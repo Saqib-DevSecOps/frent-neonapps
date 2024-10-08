@@ -25,6 +25,9 @@ urlpatterns += [
 urlpatterns += [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
+
+    path("ckeditor5/", include('django_ckeditor_5.urls'), name="ck_editor_5_upload_file"),
+
     path('inbox/notifications/', include('notifications.urls', namespace='notifications')),
 
 ]

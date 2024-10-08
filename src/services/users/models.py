@@ -45,6 +45,8 @@ class User(AbstractUser):
         return super(User, self).save(*args, **kwargs)
 
 
+
+
 @receiver(post_save, sender=settings.AUTH_USER_MODEL, dispatch_uid="user_registered")
 def on_user_registration(sender, instance, created, **kwargs):
     """
