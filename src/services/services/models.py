@@ -1,5 +1,8 @@
+import uuid
+
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.template.defaultfilters import slugify
 from django_ckeditor_5.fields import CKEditor5Field
 
 from src.services.users.models import User
@@ -7,6 +10,7 @@ from src.services.users.models import User
 
 class ServiceCategory(models.Model):
     """Service Category Model"""
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     name = models.CharField(max_length=100, unique=True, help_text="Unique category name.")
     thumbnail = models.ImageField(upload_to='services/categories/', null=True, blank=True,
                                   help_text='Recommended size: 250x250.')
@@ -29,8 +33,10 @@ class ServiceCategory(models.Model):
 
 class Service(models.Model):
     """Represents a service provided by service providers"""
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     provider = models.ForeignKey(User, on_delete=models.CASCADE, related_name='services')
     title = models.CharField(max_length=255, help_text="Service title (max 255 characters).")
+    slug = models.SlugField(max_length=255, unique=True, help_text="Unique slug for the service.")
     thumbnail = models.ImageField(upload_to='services/thumbnails/', null=True, blank=True,
                                   help_text='Recommended size: 250x250.')
     description = models.TextField(null=True, blank=True, help_text="Small description for your project")
@@ -59,12 +65,25 @@ class Service(models.Model):
             models.UniqueConstraint(fields=['provider', 'title'], name="unique_service_per_provider")
         ]
 
+    def save(self, *args, **kwargs):
+        base_slug = slugify(self.title)
+        category_slug = slugify(self.category.name) if self.category else ''
+        provider_slug = slugify(self.provider.username)
+        self.slug = '-'.join(filter(None, [base_slug, category_slug, provider_slug]))
+
+        # Ensure the slug is unique
+        if Service.objects.filter(slug=self.slug).exists():
+            self.slug = f"{self.slug}-{uuid.uuid4().hex[:5]}"
+
+        super().save(*args, **kwargs)
+
     def get_discounted_price(self):
         return self.price - (self.price * (self.discount / 100))
 
 
 class ServiceImage(models.Model):
     """Service Image Model"""
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='services/images/', help_text='Recommended size: 800x600.')
     is_active = models.BooleanField(default=True, help_text="Indicates if the service is available for booking.")
@@ -77,6 +96,7 @@ class ServiceImage(models.Model):
 
 class ServiceAvailability(models.Model):
     """Service availability slots for providers"""
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='availability_slots')
 
     day_of_week = models.CharField(max_length=10, help_text="Day of the week (e.g., Monday).")
@@ -102,6 +122,7 @@ class ServiceAvailability(models.Model):
 
 class ServiceReview(models.Model):
     """Stores reviews for services"""
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='reviews')
     reviewer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='given_reviews')
     rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], help_text="Rating (1-5).")
@@ -128,7 +149,7 @@ class ServiceRequest(models.Model):
         ('completed', 'Completed'),
         ('canceled', 'Canceled'),
     ]
-
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     seeker = models.ForeignKey(User, on_delete=models.CASCADE, related_name='service_requests')
     service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='requests')
     status = models.CharField(max_length=20, choices=REQUEST_STATUS_CHOICES, default='pending')
