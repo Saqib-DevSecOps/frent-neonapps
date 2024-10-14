@@ -80,6 +80,10 @@ class Service(models.Model):
     def get_discounted_price(self):
         return self.price - (self.price * (self.discount / 100))
 
+    def get_total_rating(self):
+        reviews = self.reviews.filter(is_active=True)
+        total_rating = sum([review.rating for review in reviews])
+        return total_rating
 
 class ServiceImage(models.Model):
     """Service Image Model"""

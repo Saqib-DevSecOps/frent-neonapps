@@ -60,9 +60,9 @@ class ServiceReviewSerializer(serializers.ModelSerializer):
 
 class ServiceDetailSerializer(serializers.ModelSerializer):
     provider = UserProfileSerializer()
-    images = ServiceImageSerializer(many=True, read_only=True, source='images')
-    availability_slots = ServiceAvailabilitySerializer(many=True, read_only=True, source='availability_slots')
-    reviews = ServiceReviewSerializer(many=True, read_only=True, source='reviews')
+    images = ServiceImageSerializer(many=True, read_only=True)  # Removed the source argument
+    availability_slots = ServiceAvailabilitySerializer(many=True, read_only=True)
+    reviews = ServiceReviewSerializer(many=True, read_only=True)
 
     class Meta:
         model = Service
