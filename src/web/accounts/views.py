@@ -1,10 +1,11 @@
+from allauth.account.views import LoginView
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views.generic import View
 from django.contrib.auth import logout
-from src.web.accounts.forms import UserProfileForm
+from src.web.accounts.forms import UserProfileForm, CustomLoginForm
 
 
 @method_decorator(login_required, name='dispatch')
@@ -29,6 +30,21 @@ class CrossAuthView(View):
             return redirect('/admin/')
 
         return redirect('/')
+
+
+class LoginView(LoginView):
+
+    def get(self, request):
+        form = CustomLoginForm()
+        return render(request, template_name='account/login.html', context={'form': form})
+
+    def post(self, request):
+        form = CustomLoginForm(request.POST)
+        if form.is_valid():
+            form.login(request)
+            return redirect('home')
+        return render(request, template_name='account/login.html', context={'form': form})
+
 
 
 @method_decorator(login_required, name='dispatch')

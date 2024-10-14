@@ -34,6 +34,7 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 INSTALLED_APPS = [
     # DJANGO APPS
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sites',
@@ -255,6 +256,13 @@ EMAIL_HOST_PASSWORD = 'jyrq jbmd grlu vvzs'
 
 # Default from email address
 DEFAULT_FROM_EMAIL = 'exarth@info.com'  # Replace with the email address to appear in the 'from' field
+
+
+ACCOUNT_FORMS = {
+    'login': 'src.web.accounts.forms.CustomLoginForm',
+    'signup': 'src.web.accounts.forms.CustomSignUpForm',
+}
+
 
 """  ACCOUNT ADAPTER Modify Login/Signup Redirect UR----------------------------------------------------"""
 ACCOUNT_ADAPTER = "src.web.accounts.adapters.MyAccountAdapter"
