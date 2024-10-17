@@ -79,7 +79,6 @@ INSTALLED_APPS = [
 
     # mailchimp
     'mailchimp_transactional',
-    'notifications',
 ]
 # MAILCHIMP SETTINGS
 MAILCHIMP_API_KEY = env('MAILCHIMP_API_KEY')

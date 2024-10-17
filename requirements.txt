@@ -29,3 +29,4 @@ paramiko
 mailchimp_transactional
 django-notifications-hq
 fido2
+django-jazzmin
