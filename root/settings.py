@@ -68,6 +68,8 @@ INSTALLED_APPS = [
     'src.core.apps.CoreConfig',
     'src.services.users.apps.UsersConfig',
     'src.services.services.apps.ServicesConfig',
+    'src.services.reporting.apps.ReportingConfig',
+    'src.services.chat.apps.ChatConfig',
 
     # WEB APPS
     'src.web.website',
@@ -257,17 +259,13 @@ EMAIL_HOST_PASSWORD = 'jyrq jbmd grlu vvzs'
 # Default from email address
 DEFAULT_FROM_EMAIL = 'exarth@info.com'  # Replace with the email address to appear in the 'from' field
 
-
 ACCOUNT_FORMS = {
     'login': 'src.web.accounts.forms.CustomLoginForm',
     'signup': 'src.web.accounts.forms.CustomSignUpForm',
 }
 
-
 """  ACCOUNT ADAPTER Modify Login/Signup Redirect UR----------------------------------------------------"""
 ACCOUNT_ADAPTER = "src.web.accounts.adapters.MyAccountAdapter"
-
-
 
 """       CKEDITOR SETUP --------------------------------------------------------------------------------"""
 """ DJANGO-CKEDITOR-5 """

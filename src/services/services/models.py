@@ -85,6 +85,7 @@ class Service(models.Model):
         total_rating = sum([review.rating for review in reviews])
         return total_rating
 
+
 class ServiceImage(models.Model):
     """Service Image Model"""
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
@@ -171,3 +172,25 @@ class ServiceRequest(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['seeker', 'service'], name="unique_service_request_per_user")
         ]
+
+
+class FavoriteService(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='favorites',
+        help_text="The user who added the service to their favorites."
+    )
+    service = models.ForeignKey(
+        Service, on_delete=models.CASCADE, related_name='favorited_by',
+        help_text="The service that was added to favorites."
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('user', 'service')
+        ordering = ['-created_at']
+        verbose_name = 'Favorite'
+        verbose_name_plural = 'Favorites'
+
+    def __str__(self):
+        return f"{self.user.username} favorited {self.service.title}"
