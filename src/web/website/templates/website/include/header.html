@@ -1,0 +1,55 @@
+{% load static %}
+<header class="header header-new">
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg header-nav">
+            <div class="navbar-header">
+                <a id="mobile_btn" href="javascript:void(0);">
+                <span class="bar-icon">
+                <span></span>
+                <span></span>
+                <span></span>
+                </span>
+                </a>
+                <a href="{% url 'website:home' %}" class="navbar-brand logo">
+                    <img src="{% static 'website/img/logo.svg' %}" class="img-fluid" alt="Logo">
+                </a>
+                <a href="{% url 'website:home' %}" class="navbar-brand logo-small">
+                    <img src="{% static 'website/img/logo-small.svg' %}" class="img-fluid" alt="Logo">
+                </a>
+            </div>
+            <div class="main-menu-wrapper">
+                <div class="menu-header">
+                    <a href="{% url 'website:home' %}" class="menu-logo">
+                        <img src="{% static 'website/img/logo.svg' %}" class="img-fluid" alt="Logo">
+                    </a>
+                    <a id="menu_close" class="menu-close" href="javascript:void(0);"> <i class="fas fa-times"></i></a>
+                </div>
+                <ul class="main-nav align-items-lg-center">
+                    <li class="has-submenu megamenu active">
+                        <a href="{% url 'website:home' %}">Home </a>
+                    </li>
+                    <li class="has-submenu">
+                        <a href="{% url 'website:services' %}">Services</a>
+                    </li>
+                    <li class="nav-item has-submenu">
+                        <a class="nav-link" href="{% url 'website:about' %}">About Us</a>
+                    </li>
+                    <li class="nav-item has-submenu">
+                        <a class="nav-link" href="{% url 'website:blog-list' %}">Blogs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'website:become-a-provider' %}">Become a Provider</a>
+                    </li>
+
+                </ul>
+            </div>
+            <ul class="nav header-navbar-rht">
+
+                <li class="nav-item">
+                    <a class="nav-link btn btn-linear-primary" href="{% url 'website:contact-us' %}"
+                      ><i class="ti ti-user-filled me-2"></i>Contact Us</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>

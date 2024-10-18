@@ -1,0 +1,168 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+    <div class="breadcrumb-bar text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-12">
+                    <h2 class="breadcrumb-title mb-2">Contact Us</h2>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb justify-content-center mb-0">
+                            <li class="breadcrumb-item">Home</li>
+                            <li class="breadcrumb-item active" aria-current="page">Contact Us</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <div class="breadcrumb-bg">
+                <img src="{% static 'website/img/bg/breadcrumb-bg-01.png' %}" class="breadcrumb-bg-1" alt="Img">
+                <img src="{% static 'website/img/bg/breadcrumb-bg-02.png' %}" class="breadcrumb-bg-2" alt="Img">
+            </div>
+        </div>
+    </div>
+    <div class="page-wrapper">
+        <div class="content">
+            <div class="container">
+                <div class="contacts">
+                    <div class="contacts-overlay-img d-none d-lg-block">
+                        <img src="{% static 'website/img/bg/bg-07.png' %}" alt="img" class="img-fluid">
+                    </div>
+                    <div class="contacts-overlay-sm d-none d-lg-block">
+                        <img src="{% static 'website/img/bg/bg-08.png' %}" alt="img" class="img-fluid">
+                    </div>
+
+                    <div class="contact-details">
+                        <div class="row justify-content-center">
+                            <div class="col-md-6 col-lg-4 d-flex">
+                                <div class="card flex-fill">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center">
+                                            <span class="rounded-circle"><i class="ti ti-phone text-primary"></i></span>
+                                            <div>
+                                                <h6 class="fs-18 mb-1">Phone Number</h6>
+                                                <p class="fs-14">(888) 888-8888</p>
+                                                <p class="fs-14">(123) 456-7890</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 d-flex">
+                                <div class="card flex-fill">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center">
+                                            <span class="rounded-circle"><i class="ti ti-mail text-primary"></i></span>
+                                            <div>
+                                                <h6 class="fs-18 mb-1">Email Address</h6>
+                                                <p class="fs-14">truelysell@example.com</p>
+                                                <p class="fs-14">johnsmith@example.com</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 d-flex">
+                                <div class="card flex-fill">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center">
+                                            <span class="rounded-circle"><i
+                                                    class="ti ti-map-pin text-primary"></i></span>
+                                            <div>
+                                                <h6 class="fs-18 mb-1">Address</h6>
+                                                <p class="fs-14">367 Hillcrest Lane, Irvine, California,
+                                                    United States</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div class="contact-img flex-fill">
+                                <img src="{% static 'website/img/services/service-76.jpg' %}" class="img-fluid" alt="img">
+                            </div>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center justify-content-center">
+                            <div class="contact-queries flex-fill">
+                                <h2>Get In Touch</h2>
+                                <form action="https://truelysell.dreamstechnologies.com/html/template/contact-us.html">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <div class="form-group">
+                                                    <input class="form-control" type="text" placeholder="Your Name">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <div class="form-group">
+                                                    <input class="form-control" type="email"
+                                                           placeholder="Your Email Address">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <div class="form-group">
+                                                    <input class="form-control" type="text"
+                                                           placeholder="Your Phone Number">
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <select class="select select2-hidden-accessible" data-select2-id="1"
+                                                        tabindex="-1" aria-hidden="true">
+                                                    <option data-select2-id="3">Select Services</option>
+                                                    <option>Car Repair</option>
+                                                    <option>Interior Designing</option>
+                                                    <option>House Cleaning</option>
+                                                </select><span
+                                                    class="select2 select2-container select2-container--default"
+                                                    dir="ltr" data-select2-id="2" style="width: 100%;"><span
+                                                    class="selection"><span
+                                                    class="select2-selection select2-selection--single" role="combobox"
+                                                    aria-haspopup="true" aria-expanded="false" tabindex="0"
+                                                    aria-disabled="false" aria-labelledby="select2-bzwh-container"><span
+                                                    class="select2-selection__rendered" id="select2-bzwh-container"
+                                                    role="textbox" aria-readonly="true" title="Select Services">Select Services</span><span
+                                                    class="select2-selection__arrow" role="presentation"><b
+                                                    role="presentation"></b></span></span></span><span
+                                                    class="dropdown-wrapper" aria-hidden="true"></span></span>
+                                            </div>
+                                            <div class="mb-3">
+                                                <div class="form-group">
+                                                    <textarea class="form-control" placeholder="Type Message"
+                                                              id="floatingTextarea"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 submit-btn">
+                                            <button class="btn btn-dark d-flex align-items-center " type="submit">Send
+                                                Message<i class="feather-arrow-right-circle ms-2"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="map-grid">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6509170.989457427!2d-123.80081967108484!3d37.192957227641294!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb9fe5f285e3d%3A0x8b5109a227086f55!2sCalifornia%2C%20USA!5e0!3m2!1sen!2sin!4v1669181581381!5m2!1sen!2sin"
+                    style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                    class="contact-map"></iframe>
+        </div>
+
+    </div>
+
+{% endblock %}

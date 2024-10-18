@@ -1,0 +1,50 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="breadcrumb-bar text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-12">
+                    <h2 class="breadcrumb-title mb-2">Categories</h2>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb justify-content-center mb-0">
+                            <li class="breadcrumb-item"><a href="index.html"><i class="ti ti-home-2"></i></a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Categories</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <div class="breadcrumb-bg">
+                <img src="{% static 'website/img/bg/breadcrumb-bg-01.png' %}" class="breadcrumb-bg-1" alt="Img">
+                <img src="{% static 'website/img/bg/breadcrumb-bg-02.png' %}" class="breadcrumb-bg-2" alt="Img">
+            </div>
+        </div>
+    </div>
+    <div class="page-wrapper">
+        <div class="content content-two">
+            <div class="container">
+                <div class="row justify-content-center align-items-center">
+                    {% for obj in '1234568909876543' %}
+                        <div class="col-lg-3 col-md-6">
+                            <div class="category card wow fadeInUp" data-wow-delay="0.3s"
+                                 style="visibility: visible; animation-delay: 0.3s; animation-name: fadeInUp;">
+                                <div class="card-body">
+                                    <div class="feature-icon d-flex justify-content-center align-items-center mb-2">
+                            <span class="rounded-pill d-flex justify-content-center align-items-center p-3">
+                            <img src="{% static 'website/img/icons/category-01.svg' %}" class="img-fluid" alt="logo">
+                            </span>
+                                    </div>
+                                    <h5 class="text-center"><a href="services-list.html">Construction</a></h5>
+                                    <div class="overlay">
+                                        <img src="{% static 'website/img/services/service-26.jpg' %}" class="img-fluid" alt="img">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

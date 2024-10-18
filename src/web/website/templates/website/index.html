@@ -1,10 +1,687 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-asdasdasd
-</body>
-</html>
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <section class="hero-section" id="home">
+        <div class="hero-content position-relative overflow-hidden">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <div class="wow fadeInUp" data-wow-duration="1s" data-wow-delay=".25s">
+                            <h1 class="mb-2">Connect with Nearby Top-rated Professional <span class="typed"
+                                                                                              data-type-text="Carpenters"></span>
+                            </h1>
+                            <p class="mb-3 sub-title">We can connect you to the right Service, first time and every
+                                time.</p>
+                            <div class="banner-form bg-white border mb-3">
+                                <form action="#">
+                                    <div class="d-md-flex align-items-center">
+                                        <div class="input-group mb-2">
+                                            <span class="input-group-text px-1"><i class="ti ti-search"></i></span>
+                                            <input type="text" class="form-control" placeholder="Search for Service">
+                                        </div>
+                                        <div class="input-group mb-2">
+                                            <span class="input-group-text px-1"><i class="ti ti-map-pin"></i></span>
+                                            <input type="text" class="form-control" placeholder="Enter Location">
+                                        </div>
+                                        <div class="mb-2">
+                                            <a href="search.html"
+                                               class="btn btn-linear-primary d-inline-flex align-items-center w-100">
+                                                <i class="feather-search me-2"></i>
+                                                Search
+                                            </a>
+                                        </div>
+                                    </div>
+                                </form>
+                                <img src="{% static 'website/img/bg/bg-06.svg' %}" alt="img"
+                                     class="shape-06 round-animate">
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <h6 class="mb-2 me-2 fw-medium">Popular Searches</h6>
+                                <a href="search.html" class="badge badge-dark-transparent fs-14 fw-normal mb-2 me-2">Plumber</a>
+                                <a href="search.html" class="badge badge-dark-transparent fs-14 fw-normal mb-2 me-2">Interior</a>
+                                <a href="search.html" class="badge badge-dark-transparent fs-14 fw-normal mb-2 me-2">Nail
+                                    Technicians</a>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap banner-info">
+                                <div class="d-flex align-items-center me-4 mt-4">
+                                    <img src="{% static 'website/img/icons/success-01.svg' %}" alt="icon">
+                                    <div class="ms-2">
+                                        <h6>215,292 +</h6>
+                                        <p>Verified Providers</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center me-4 mt-4">
+                                    <img src="{% static 'website/img/icons/success-02.svg' %}" alt="icon">
+                                    <div class="ms-2">
+                                        <h6>90,000+</h6>
+                                        <p>Services Completed</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center me-4 mt-4">
+                                    <img src="{% static 'website/img/icons/success-03.svg' %}" alt="icon">
+                                    <div class="ms-2">
+                                        <h6>2,390,968 </h6>
+                                        <p>Reviews Globally</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="banner-img wow fadeInUp" data-wow-duration="1s" data-wow-delay=".25s">
+                        <img src="{% static 'website/img/banner.png' %}" alt="img" class="img-fluid animation-float">
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="d-inline-flex bg-white p-2 rounded align-items-center shape-01 floating-x">
+                    <span class="avatar avatar-md bg-warning rounded-circle me-2"><i
+                            class="ti ti-star-filled"></i></span>
+                    <span>4.9 / 5<small class="d-block">(255 reviews)</small></span>
+                    <i class="border-edge"></i>
+                </div>
+                <div class="d-inline-flex bg-white p-2 rounded align-items-center shape-02 floating-x">
+                    <span class="me-2"><img src="{% static 'website/img/icons/tick-banner.svg' %}" alt></span>
+                    <p class="fs-12 text-dark mb-0">300 Booking Completed</p>
+                    <i class="border-edge"></i>
+                </div>
+                <img src="{% static 'website/img/bg/bg-03.svg' %}" alt="img" class="shape-03">
+                <img src="{% static 'website/img/bg/bg-04.svg' %}" alt="img" class="shape-04">
+                <img src="{% static 'website/img/bg/bg-05.svg' %}" alt="img" class="shape-05">
+            </div>
+        </div>
+    </section>
+
+    <div class="about-sec">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="about-img d-none d-md-block">
+                        <div class="about-exp">
+                            <span>12+ years of experiences</span>
+                        </div>
+                        <div class="abt-img">
+                            <img src="{% static 'website/img/providers/provider-23.jpg' %}" class="img-fluid" alt="img">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="about-content">
+                        <h6>ABOUT OUR COMPANY</h6>
+                        <h2>Best Solution For Cleaning Services</h2>
+                        <p>Welcome to Truelysell, your premier destination for connecting with top-rated service
+                            providers and finding the perfect match for your needs. Our platform is designed to
+                            simplify the process of discovering, evaluating, and hiring trusted professionals
+                            across a wide range of services, from home improvement and IT support to personal
+                            care and more.</p>
+                        <p>At Truelysell, our mission is to bridge the gap between service providers and
+                            customers by offering a seamless and efficient marketplace experience. We aim to
+                            empower both parties by providing a reliable platform where quality, transparency,
+                            and customer satisfaction are our top priorities.</p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul>
+                                    <li class="text-truncate"><i class="ti ti-circle-check-filled text-dark me-1"></i>We
+                                        prioritize quality and reliability
+                                    </li>
+                                    <li class="text-truncate"><i class="ti ti-circle-check-filled text-dark me-1"></i>WeSaving
+                                        your time and effort.
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul>
+                                    <li class="text-truncate"><i class="ti ti-circle-check-filled text-dark me-1"></i>Clear,
+                                        detailed service listings &amp; reviews
+                                    </li>
+                                    <li class="text-truncate"><i class="ti ti-circle-check-filled text-dark me-1"></i>
+                                        Smooth and satisfactory experience.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="content">
+            <div class="container">
+
+                <div class="row align-items-center justify-content-center">
+                    <div class="col-md-8 ">
+                        <div class="work-wrap work-wrap-acc">
+                            <span>01</span>
+                            <h1 class="display-6">Create An Account</h1>
+                            <p>Create an account to become a service provider and start offering your services to a wide
+                                audience. By signing up, you’ll be able to showcase your expertise, manage appointments,
+                                and connect with potential clients.</p>
+                            <p>Simply provide your name, email address, and create a strong password to get started.
+                                Once registered, you’ll have access to tools for tracking your work, setting
+                                availability, and receiving payments. </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="work-img d-none d-md-block">
+                            <img src="{% static 'website/img/bg/bg-09.png' %}" class="img-fluid" alt="image">
+                        </div>
+                    </div>
+                    <div class="work-wrap-img d-none d-md-block">
+                        <img src="{% static 'website/img/bg/bg-12.png' %}" alt="img" class="img-fluid">
+                    </div>
+                </div>
+                <div class="row align-items-center justify-content-center">
+                    <div class="col-md-4  order-last order-md-first">
+                        <div class="work-img d-none d-md-block">
+                            <img src="{% static 'website/img/bg/bg-10.png' %}" class="img-fluid" alt="image">
+                        </div>
+                    </div>
+                    <div class="col-md-8 d-flex justify-content-center">
+                        <div class="work-wrap work-wrap-post">
+                            <span>02</span>
+                            <h1 class="display-6">Post An Ad</h1>
+                            <p>Promote your services and reach new clients by posting on our platform. Start by
+                                providing a clear and engaging title that describes your service. Include a detailed
+                                description outlining what you offer, your expertise, and any special skills or
+                                certifications. Choose the right category to make it easier for clients to find your
+                                service.</p>
+                            <p>Be sure to add your contact information so clients can easily get in touch with you.
+                                Posting your service is fast and straightforward, helping you expand your client base
+                                effortlessly!</p>
+                        </div>
+                    </div>
+                    <div class="work-wrap-img d-none d-md-block">
+                        <img src="{% static 'website/img/bg/bg-12.png' %}" alt="img" class="img-fluid">
+                    </div>
+                </div>
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div class="work-wrap work-wrap-earning mb-0">
+                            <span>03</span>
+                            <h1 class="display-6">Start Earning</h1>
+                            <p>Take control of your financial future by starting to earn with our platform. Whether
+                                you're a seasoned professional or just getting started, we make it easy for you to
+                                connect with clients who need your skills.Manage your schedule with ease and accept jobs
+                                that fit your expertise and availability.</p>
+                            <p>Start earning today, expand your client base, and watch your income soar as you take
+                                advantage of new opportunities. </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="work-img mb-0 d-none d-md-block">
+                            <img src="{% static 'website/img/bg/bg-11.png' %}" class="img-fluid" alt="image">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <section class="section pt-0">
+        <div class="container">
+            <div class="work-section bg-black m-0">
+                <div class="row align-items-center bg-01">
+                    <div class="col-md-12 wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="section-header text-center">
+                            <h2 class="text-white">How Truelysell <span class="text-linear-primary">Works</span></h2>
+                            <p class="text-light">Each listing is designed to be clear and concise, providing customers
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row gx-0 gy-4">
+                    <div class="col-lg-4 d-flex">
+                        <div class="work-item text-center flex-fill">
+                            <div class="mb-3">
+                                <img src="{% static 'website/img/icons/work-01.svg' %}" alt="img">
+                            </div>
+                            <h6 class="text-white mb-2">1. Post a Service</h6>
+                            <p>After you post a job, our matching system identifies and alerts relevant Provider, who
+                                can then express interest in your job.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 d-flex">
+                        <div class="work-item text-center flex-fill">
+                            <div class="mb-3">
+                                <img src="{% static 'website/img/icons/work-01.svg' %}" alt="img">
+                            </div>
+                            <h6 class="text-white mb-2">2. Getting Booked & Job done</h6>
+                            <p>After you post a job, our matching system identifies and alerts relevant Provider, who
+                                can then express interest in your job.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 d-flex">
+                        <div class="work-item work-03 text-center flex-fill">
+                            <div class="mb-3">
+                                <img src="{% static 'website/img/icons/work-03.svg' %}" alt="img">
+                            </div>
+                            <h6 class="text-white mb-2">3. Get Reviewd & Get Leads</h6>
+                            <p>After you post a job, our matching system identifies and alerts relevant Provider, who
+                                can then express interest in your job.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="work-bg1">
+                    <img src="{% static 'website/img/bg/work-bg-01.svg' %}" class="img-fluid" alt="img">
+                </div>
+                <div class="work-bg2">
+                    <img src="{% static 'website/img/bg/work-bg-02.svg' %}" class="img-fluid" alt="img">
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="section category-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 text-center wow fadeInUp" data-wow-delay="0.2s">
+                    <div class="section-header text-center">
+                        <h2 class="mb-1">Explore our <span class="text-linear-primary">Categories</span></h2>
+                        <p class="sub-title">Service categories help organize and structure the offerings on a
+                            marketplace, making it easier for users to find what they need.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-4 row-cols-xxl-6 row-cols-xl-6 row-cols-md-4 row-cols-sm-2 row-cols-1 justify-content-center">
+                <div class="col d-flex">
+                    <div class="category-item text-center flex-fill wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="mx-auto mb-3">
+                            <img src="{% static 'website/img/icons/category-01.svg' %}" class="img-fluid" alt="img">
+                        </div>
+                        <h6 class="fs-14 mb-1">Construction</h6>
+                        <p class="fs-14 mb-0">9874 Listings</p>
+                        <a href="javascript:void(0);" class="link-primary text-decoration-underline fs-14">View All</a>
+                    </div>
+                </div>
+                <div class="col d-flex">
+                    <div class="category-item text-center flex-fill wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="mx-auto mb-3">
+                            <img src="{% static 'website/img/icons/category-02.svg' %}" class="img-fluid" alt="img">
+                        </div>
+                        <h6 class="fs-14 mb-1">Removals</h6>
+                        <p class="fs-14 mb-0">787 Listings</p>
+                        <a href="javascript:void(0);" class="link-primary text-decoration-underline fs-14">View All</a>
+                    </div>
+                </div>
+                <div class="col d-flex">
+                    <div class="category-item text-center flex-fill wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="mx-auto mb-3">
+                            <img src="{% static 'website/img/icons/category-13.svg' %}" class="img-fluid" alt="img">
+                        </div>
+                        <h6 class="fs-14 mb-1">Cleaning</h6>
+                        <p class="fs-14 mb-0">2357 Listings</p>
+                        <a href="javascript:void(0);" class="link-primary text-decoration-underline fs-14">View All</a>
+                    </div>
+                </div>
+                <div class="col d-flex">
+                    <div class="category-item text-center flex-fill wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="mx-auto mb-3">
+                            <img src="{% static 'website/img/icons/category-04.svg' %}" class="img-fluid" alt="img">
+                        </div>
+                        <h6 class="fs-14 mb-1">Computer Service</h6>
+                        <p class="fs-14 mb-0">1260 Listings</p>
+                        <a href="javascript:void(0);" class="link-primary text-decoration-underline fs-14">View All</a>
+                    </div>
+                </div>
+                <div class="col d-flex">
+                    <div class="category-item text-center flex-fill wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="mx-auto mb-3">
+                            <img src="{% static 'website/img/icons/category-05.svg' %}" class="img-fluid" alt="img">
+                        </div>
+                        <h6 class="fs-14 mb-1">Electrical</h6>
+                        <p class="fs-14 mb-0">4546 Listings</p>
+                        <a href="javascript:void(0);" class="link-primary text-decoration-underline fs-14">View All</a>
+                    </div>
+                </div>
+                <div class="col d-flex">
+                    <div class="category-item text-center flex-fill wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="mx-auto mb-3">
+                            <img src="{% static 'website/img/icons/category-06.svg' %}" class="img-fluid" alt="img">
+                        </div>
+                        <h6 class="fs-14 mb-1">Man & Van</h6>
+                        <p class="fs-14 mb-0">2546 Listings</p>
+                        <a href="javascript:void(0);" class="link-primary text-decoration-underline fs-14">View All</a>
+                    </div>
+                </div>
+                <div class="col d-flex">
+                    <div class="category-item text-center flex-fill wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="mx-auto mb-3">
+                            <img src="{% static 'website/img/icons/category-07.svg' %}" class="img-fluid" alt="img">
+                        </div>
+                        <h6 class="fs-14 mb-1">Deliveries</h6>
+                        <p class="fs-14 mb-0">4547 Listings</p>
+                        <a href="javascript:void(0);" class="link-primary text-decoration-underline fs-14">View All</a>
+                    </div>
+                </div>
+                <div class="col d-flex">
+                    <div class="category-item text-center flex-fill wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="mx-auto mb-3">
+                            <img src="{% static 'website/img/icons/category-08.svg' %}" class="img-fluid" alt="img">
+                        </div>
+                        <h6 class="fs-14 mb-1">Mobile Barber</h6>
+                        <p class="fs-14 mb-0">4787 Listings</p>
+                        <a href="javascript:void(0);" class="link-primary text-decoration-underline fs-14">View All</a>
+                        <span class="badge bg-success">New</span>
+                    </div>
+                </div>
+                <div class="col d-flex">
+                    <div class="category-item text-center flex-fill wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="mx-auto mb-3">
+                            <img src="{% static 'website/img/icons/category-09.svg' %}" class="img-fluid" alt="img">
+                        </div>
+                        <h6 class="fs-14 mb-1">Interior</h6>
+                        <p class="fs-14 mb-0">1457 Listings</p>
+                        <a href="javascript:void(0);" class="link-primary text-decoration-underline fs-14">View All</a>
+                    </div>
+                </div>
+                <div class="col d-flex">
+                    <div class="category-item text-center flex-fill wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="mx-auto mb-3">
+                            <img src="{% static 'website/img/icons/category-10.svg' %}" class="img-fluid" alt="img">
+                        </div>
+                        <h6 class="fs-14 mb-1">Plumbing</h6>
+                        <p class="fs-14 mb-0">4157 Listings</p>
+                        <a href="javascript:void(0);" class="link-primary text-decoration-underline fs-14">View All</a>
+                    </div>
+                </div>
+                <div class="col d-flex">
+                    <div class="category-item text-center flex-fill wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="mx-auto mb-3">
+                            <img src="{% static 'website/img/icons/category-11.svg' %}" class="img-fluid" alt="img">
+                        </div>
+                        <h6 class="fs-14 mb-1">Nail Technicians</h6>
+                        <p class="fs-14 mb-0">5477 Listings</p>
+                        <a href="javascript:void(0);" class="link-primary text-decoration-underline fs-14">View All</a>
+                    </div>
+                </div>
+                <div class="col d-flex">
+                    <div class="category-item text-center flex-fill wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="mx-auto mb-3">
+                            <img src="{% static 'website/img/icons/category-12.svg' %}" class="img-fluid" alt="img">
+                        </div>
+                        <h6 class="fs-14 mb-1">Hair Dressers</h6>
+                        <p class="fs-14 mb-0">7457 Listings</p>
+                        <a href="javascript:void(0);" class="link-primary text-decoration-underline fs-14">View All</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="text-center view-all wow fadeInUp" data-wow-delay="0.2s">
+                        <a href="{% url 'website:services' %}" class="btn btn-dark">View All<i
+                                class="ti ti-arrow-right ms-2"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+    <section class="section testimonial-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 text-center wow fadeInUp" data-wow-delay="0.2s">
+                    <div class="section-header text-center">
+                        <h2 class="mb-1">Genuine reviews from <span class="text-linear-primary">Customers</span></h2>
+                        <p class="sub-title">Each listing is designed to be clear and concise, providing customers</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-slider row nav-center">
+                <div class="col-xl-3 col-md-6 ">
+                    <div class="testimonial-item wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fa-solid fa-star text-warning me-1"></i>
+                            <i class="fa-solid fa-star text-warning me-1"></i>
+                            <i class="fa-solid fa-star text-warning me-1"></i>
+                            <i class="fa-solid fa-star text-warning me-1"></i>
+                            <i class="fa-solid fa-star text-warning"></i>
+                        </div>
+                        <h5 class="mb-2">Quality of work was excellent</h5>
+                        <p class="mb-4">“ I had a great experience with ABC Electrical on the Services. The electrician
+                            arrived on time!!!“</p>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center overflow-hidden">
+                            <span class="avatar avatar-lg flex-shrink-0">
+                    <img src="{% static 'website/img/profiles/avatar-14.jpg' %}" class="img-fluid rounded-circle"
+                         alt="img">
+                    </span>
+                                <h6 class=" text-truncate ms-2">Robert Anderson</h6>
+                            </div>
+                            <p> 2 Days Ago</p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-xl-3 col-md-6 ">
+
+                    <div class="testimonial-item wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fa-solid fa-star text-warning me-1"></i>
+                            <i class="fa-solid fa-star text-warning me-1"></i>
+                            <i class="fa-solid fa-star text-warning me-1"></i>
+                            <i class="fa-solid fa-star text-warning me-1"></i>
+                            <i class="fa-solid fa-star text-warning"></i>
+                        </div>
+                        <h5 class="mb-2">Green Cleaning</h5>
+                        <p class="mb-4">“ I love that they use eco-friendly products without compromising on cleanliness
+                            with care.“</p>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center overflow-hidden">
+                        <span class="avatar avatar-lg flex-shrink-0">
+                        <img src="{% static 'website/img/profiles/avatar-15.jpg' %}" class="img-fluid rounded-circle"
+                             alt="img">
+                        </span>
+                                <h6 class=" text-truncate ms-2">Delois Coffin</h6>
+                            </div>
+                            <p> 3 Days Ago</p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-xl-3 col-md-6 ">
+                    <div class="testimonial-item wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fa-solid fa-star text-warning me-1"></i>
+                            <i class="fa-solid fa-star text-warning me-1"></i>
+                            <i class="fa-solid fa-star text-warning me-1"></i>
+                            <i class="fa-solid fa-star text-warning me-1"></i>
+                            <i class="fa-solid fa-star text-warning"></i>
+                        </div>
+                        <h5 class="mb-2">Luxury Car Cleaning</h5>
+                        <p class="mb-4">“Exceptional care for my luxury vehicle. The team treated my car with precision
+                            and
+                            care.“</p>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center overflow-hidden">
+                            <span class="avatar avatar-lg flex-shrink-0">
+                            <img src="{% static 'website/img/profiles/avatar-13.jpg' %}"
+                                 class="img-fluid rounded-circle" alt="img">
+                            </span>
+                                <h6 class=" text-truncate ms-2">Matthew Hicks</h6>
+                            </div>
+                            <p>5 Days Ago</p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-xl-3 col-md-6 ">
+                    <div class="testimonial-item wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fa-solid fa-star text-warning me-1"></i>
+                            <i class="fa-solid fa-star text-warning me-1"></i>
+                            <i class="fa-solid fa-star text-warning me-1"></i>
+                            <i class="fa-solid fa-star text-warning me-1"></i>
+                            <i class="fa-solid fa-star text-warning"></i>
+                        </div>
+                        <h5 class="mb-2">Quick and reliable</h5>
+                        <p class="mb-4">“They fixed my issue in no time and got everything running smoothly again! Good
+                            work“</p>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center overflow-hidden">
+                        <span class="avatar avatar-lg flex-shrink-0">
+                        <img src="{% static 'website/img/profiles/avatar-12.jpg' %}" class="img-fluid rounded-circle"
+                             alt="img">
+                        </span>
+                                <h6 class=" text-truncate ms-2">Daniel Davis</h6>
+                            </div>
+                            <p>7 Days Ago</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="text-center wow fadeInUp" data-wow-delay="0.2s">
+                <h6 class="mb-2">Each listing is designed to be clear and concise, providing customers</h6>
+                <p>
+                    <span class="text-dark fw-medium">Excellent</span>
+                    <img src="{% static 'website/img/icons/star-01.svg' %}" class="img-fluid" alt="img">
+                    <img src="{% static 'website/img/icons/star-01.svg' %}" class="img-fluid" alt="img">
+                    <img src="{% static 'website/img/icons/star-01.svg' %}" class="img-fluid" alt="img">
+                    <img src="{% static 'website/img/icons/star-01.svg' %}" class="img-fluid" alt="img">
+                    <img src="{% static 'website/img/icons/star-01.svg' %}" class="img-fluid" alt="img">
+                    <span class="fs-14">Based on 456 reviews</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+
+    <section class="section blog-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 text-center wow fadeInUp" data-wow-delay="0.2s">
+                    <div class="section-header text-center">
+                        <h2 class="mb-1">Checkout our Recent <span class="text-linear-primary">Blogs</span></h2>
+                        <p class="sub-title">Each listing is designed to be clear and concise, providing customers</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="blog-slider row nav-center nav-center">
+                <div class="col-xl-3 col-md-6 ">
+
+                    <div class="blog-item wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="blog-img">
+                            <a href="blog-details.html">
+                                <img src="{% static 'website/img/blogs/blog-01.jpg' %}" class="img-fluid" alt="img">
+                            </a>
+                        </div>
+                        <div class=" blog-content">
+                            <p class="fs-14 fw-meium text-gray-9 d-inline-flex align-items-center mb-2">Admin<i
+                                    class="ti ti-circle-filled fs-6 mx-1"></i>1 Jan 2023</p>
+                            <h6 class="text-truncate mb-2"><a href="blog-details.html">Bill Walsh leadership lessons</a>
+                            </h6>
+                            <p class="two-line-ellipsis mb-3">Like to know the secrets of transforming a 2-14</p>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <span class="badge badge-info-transparent me-2">Leadership</span>
+                                <span class="badge badge-dark-transparent">Management</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 ">
+
+                    <div class="blog-item wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="blog-img">
+                            <a href="blog-details.html">
+                                <img src="{% static 'website/img/blogs/blog-02.jpg' %}" class="img-fluid" alt="img">
+                            </a>
+                        </div>
+                        <div class=" blog-content">
+                            <p class="fs-14 fw-meium text-gray-9 d-inline-flex align-items-center mb-2">Admin<i
+                                    class="ti ti-circle-filled fs-6 mx-1"></i>18 Jan 2023</p>
+                            <h6 class="text-truncate mb-2"><a href="blog-details.html">Transform Your Space</a></h6>
+                            <p class="two-line-ellipsis mb-3">Find out how we can help you create the perfect
+                                environment.
+                            </p>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <span class="badge badge-info-transparent me-2">Remodeling</span>
+                                <span class="badge badge-dark-transparent">Transformation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 ">
+
+                    <div class="blog-item wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="blog-img">
+                            <a href="blog-details.html">
+                                <img src="{% static 'website/img/blogs/blog-03.jpg' %}" class="img-fluid" alt="img">
+                            </a>
+                        </div>
+                        <div class=" blog-content">
+                            <p class="fs-14 fw-meium text-gray-9 d-inline-flex align-items-center mb-2">Admin<i
+                                    class="ti ti-circle-filled fs-6 mx-1"></i>08 Feb 2023</p>
+                            <h6 class="text-truncate mb-2"><a href="blog-details.html">Top Tips for Service Success</a>
+                            </h6>
+                            <p class="two-line-ellipsis mb-3">Learn key tips to make the most out of our services.</p>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <span class="badge badge-info-transparent me-2">Success</span>
+                                <span class="badge badge-dark-transparent">Advice</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 ">
+
+                    <div class="blog-item wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="blog-img">
+                            <a href="blog-details.html">
+                                <img src="{% static 'website/img/blogs/blog-04.jpg' %}" class="img-fluid" alt="img">
+                            </a>
+                        </div>
+                        <div class=" blog-content">
+                            <p class="fs-14 fw-meium text-gray-9 d-inline-flex align-items-center mb-2">Admin<i
+                                    class="ti ti-circle-filled fs-6 mx-1"></i>10 Feb 2023</p>
+                            <h6 class="text-truncate mb-2"><a href="blog-details.html">Service Innovations</a></h6>
+                            <p class="two-line-ellipsis mb-3">Explore the latest advancements in our field.</p>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <span class="badge badge-info-transparent me-2">Innovations</span>
+                                <span class="badge badge-dark-transparent">Latest Trends</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center wow fadeInUp" data-wow-delay="0.2s">
+                <a href="{% url 'website:blog-list' %}" class="btn btn-dark">View All<i class="ti ti-arrow-right ms-2"></i></a>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="section business-section bg-black">
+        <div class="container">
+            <div class="row align-items-center bg-01">
+                <div class="col-md-6 wow fadeInUp" data-wow-delay="0.2s">
+                    <div class="section-header mb-md-0 mb-4">
+                        <h2 class="text-white display-4">Add Services & Grow your <span class="text-linear-primary">business with us</span>
+                        </h2>
+                        <p class="text-light">A versatile platform that connects you with local professionals across
+                            various categories, from home services like plumbing and electrical work to personal
+                            services like photography and tutoring.</p>
+                        <a href="javascript:void(0);" class="btn btn-linear-primary"><i
+                                class="ti ti-user-filled me-2"></i>Join Us</a>
+                    </div>
+                </div>
+                <div class="col-md-6 text-md-end wow fadeInUp" data-wow-delay="0.2s">
+                    <div class="business-img">
+                        <img src="{% static 'website/img/business.jpg' %}" class="img-fluid" alt="img">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+{% endblock content %}

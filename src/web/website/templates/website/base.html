@@ -1,10 +1,73 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>FrentApp - Service Marketplace APP</title>
+
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'website/img/favicon.svg' %}">
+
+    <link rel="stylesheet" href="{% static 'website/css/bootstrap.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'website/css/animate.css' %}">
+
+    <link rel="stylesheet" href="{% static 'website/plugins/tabler-icons/tabler-icons.css' %}">
+
+    <link rel="stylesheet" href="{% static 'website/plugins/fontawesome/css/fontawesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'website/plugins/fontawesome/css/all.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'website/plugins/select2/css/select2.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'website/plugins/owlcarousel/owl.carousel.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'website/plugins/intltelinput/css/intlTelInput.css' %}">
+    <link rel="stylesheet" href="{% static 'website/plugins/intltelinput/css/demo.css' %}">
+
+    <link rel="stylesheet" href="{% static 'website/css/feather.css' %}">
+
+    <link rel="stylesheet" href="{% static 'website/css/style.css' %}">
 </head>
 <body>
 
+{% include 'website/include/header.html' %}
+
+{% block content %}
+{% endblock content %}
+{% include 'website/include/footer.html' %}
+
+<div class="back-to-top">
+    <a class="back-to-top-icon align-items-center justify-content-center d-flex" href="#top"><i
+            class="fa-solid fa-arrow-up"></i></a>
+</div>
+
+<div class="xb-cursor tx-js-cursor">
+    <div class="xb-cursor-wrapper">
+        <div class="xb-cursor--follower xb-js-follower"></div>
+    </div>
+</div>
+
+
+<script src="{% static 'website/js/jquery-3.7.1.min.js' %}" type="=text/javascript"></script>
+
+<script src="{% static 'website/js/bootstrap.bundle.min.js' %}" type="text/javascript' %}"></script>
+
+<script src="{% static 'website/js/wow.min.js' %}" type="text/javascript' %}"></script>
+
+<script src="{% static 'website/plugins/owlcarousel/owl.carousel.min.js' %}" type="text/javascript' %}"></script>
+
+<script src="{% static 'website/plugins/select2/js/select2.min.js' %}" type="text/javascript' %}"></script>
+
+<script src="{% static 'website/js/cursor.js' %}" type="text/javascript' %}"></script>
+
+<script src="{% static 'website/plugins/intltelinput/js/intlTelInput.js' %}" type="text/javascript' %}"></script>
+<script src="{% static 'website/plugins/ityped/index.js' %}" type="text/javascript' %}"></script>
+
+<script src="{% static 'website/js/validation.js' %}" type="text/javascript' %}"></script>
+
+<script src="{% static 'website/js/script.js' %}" type="text/javascript' %}"></script>
+<script src="{% static 'website/js/rocket-loader.min.js' %}"></script>
 </body>
+
+<!-- Mirrored from truelysell.dreamstechnologies.com/html/template/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 18 Oct 2024 05:33:37 GMT -->
 </html>
