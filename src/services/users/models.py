@@ -1,9 +1,5 @@
-from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.utils import timezone
 from django_otp.models import Device
 from django_resized import ResizedImageField
 from phonenumber_field.modelfields import PhoneNumberField
@@ -40,18 +36,29 @@ class User(AbstractUser):
         self.profile_image.delete(save=True)
         super(User, self).delete(*args, **kwargs)
 
+    def get_service_provider_profile(self):
+        if hasattr(self, 'service_provider_profile'):
+            return self.service_provider_profile
+        return None
+
     def save(self, *args, **kwargs):
         if self.is_staff:
             self.user_type = 'admin'
         return super(User, self).save(*args, **kwargs)
 
+    def get_user_wallet(self):
+        if hasattr(self, 'user_wallet'):
+            return self.user_wallet
+        return None
+
 
 class ServiceProvider(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='service_provider_profile', verbose_name="User Account")
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='service_provider_profile',
+                                verbose_name="User Account")
     company_name = models.CharField(
         max_length=255, blank=True, null=True, verbose_name="Company Name")
     bio = models.TextField(
-        blank=True, null=True, help_text="Short description about the service provider.",verbose_name="Biography"
+        blank=True, null=True, help_text="Short description about the service provider.", verbose_name="Biography"
     )
     phone_number = models.CharField(
         max_length=20, blank=True, null=True, verbose_name="Phone Number"
@@ -137,16 +144,3 @@ class BlockedUser(models.Model):
 
     def __str__(self):
         return f"{self.user.username} blocked {self.blocked_user.username}"
-
-
-@receiver(post_save, sender=settings.AUTH_USER_MODEL, dispatch_uid="user_registered")
-def on_user_registration(sender, instance, created, **kwargs):
-    """
-    :TOPIC if user creates at any point the statistics model will be initialized
-    :param sender:
-    :param instance:
-    :param created:
-    :param kwargs:
-    :return:
-    """
-    pass

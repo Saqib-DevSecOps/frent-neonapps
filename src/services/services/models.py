@@ -5,7 +5,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django_ckeditor_5.fields import CKEditor5Field
 
-from src.services.users.models import User
+from src.services.users.models import User, ServiceProvider
 
 
 class ServiceCategory(models.Model):
@@ -34,7 +34,7 @@ class ServiceCategory(models.Model):
 class Service(models.Model):
     """Represents a service provided by service providers"""
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
-    provider = models.ForeignKey(User, on_delete=models.CASCADE, related_name='services')
+    provider = models.ForeignKey(ServiceProvider, on_delete=models.CASCADE, related_name='services')
     title = models.CharField(max_length=255, help_text="Service title (max 255 characters).")
     slug = models.SlugField(max_length=255, unique=True, help_text="Unique slug for the service.")
     thumbnail = models.ImageField(upload_to='services/thumbnails/', null=True, blank=True,

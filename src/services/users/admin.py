@@ -26,7 +26,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 
 from .models import (
-    User, BlockedUser
+    User, BlockedUser, ServiceProvider
 )
 
 csrf_protect_m = method_decorator(csrf_protect)
@@ -40,7 +40,7 @@ class UserCustomAdmin(admin.ModelAdmin):
         (None, {'fields': ('username', 'password')}),
         ('Personal info', {'fields': ('profile_image', 'first_name', 'last_name', 'email', 'phone_number')}),
         ('Permissions', {
-            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
+            'fields': ('is_active', 'is_staff', 'is_superuser','user_type', 'groups', 'user_permissions'),
         }),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
@@ -214,7 +214,23 @@ class BlockedUserAdmin(admin.ModelAdmin):
     ordering = ('-created_at',)
 
 
+class ServiceProviderAdmin(admin.ModelAdmin):
+    list_display = ('user', 'company_name', 'average_rating', 'total_reviews', 'created_at', 'updated_at')
+    search_fields = ('user__username', 'company_name')
+    list_filter = ('created_at', 'updated_at')
+    date_hierarchy = 'created_at'
+    ordering = ('-created_at',)
+
+
 # CUSTOM USER
+
+@admin.register(ServiceProvider)
+class ServiceProviderAdmin(admin.ModelAdmin):
+    list_display = ('user', 'company_name', 'average_rating', 'total_reviews', 'created_at', 'updated_at')
+    search_fields = ('user__username', 'company_name')
+    list_filter = ('created_at', 'updated_at')
+    date_hierarchy = 'created_at'
+    ordering = ('-created_at',)
 
 
 admin.site.register(BlockedUser, BlockedUserAdmin)
