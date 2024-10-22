@@ -26,7 +26,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 
 from .models import (
-    User, BlockedUser, ServiceProvider
+    User, BlockedUser, ServiceProvider, Address, UserImages
 )
 
 csrf_protect_m = method_decorator(csrf_protect)
@@ -37,12 +37,18 @@ class UserCustomAdmin(admin.ModelAdmin):
     add_form_template = 'admin/auth/user/add_form.html'
     change_user_password_template = None
     fieldsets = (
-        (None, {'fields': ('username', 'password')}),
-        ('Personal info', {'fields': ('profile_image', 'first_name', 'last_name', 'email', 'phone_number')}),
-        ('Permissions', {
-            'fields': ('is_active', 'is_staff', 'is_superuser','user_type', 'groups', 'user_permissions'),
+        (None, {
+            'fields': ('username', 'email', 'password')
         }),
-        ('Important dates', {'fields': ('last_login', 'date_joined')}),
+        ('Personal Info', {
+            'fields': ('first_name', 'last_name', 'profile_image', 'bio', 'phone_number')
+        }),
+        ('Permissions', {
+            'fields': ('user_type', 'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')
+        }),
+        ('Important Dates', {
+            'fields': ('last_login', 'date_joined')
+        })
     )
     filter_horizontal = ('groups', 'user_permissions',)
     list_display = [
@@ -206,35 +212,36 @@ class UserCustomAdmin(admin.ModelAdmin):
         return super().response_add(request, obj, post_url_continue)
 
 
-class BlockedUserAdmin(admin.ModelAdmin):
-    list_display = ('user', 'blocked_user', 'reason', 'created_at', 'updated_at')
-    search_fields = ('user__username', 'blocked_user__username')
-    list_filter = ('created_at', 'updated_at')
-    date_hierarchy = 'created_at'
-    ordering = ('-created_at',)
-
-
-class ServiceProviderAdmin(admin.ModelAdmin):
-    list_display = ('user', 'company_name', 'average_rating', 'total_reviews', 'created_at', 'updated_at')
-    search_fields = ('user__username', 'company_name')
-    list_filter = ('created_at', 'updated_at')
-    date_hierarchy = 'created_at'
-    ordering = ('-created_at',)
-
-
-# CUSTOM USER
-
 @admin.register(ServiceProvider)
 class ServiceProviderAdmin(admin.ModelAdmin):
-    list_display = ('user', 'company_name', 'average_rating', 'total_reviews', 'created_at', 'updated_at')
-    search_fields = ('user__username', 'company_name')
-    list_filter = ('created_at', 'updated_at')
-    date_hierarchy = 'created_at'
-    ordering = ('-created_at',)
+    list_display = ('user', 'company_name', 'phone_number', 'verified', 'status')
+    search_fields = ('user__username', 'company_name', 'phone_number')
+    list_filter = ('verified', 'status')
+    readonly_fields = ('created_at', 'updated_at')
 
 
-admin.site.register(BlockedUser, BlockedUserAdmin)
-admin.site.register(User, UserCustomAdmin)
-admin.site.site_header = "Root Access"
-admin.site.site_title = "APP"
-admin.site.index_title = "Dashboard"
+@admin.register(Address)
+class AddressAdmin(admin.ModelAdmin):
+    list_display = ('user', 'address', 'city', 'region', 'country', 'zip_code')
+    search_fields = ('user__username', 'address', 'zip_code')
+    list_filter = ('city', 'region', 'country')
+    readonly_fields = ('created_at', 'updated_at')
+
+
+@admin.register(BlockedUser)
+class BlockedUserAdmin(admin.ModelAdmin):
+    list_display = ('user', 'blocked_user', 'created_at')
+    search_fields = ('user__username', 'blocked_user__username')
+    readonly_fields = ('created_at', 'updated_at')
+    list_filter = ('created_at',)
+
+
+@admin.register(UserImages)
+class UserImagesAdmin(admin.ModelAdmin):
+    list_display = ('user', 'created_at')
+    search_fields = ('user__username',)
+    readonly_fields = ('created_at',)
+
+
+# Register the admin classes
+admin.site.register(User, UserAdmin)

@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django_filters',
     'phonenumber_field',
     'django_ckeditor_5',
+    'cities_light',
 
     # WEB APPS
     'allauth',

@@ -1,3 +1,4 @@
+from cities_light.models import City, Region, Country
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django_otp.models import Device
@@ -18,6 +19,7 @@ class User(AbstractUser):
         upload_to='users/images/profiles/', null=True, blank=True, size=[250, 250], quality=75, force_format='PNG',
         help_text='size of logo must be 250*250 and format must be png image file', crop=['middle', 'center']
     )
+    bio = models.TextField(blank=True, null=True, help_text="Short description about the user.")
     user_type = models.CharField(max_length=20, choices=USER_TYPES, default='service_seeker')
     phone_number = PhoneNumberField(null=True, blank=True, unique=True)
 
@@ -57,9 +59,7 @@ class ServiceProvider(models.Model):
                                 verbose_name="User Account")
     company_name = models.CharField(
         max_length=255, blank=True, null=True, verbose_name="Company Name")
-    bio = models.TextField(
-        blank=True, null=True, help_text="Short description about the service provider.", verbose_name="Biography"
-    )
+
     phone_number = models.CharField(
         max_length=20, blank=True, null=True, verbose_name="Phone Number"
     )
@@ -69,9 +69,7 @@ class ServiceProvider(models.Model):
     website = models.URLField(
         blank=True, null=True, verbose_name="Website"
     )
-    image = models.ImageField(
-        upload_to='service_providers/', blank=True, null=True, verbose_name="Profile Image"
-    )
+
     rating = models.DecimalField(
         max_digits=3, decimal_places=2, default=0.00, verbose_name="Average Rating"
     )
@@ -122,6 +120,27 @@ class ServiceProvider(models.Model):
         ordering = ['-created_at']
 
 
+class Address(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+
+    address = models.CharField(max_length=255, blank=True, null=True)
+    city = models.ForeignKey(City, on_delete=models.SET_NULL, blank=True, null=True, related_name="user_profiles")
+    region = models.ForeignKey(Region, on_delete=models.SET_NULL, blank=True, null=True, related_name="user_profiles")
+    country = models.ForeignKey(Country, on_delete=models.SET_NULL, blank=True, null=True, related_name="user_profiles")
+    zip_code = models.CharField(max_length=20, blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.user.username
+
+    class Meta:
+        verbose_name = 'User Profile'
+        verbose_name_plural = 'User Profiles'
+        ordering = ['-created_at']
+
+
 class BlockedUser(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='blocked_users',
@@ -144,3 +163,20 @@ class BlockedUser(models.Model):
 
     def __str__(self):
         return f"{self.user.username} blocked {self.blocked_user.username}"
+
+
+class UserImages(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='images')
+    image = ResizedImageField(
+        upload_to='users/images/', size=[800, 800], quality=75, force_format='PNG',
+        help_text='size of logo must be 800*800 and format must be png image file', crop=['middle', 'center']
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.username
+
+    class Meta:
+        verbose_name = 'User Image'
+        verbose_name_plural = 'User Images'
+        ordering = ['-created_at']
