@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load custom_tags %}
+
+{% block subtitle %}
+    Subscriptions
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-12">
+            <form method="get">
+                <div class="input-group mb-3">
+                    {{ filter_form }}
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fa fa-search"></i> Search
+                        </button>
+                        <a href="{% url 'payments:subscription-list' %}" class="btn btn-danger">
+                            <i class="fa fa-paint-brush"></i>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-body">
+
+                    {% if object_list %}
+
+                        <div class="table-responsive">
+                            <table class="table table-hover table-borderless">
+
+                                <thead class="border-bottom">
+                                <tr>
+                                    <th><b><i class="bx bx-user"></i> User</b></th>
+                                    <th><b><i class="bx bx-box"></i> Package</b></th>
+                                    <th><b><i class="bx bx-calendar"></i> Dates</b></th>
+                                    <th><b><i class="bx bx-check"></i> Status</b></th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                {% for object in object_list %}
+                                    <tr>
+                                        <td>
+                                            <a class="text-decoration-none"
+                                               href="{% url 'admins:user-detail' object.user.id %}">
+                                                <b>
+                                                    {{ object.user }}
+                                                </b><br>
+                                                <small>({{ object.user.email }})</small>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            {% if not object.stripe_price %}
+                                                -
+                                            {% else %}
+                                                <b>{{ object.stripe_price.product }}</b><br>
+                                                {{ object.stripe_price.get_real_price }}
+                                                {{ object.stripe_price.currency }}/
+                                                {{ object.stripe_price.recurring_interval }}
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {{ object.subscription_start.date }}
+                                            - {{ object.subscription_end.date }}
+                                        </td>
+                                        <td>
+                                        <span class="badge bg-{{ object.subscription_status|get_badge }}">
+                                            {{ object.subscription_status }}
+                                        </span>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-danger">
+                            <b>No subscriptions available yet.</b>
+                        </p>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    {% if object_list %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="mt-4">
+                    <ul class="pagination">
+                        {% if object_list.has_previous %}
+                            <li>
+                            <span>
+                                <a href="{% relative_url object_list.previous_page_number 'page' request.GET.urlencode %}">
+                                    Previous
+                                </a>
+                            </span>
+                            </li>
+                        {% endif %}
+                        <li class="">
+                            <span>Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.</span>
+                        </li>
+                        {% if object_list.has_next %}
+                            <li>
+                            <span>
+                                <a href="{% relative_url object_list.next_page_number 'page' request.GET.urlencode %}">
+                                    Next
+                                </a>
+                            </span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(function () {
+
+            $('label').hide();
+            $('input').addClass('form-control bg-inverse bg-opacity-5');
+            $('select').addClass('form-control');
+
+            $("#id_subscription_status option:first").text("-- Subscription status --");
+        });
+    </script>
+{% endblock %}
+

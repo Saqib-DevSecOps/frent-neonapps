@@ -1,23 +1,53 @@
-from django.contrib import admin
 from .models import Wallet, Transaction, Charge
-
+from django.contrib import admin
 
 @admin.register(Wallet)
 class WalletAdmin(admin.ModelAdmin):
-    list_display = ('user', 'balance_available', 'balance_pending', 'total_amounts', 'created_on', 'updated_on')
-    search_fields = ('user__username', 'user__email')
-    readonly_fields = (
-    'created_on', 'updated_on', 'balance_available', 'balance_pending', 'total_amounts', 'total_deposits',
-    'total_earnings', 'total_withdrawals', 'outstanding_charges')
-    list_filter = ('created_on',)
+    list_display = (
+        'user', 'stripe_account_id', 'stripe_account_email',
+        'stripe_is_active', 'total_amounts', 'total_earnings',
+        'balance_available', 'connect_available_balance', 'created_on'
+    )
+    list_filter = ('stripe_is_active', 'stripe_account_country')
+    search_fields = ('user__username', 'stripe_account_email', 'stripe_account_id')
+    readonly_fields = ('created_on', 'updated_on')
+    fieldsets = (
+        ('User Information', {
+            'fields': ('user', 'description')
+        }),
+        ('Stripe Details', {
+            'fields': (
+                'stripe_account_id', 'stripe_account_type',
+                'stripe_account_country', 'stripe_account_email',
+                'stripe_description', 'stripe_is_active'
+            )
+        }),
+        ('Overall Report', {
+            'fields': (
+                'total_amounts', 'total_deposits', 'total_earnings',
+                'total_withdrawals'
+            )
+        }),
+        ('Balance Report', {
+            'fields': (
+                'balance_available', 'balance_pending',
+                'outstanding_charges'
+            )
+        }),
+        ('Connect Report', {
+            'fields': (
+                'connect_available_balance',
+                'connect_available_balance_currency',
+                'connect_pending_balance',
+                'connect_pending_balance_currency'
+            )
+        }),
+        ('Timestamps', {
+            'fields': ('created_on', 'updated_on')
+        }),
+    )
+    ordering = ('-created_on',)
 
-    def get_readonly_fields(self, request, obj=None):
-        """
-        Make all fields read-only when editing an existing object.
-        """
-        if obj:
-            return self.readonly_fields + ('user',)
-        return self.readonly_fields
 
 
 @admin.register(Transaction)

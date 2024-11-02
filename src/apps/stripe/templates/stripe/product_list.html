@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load custom_tags %}
+
+{% block subtitle %}
+    Packages
+{% endblock %}
+
+{% block content %}
+
+    <div class="row mb-4">
+        <div class="col-sm-12 text-right">
+            <a href="{% url 'payments:product-refresh' %}" class="bg-soft-primary text-primary btn float-right">
+                <i class="bx bx-revision"></i> Update
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        {% if object_list %}
+            {% for object in object_list %}
+
+                <div class="col-xl-4 col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    {% if object.image %}
+                                        <img src="{{ object.image }}"
+                                             alt="logo" class="rounded-circle" height="100" width="100">
+                                    {% else %}
+                                        <img src="https://placehold.co/64"
+                                             alt="logo" class="rounded-circle" height="100" width="100">
+                                    {% endif %}
+                                </div>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <div class="flex-grow-1 ms-3">
+                                    <h4 class="mb-0">
+                                        <b><a href="#">{{ object.name }}</a></b>
+                                    </h4>
+                                    <p class="mb-0">{{ object.description }}</p>
+                                    <h3 class="mb-0 text-muted mt-2">
+                                        {% for price in object.get_prices %}
+                                            <b>€ {{ price.get_real_price }}/{{ price.recurring_interval }}</b> &nbsp;
+                                        {% endfor %}
+
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="px-4 py-3 border-top">
+                            <ul class="list-inline mb-0">
+                                <li class="list-inline-item me-3">
+                                    {% if object.active %}
+                                        <span class="badge text-white bg-success">Approved</span>
+                                    {% else %}
+                                        <span class="badge text-white bg-danger">Not Approved</span>
+                                    {% endif %}
+                                </li>
+                                <li class="list-inline-item me-3">
+                                    <i class="bx bx-calendar me-1"></i> {{ object.created|date:"d M, Y" }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+        {% else %}
+
+            <div class=" col-12">
+                <span class="text-danger"><b>Product not Found</b></span>
+
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+

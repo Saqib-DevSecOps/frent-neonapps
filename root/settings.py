@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     'src.services.reporting.apps.ReportingConfig',
     'src.services.wallet.apps.WalletConfig',
     'src.services.chat.apps.ChatConfig',
+    'src.apps.stripe.apps.StripeConfig',
 
     # WEB APPS
     'src.web.website',
@@ -85,16 +86,6 @@ INSTALLED_APPS = [
 # MAILCHIMP SETTINGS
 MAILCHIMP_API_KEY = env('MAILCHIMP_API_KEY')
 MAILCHIMP_FROM_EMAIL = env('MAILCHIMP_FROM_EMAIL')
-EMAIL_HOST = "smtp.mandrillapp.com"
-
-# GOOGLE SETTINGS
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_USE_TLS = True
-EMAIL_PORT = "587"
-EMAIL_HOST = "smtp.gmail.com"
-DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 MIDDLEWARE = [
     # DJANGO MIDDLEWARES
@@ -246,20 +237,7 @@ SOCIALACCOUNT_PROVIDERS = {
 """ MFA SETUP --------------------------------------------------------------------------------"""
 MFA_ADAPTER = "allauth.mfa.adapter.DefaultMFAAdapter"
 
-""" GMAIL SMTP ---------------------------------------------------------------------------------"""
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# SMTP  configuration
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
-
-EMAIL_HOST_USER = 'gwtw.mhn@gmail.com'
-EMAIL_HOST_PASSWORD = 'jyrq jbmd grlu vvzs'
-
-# Default from email address
-DEFAULT_FROM_EMAIL = 'exarth@info.com'  # Replace with the email address to appear in the 'from' field
-
+"""RESTAUTH SETUP --------------------------------------------------------------------------------"""
 ACCOUNT_FORMS = {
     'login': 'src.web.accounts.forms.CustomLoginForm',
     'signup': 'src.web.accounts.forms.CustomSignUpForm',
@@ -267,6 +245,19 @@ ACCOUNT_FORMS = {
 
 """  ACCOUNT ADAPTER Modify Login/Signup Redirect UR----------------------------------------------------"""
 ACCOUNT_ADAPTER = "src.web.accounts.adapters.MyAccountAdapter"
+
+""" PAYMENTS SETUP --------------------------------------------------------------------------------------------------"""
+PAYMENTS_ENABLED = env('PAYMENTS_ENABLED')
+if PAYMENTS_ENABLED:
+
+    STRIPE_PUBLIC_KEY = env('STRIPE_PUBLIC_KEY_LIVE')
+    STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY_LIVE')
+    STRIPE_WEBHOOK_SECRET = env('STRIPE_WEBHOOK_SECRET_LIVE')
+
+else:
+    STRIPE_PUBLIC_KEY = env('STRIPE_PUBLIC_KEY')
+    STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
+    STRIPE_WEBHOOK_SECRET = env('STRIPE_WEBHOOK_SECRET')
 
 """       CKEDITOR SETUP --------------------------------------------------------------------------------"""
 """ DJANGO-CKEDITOR-5 """

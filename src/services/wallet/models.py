@@ -2,14 +2,20 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.db import models
-
 from src.services.users.models import User
 
 
-# Create your models here.
 class Wallet(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_wallet')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user')
     description = models.TextField(null=True, blank=True)
+
+    # STRIPE
+    stripe_account_id = models.CharField(max_length=255, null=True, blank=True)
+    stripe_account_type = models.CharField(max_length=255, null=True, blank=True)
+    stripe_account_country = models.CharField(max_length=255, null=True, blank=True)
+    stripe_account_email = models.EmailField(null=True, blank=False)
+    stripe_description = models.JSONField(null=True, blank=True)
+    stripe_is_active = models.BooleanField(default=False)
 
     # OVERALL REPORT
     total_amounts = models.FloatField(default=0)
@@ -22,6 +28,12 @@ class Wallet(models.Model):
     balance_pending = models.FloatField(default=0)
     outstanding_charges = models.FloatField(default=0)
 
+    # CONNECT REPORT
+    connect_available_balance = models.FloatField(default=0)
+    connect_available_balance_currency = models.CharField(max_length=3, null=True, blank=True)
+    connect_pending_balance = models.FloatField(default=0)
+    connect_pending_balance_currency = models.CharField(max_length=3, null=True, blank=True)
+
     # DATES
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -33,11 +45,22 @@ class Wallet(models.Model):
     def __str__(self):
         return str(self.pk)
 
+    def is_stripe_connected(self):
+        return self.stripe_account_id is not None
+
+    def is_stripe_account_active(self):
+        if not self.is_stripe_connected() or not self.stripe_is_active:
+            return False
+        return True
+
     def get_available_balance(self):
         return self.balance_available
 
     def get_pending_balance(self):
         return self.balance_pending
+
+    def get_connect_balance(self):
+        return self.connect_available_balance
 
 
 class Transaction(models.Model):
