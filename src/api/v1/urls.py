@@ -6,5 +6,5 @@ app_name = 'v1'
 urlpatterns = [
     path('home/', HomeAPIView.as_view(), name='home'),
     path('services/', ServiceListView.as_view(), name='service-list'),
-    path('services/<int:id>/', ServiceDetailView.as_view(), name='service-detail'),
+    path('services/<str:pk>/', ServiceDetailView.as_view(), name='service-detail'),
 ]

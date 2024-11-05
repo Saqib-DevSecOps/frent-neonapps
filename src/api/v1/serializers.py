@@ -14,7 +14,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class ServiceCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceCategory
-        fields = ['name', 'thumbnail', 'description', 'is_active']
+        fields = ['id','name', 'thumbnail', 'description', 'is_active']
 
 
 class ServiceHomeSerializer(serializers.ModelSerializer):
@@ -22,7 +22,7 @@ class ServiceHomeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Service
-        fields = ['title', 'provider', 'thumbnail', 'description', 'price', 'discount', 'category', 'is_active']
+        fields = ['id','title', 'provider', 'thumbnail', 'description', 'price', 'discount', 'category', 'is_active']
 
 
 class ServiceHomeListSerializer(serializers.Serializer):
@@ -36,7 +36,7 @@ class ServiceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Service
-        fields = ['title', 'provider', 'thumbnail', 'description', 'content', 'price', 'discount', 'category',
+        fields = ['id','title', 'provider', 'thumbnail', 'description', 'content', 'price', 'discount', 'category',
                   'is_active']
 
 
@@ -67,6 +67,6 @@ class ServiceDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
         fields = [
-            'title', 'provider', 'thumbnail', 'description', 'content', 'price', 'discount',
+            'id','title', 'provider', 'thumbnail', 'description', 'content', 'price', 'discount',
             'category', 'is_active', 'images', 'availability_slots', 'reviews'
         ]

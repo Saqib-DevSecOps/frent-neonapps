@@ -99,8 +99,14 @@ MIDDLEWARE = [
     'django_browser_reload.middleware.BrowserReloadMiddleware',
 
     # YOUR MIDDLEWARES
-    "allauth.account.middleware.AccountMiddleware",
+    # "allauth.account.middleware.AccountMiddleware",
 ]
+
+# settings.py
+CITIES_LIGHT_TRANSLATION_LANGUAGES = ['en']  # Load English translations only
+CITIES_LIGHT_INCLUDE_COUNTRIES = ['PK', ]  # Load data only for Pakistan and Turkey
+CITIES_LIGHT_INCLUDE_CITY_TYPES = ['PPL', 'PPLA', 'PPLC']  # Include populated places and capitals
+
 
 AUTHENTICATION_BACKENDS = (
     # DJANGO BACKENDS

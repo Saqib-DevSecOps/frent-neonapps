@@ -1,4 +1,4 @@
-from cities_light.models import City, Region, Country
+from cities_light.models import City, Region, Country,SubRegion
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django_otp.models import Device
@@ -54,6 +54,7 @@ class User(AbstractUser):
         return None
 
 
+
 class ServiceProvider(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='service_provider_profile',
                                 verbose_name="User Account")
@@ -63,8 +64,20 @@ class ServiceProvider(models.Model):
     phone_number = models.CharField(
         max_length=20, blank=True, null=True, verbose_name="Phone Number"
     )
+    city = models.ForeignKey(
+        City, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="City"
+    )
+    sub_region = models.ForeignKey(
+        SubRegion, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Sub-Region"
+    )
+    region = models.ForeignKey(
+        Region, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Region/State"
+    )
+    country = models.ForeignKey(
+        Country, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Country"
+    )
     address = models.CharField(
-        max_length=255, blank=True, null=True, verbose_name="Address"
+        max_length=255, blank=True, null=True, verbose_name="Enter Address"
     )
     website = models.URLField(
         blank=True, null=True, verbose_name="Website"

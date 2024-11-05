@@ -1,15 +1,17 @@
 # views.py
 from django.db import models
 from django.db.models import Avg, Count
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from src.services.services.models import Service, ServiceCategory
+from .filters import ServiceFilter
 from .serializers import (
     ServiceHomeListSerializer,
     ServiceDetailSerializer,
-    ServiceSerializer, ServiceCategorySerializer
+    ServiceSerializer, ServiceCategorySerializer, ServiceHomeSerializer
 )
 
 
@@ -30,9 +32,9 @@ class HomeAPIView(ListAPIView):
         top_categories = ServiceCategory.objects.filter(is_active=True)[:5]
 
         data = {
-            'top_services': ServiceHomeListSerializer(top_services, many=True).data,
-            'new_services': ServiceHomeListSerializer(new_services, many=True).data,
-            'top_categories': ServiceCategorySerializer(top_categories, many=True).data,
+            'top_services': top_services,
+            'new_services': new_services,
+            'top_categories': top_categories,
         }
         return data
 
@@ -41,9 +43,13 @@ class HomeAPIView(ListAPIView):
         serializer = self.get_serializer(queryset)
         return Response(serializer.data)
 
+
+
 class ServiceListView(generics.ListAPIView):
     queryset = Service.objects.filter(is_active=True)
     serializer_class = ServiceSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ServiceFilter
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 
