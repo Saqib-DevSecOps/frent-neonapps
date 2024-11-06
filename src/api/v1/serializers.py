@@ -2,7 +2,7 @@
 from cities_light.models import SubRegion, Region, Country
 from rest_framework import serializers
 from src.services.services.models import ServiceCategory, Service, ServiceImage, ServiceAvailability, ServiceReview, \
-    ServiceRequest
+    ServiceRequest, ServiceCurrency, ServiceLocation
 from src.services.users.models import User
 
 """ ---------------------Helper Serializers--------------------- """
@@ -41,10 +41,43 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return obj.get_provider_location()
 
 
+""" ---------------------Service Serializers--------------------- """
+
+
 class ServiceCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceCategory
         fields = ['id', 'name', 'thumbnail', 'description', 'is_active']
+
+
+class ServiceCurrentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceCurrency
+        fields = ['id', 'name']
+
+
+class ServiceImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceImage
+        fields = ['id', 'image']
+
+
+class ServiceAvailabilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceAvailability
+        fields = ['id', 'day_of_week', 'start_time', 'end_time', 'timezone', 'is_active']
+
+
+class ServiceLocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceLocation
+        fields = ['id', 'address', 'city', 'region', 'country']
+
+
+class ServiceReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceReview
+        fields = ['id', 'service', 'reviewer', 'rating', 'comment', 'created_at']
 
 
 class ServiceHomeSerializer(serializers.ModelSerializer):
@@ -52,11 +85,12 @@ class ServiceHomeSerializer(serializers.ModelSerializer):
     category = serializers.SerializerMethodField()
     rating = serializers.SerializerMethodField()
     schedule = serializers.SerializerMethodField()
+    currency = ServiceCurrency()
 
     class Meta:
         model = Service
-        fields = ['id', 'title', 'thumbnail', 'provider', 'category', 'schedule', 'description', 'price', 'discount',
-                  'rating',
+        fields = ['id', 'title', 'thumbnail', 'provider', 'service_type', 'category', 'schedule', 'description',
+                  'price_type', 'price', 'discount', 'currency', 'rating',
                   'is_active']
 
     def get_rating(self, obj):
@@ -92,8 +126,8 @@ class ServiceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Service
-        fields = ['id', 'title', 'provider', 'category', 'schedule', 'description', 'price', 'discount', 'rating',
-                  'is_active']
+        fields = ['id', 'title', 'provider', 'thumbnail', 'category', 'service_type', 'schedule', 'description',
+                  'price_type', 'price', 'discount', 'currency', 'rating', 'is_active']
 
     def get_rating(self, obj):
         return obj.get_total_rating()
@@ -114,33 +148,30 @@ class ServiceSerializer(serializers.ModelSerializer):
         return data
 
 
-class ServiceImageSerializer(serializers.ModelSerializer):
+class ServiceCreateUpdateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ServiceImage
-        fields = ['id', 'image']
+        model = Service
+        fields = ['title', 'category', 'service_type', 'thumbnail', 'description', 'content', 'price_type', 'price',
+                  'discount', 'currency', 'is_active']
 
-
-class ServiceAvailabilitySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ServiceAvailability
-        fields = ['id', 'day_of_week', 'start_time', 'end_time', 'timezone', 'is_active']
-
-
-class ServiceReviewSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ServiceReview
-        fields = ['id', 'service', 'reviewer', 'rating', 'comment', 'created_at']
+    def validate_title(self, value):
+        request = self.context.get("request")
+        if Service.objects.filter(provider=request.user, title=value).exists():
+            raise serializers.ValidationError("You already have a service with this title.")
+        return value
 
 
 class ServiceDetailSerializer(serializers.ModelSerializer):
     provider = UserProfileSerializer()
-    images = ServiceImageSerializer(many=True, read_only=True)  # Removed the source argument
+    images = ServiceImageSerializer(many=True, read_only=True)
     availability_slots = ServiceAvailabilitySerializer(many=True, read_only=True)
     reviews = ServiceReviewSerializer(many=True, read_only=True)
+    currency = ServiceCurrency()
 
     class Meta:
         model = Service
         fields = [
-            'id', 'title', 'provider', 'thumbnail', 'description', 'content', 'price', 'discount',
+            'id', 'title', 'provider', 'service_type', 'thumbnail', 'description', 'content', 'price_type', 'price',
+            'discount', 'currency',
             'category', 'is_active', 'images', 'availability_slots', 'reviews'
         ]

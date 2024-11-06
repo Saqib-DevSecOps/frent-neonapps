@@ -1,5 +1,6 @@
 import uuid
 
+from cities_light.models import City, Region, Country
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.template.defaultfilters import slugify
@@ -31,7 +32,40 @@ class ServiceCategory(models.Model):
         ]
 
 
+class ServiceCurrency(models.Model):
+    """Service Currency Model"""
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+    name = models.CharField(max_length=100, unique=True, help_text="Unique currency name.")
+    code = models.CharField(max_length=3, unique=True, help_text="Unique currency code.")
+    symbol = models.CharField(max_length=5, unique=True, help_text="Unique currency symbol.")
+    description = models.TextField(blank=True, null=True, help_text="Small description of the currency.")
+    is_active = models.BooleanField(default=True, help_text="Indicates if the currency is currently active.")
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Service Currencies"
+        ordering = ['name']
+        constraints = [
+            models.UniqueConstraint(fields=['name'], name="unique_service_currency_name")
+        ]
+
+
 class Service(models.Model):
+    PRICE_TYPE_CHOICES = [
+        ('fixed', 'Fixed'),
+        ('hourly', 'Hourly'),
+    ]
+    SERVICE_TYPE_CHOICES = [
+        ('onside', 'Onsite'),
+        ('online', 'Online'),
+        ('both', 'Both'),
+    ]
+
     """Represents a service provided by service providers"""
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     provider = models.ForeignKey(User, on_delete=models.CASCADE, related_name='services')
@@ -39,18 +73,26 @@ class Service(models.Model):
     slug = models.SlugField(max_length=255, unique=True, help_text="Unique slug for the service.")
     thumbnail = models.ImageField(upload_to='services/thumbnails/', null=True, blank=True,
                                   help_text='Recommended size: 250x250.')
+    category = models.ForeignKey(ServiceCategory, on_delete=models.SET_NULL, null=True, blank=True,
+                                 related_name='services', help_text="The category this service belongs to.")
+    service_type = models.CharField(max_length=10, choices=SERVICE_TYPE_CHOICES, default='onside',
+                                    help_text="The type of service (onsite, online, or both).")
     description = models.TextField(null=True, blank=True, help_text="Small description for your project")
     content = CKEditor5Field(
         'Text', config_name='extends', null=True, blank=True, help_text="Full description for your project"
     )
 
+    price_type = models.CharField(max_length=10, choices=PRICE_TYPE_CHOICES, default='fixed',
+                                  help_text="The type of pricing for the service.")
     price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0.01)],
                                 help_text="Service price (up to 10 digits and 2 decimal places).")
+    currency = models.ForeignKey(ServiceCurrency, on_delete=models.SET_NULL, null=True, blank=True,
+                                 related_name='services',
+                                 help_text="The currency for the service price(e.g.,Lira, USD, EUR, etc.).")
     discount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00,
                                    validators=[MinValueValidator(0.00), MaxValueValidator(99.00)]
                                    )
-    category = models.ForeignKey(ServiceCategory, on_delete=models.SET_NULL, null=True, blank=True,
-                                 related_name='services', help_text="The category this service belongs to.")
+
     is_active = models.BooleanField(default=True, help_text="Indicates if the service is available for booking.")
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -126,6 +168,30 @@ class ServiceAvailability(models.Model):
 
     def __str__(self):
         return f"{self.service.title} available on {self.day_of_week} from {self.start_time} to {self.end_time}"
+
+
+class ServiceLocation(models.Model):
+    """Service location for providers"""
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+    service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='locations')
+    address = models.CharField(max_length=255, help_text="Service location address.")
+    city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True, related_name="service_locations")
+    region = models.ForeignKey(Region, on_delete=models.SET_NULL, null=True, blank=True,
+                               related_name="service_locations")
+    country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True,
+                                related_name="service_locations")
+    zip_code = models.CharField(max_length=20, blank=True, null=True)
+
+    class Meta:
+        verbose_name_plural = "Service Locations"
+        ordering = ['city', 'region', 'country']
+        constraints = [
+            models.UniqueConstraint(fields=['service', 'address', 'city', 'region', 'country'],
+                                    name="unique_service_location")
+        ]
+
+    def __str__(self):
+        return f"{self.service.title} located at {self.address}, {self.city}, {self.region}, {self.country}"
 
 
 class ServiceReview(models.Model):
