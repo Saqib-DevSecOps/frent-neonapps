@@ -1,6 +1,5 @@
 from django.urls import path, include
 from .views import LogoutView, CrossAuthView, UserUpdateView
-
 app_name = 'users'
 urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),

@@ -245,7 +245,7 @@ MFA_ADAPTER = "allauth.mfa.adapter.DefaultMFAAdapter"
 
 """RESTAUTH SETUP --------------------------------------------------------------------------------"""
 ACCOUNT_FORMS = {
-    'login': 'src.web.accounts.forms.CustomLoginForm',
+    # 'login': 'src.web.accounts.forms.CustomLoginForm',
     'signup': 'src.web.accounts.forms.CustomSignUpForm',
 }
 
