@@ -71,7 +71,7 @@ class ServiceAvailabilitySerializer(serializers.ModelSerializer):
 class ServiceLocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceLocation
-        fields = ['id', 'address', 'city', 'region', 'country']
+        fields = ['id', 'address', 'city', 'region', 'country', 'latitude', 'longitude']
 
 
 class ServiceReviewSerializer(serializers.ModelSerializer):

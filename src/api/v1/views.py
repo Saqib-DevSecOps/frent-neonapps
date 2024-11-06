@@ -112,7 +112,8 @@ class ProviderServiceImageUploadCreateAPIView(CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        service = get_object_or_404(Service.objects.filter(provider=self.request.user), pk=self.kwargs.get('service_pk'))
+        service = get_object_or_404(Service.objects.filter(provider=self.request.user),
+                                    pk=self.kwargs.get('service_pk'))
         serializer.save(service=service)
         return Response(status=status.HTTP_201_CREATED, data={'message': 'Image uploaded successfully'})
 

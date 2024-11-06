@@ -180,7 +180,11 @@ class ServiceLocation(models.Model):
                                related_name="service_locations")
     country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True,
                                 related_name="service_locations")
-    zip_code = models.CharField(max_length=20, blank=True, null=True)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True,
+                                   help_text="Latitude of the service location.")
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True,
+                                    help_text="Longitude of the service location.")
+    is_active = models.BooleanField(default=True, help_text="Is this service location active?")
 
     class Meta:
         verbose_name_plural = "Service Locations"
