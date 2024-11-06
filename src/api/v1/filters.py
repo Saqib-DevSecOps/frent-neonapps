@@ -2,11 +2,16 @@ import django_filters
 from django.db.models import Avg
 from src.services.services.models import Service
 
+
 class ServiceFilter(django_filters.FilterSet):
+    search = django_filters.CharFilter(method='search_services')
     category = django_filters.UUIDFilter(field_name="category__id")
-    location = django_filters.CharFilter(field_name="provider__service_provider_profile__address", lookup_expr='icontains')
-    province = django_filters.CharFilter(field_name="provider__service_provider_profile__region__name", lookup_expr='icontains')
-    sub_region = django_filters.CharFilter(field_name="provider__service_provider_profile__sub_region__name", lookup_expr='icontains')
+    location = django_filters.CharFilter(field_name="provider__service_provider_profile__address",
+                                         lookup_expr='icontains')
+    province = django_filters.CharFilter(field_name="provider__service_provider_profile__region__name",
+                                         lookup_expr='icontains')
+    sub_region = django_filters.CharFilter(field_name="provider__service_provider_profile__sub_region__name",
+                                           lookup_expr='icontains')
     average_rating = django_filters.NumberFilter(method='filter_by_average_rating')
     date = django_filters.CharFilter(method='filter_by_date_and_time')
     start_time = django_filters.TimeFilter(method='filter_by_date_and_time')
@@ -34,3 +39,6 @@ class ServiceFilter(django_filters.FilterSet):
             )
 
         return queryset
+
+    def search_services(self, queryset, name, value):
+        return queryset.filter(title__icontains=value) | queryset.filter(description__icontains=value)
