@@ -1,4 +1,4 @@
-from cities_light.models import City, Region, Country,SubRegion
+from cities_light.models import City, Region, Country, SubRegion
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django_otp.models import Device
@@ -53,6 +53,17 @@ class User(AbstractUser):
             return self.user_wallet
         return None
 
+    def get_provider(self):
+        if hasattr(self, 'service_provider_profile'):
+            return self.service_provider_profile
+        return None
+
+    def get_provider_location(self):
+        if hasattr(self, 'service_provider_profile'):
+            return (f"{self.service_provider_profile.city.name}, "
+                    f"{self.service_provider_profile.region.name},"
+                    f" {self.service_provider_profile.country.name}")
+        return None
 
 
 class ServiceProvider(models.Model):

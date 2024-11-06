@@ -85,6 +85,9 @@ class Service(models.Model):
         total_rating = sum([review.rating for review in reviews])
         return total_rating
 
+    def get_service_schedule(self):
+        return self.availability_slots.filter(is_active=True)
+
 
 class ServiceImage(models.Model):
     """Service Image Model"""
