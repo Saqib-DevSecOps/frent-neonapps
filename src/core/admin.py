@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import (
-    Country, Application
+    Country, Application, Language
 )
 
 
@@ -13,3 +13,8 @@ class ApplicationAdmin(admin.ModelAdmin):
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
     list_display = ('name', 'short_name', 'language', 'currency', 'phone_code', 'is_active', 'created_on')
+
+
+@admin.register(Language)
+class LanguageAdmin(admin.ModelAdmin):
+    list_display = ('name', 'short_name', 'is_active', 'created_on')

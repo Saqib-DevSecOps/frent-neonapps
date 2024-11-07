@@ -35,10 +35,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'profile_image', 'phone_number', 'location']
+        fields = ['id', 'username', 'profile_image', 'location']
 
     def get_location(self, obj):
-        return obj.get_provider_location()
+        if obj.get_provider_location():
+            return obj.get_provider_location()
+        return None
 
 
 """ ---------------------Service Serializers--------------------- """
@@ -178,3 +180,6 @@ class ServiceDetailSerializer(serializers.ModelSerializer):
             'discount', 'currency',
             'category', 'is_active', 'images', 'availability_slots', 'location', 'reviews'
         ]
+
+
+""" ---------------------User Serializers--------------------- """

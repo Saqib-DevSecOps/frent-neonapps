@@ -82,9 +82,21 @@ class Application(models.Model):
     def __str__(self):
         return self.name
 
-    def save(self,  *args, **kwargs):
+    def save(self, *args, **kwargs):
         if Application.objects.exists() and not self.pk:
             raise ValidationError("Only one record allowed.")
         super(Application, self).save(*args, **kwargs)
 
 
+class Language(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    short_name = models.CharField(max_length=2, unique=True, help_text='ISO 639-1')
+    is_active = models.BooleanField(default=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name_plural = 'Languages'
+
+    def __str__(self):
+        return self.name

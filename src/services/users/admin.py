@@ -1,10 +1,3 @@
-from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from django.template.response import TemplateResponse
-from django.urls import reverse
-from django.utils.html import format_html
-from django.utils.http import urlencode
-
 from django.conf import settings
 from django.contrib import admin, messages
 from django.contrib.admin.options import IS_POPUP_VAR
@@ -13,7 +6,6 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import (
     AdminPasswordChangeForm, UserChangeForm, UserCreationForm,
 )
-from django.contrib.auth.models import Group, User
 from django.core.exceptions import PermissionDenied
 from django.db import router, transaction
 from django.http import Http404, HttpResponseRedirect
@@ -26,7 +18,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 
 from .models import (
-    User, BlockedUser, ServiceProvider, Address, UserImages
+    User, BlockedUser, ServiceProvider, Address, UserImages, SocialMedia, Interest, Certification
 )
 
 csrf_protect_m = method_decorator(csrf_protect)
@@ -214,10 +206,24 @@ class UserCustomAdmin(admin.ModelAdmin):
 
 @admin.register(ServiceProvider)
 class ServiceProviderAdmin(admin.ModelAdmin):
-    list_display = ('user', 'company_name', 'phone_number', 'verified', 'status')
+    list_display = ('user', 'company_name', 'phone_number', 'rating', 'total_reviews', 'verified', 'status')
     search_fields = ('user__username', 'company_name', 'phone_number')
     list_filter = ('verified', 'status')
     readonly_fields = ('created_at', 'updated_at')
+
+    # Add actions like bulk update for the ServiceProvider model
+    actions = ['activate_service_provider', 'deactivate_service_provider']
+
+    def activate_service_provider(self, request, queryset):
+        queryset.update(status='active')
+        self.message_user(request, "Selected service providers activated.", messages.SUCCESS)
+
+    def deactivate_service_provider(self, request, queryset):
+        queryset.update(status='inactive')
+        self.message_user(request, "Selected service providers deactivated.", messages.SUCCESS)
+
+    activate_service_provider.short_description = "Activate selected Service Providers"
+    deactivate_service_provider.short_description = "Deactivate selected Service Providers"
 
 
 @admin.register(Address)
@@ -235,6 +241,15 @@ class BlockedUserAdmin(admin.ModelAdmin):
     readonly_fields = ('created_at', 'updated_at')
     list_filter = ('created_at',)
 
+    # Add actions for blocking/unblocking users
+    actions = ['unblock_user']
+
+    def unblock_user(self, request, queryset):
+        queryset.update(is_active=True)
+        self.message_user(request, "Selected users have been unblocked.", messages.SUCCESS)
+
+    unblock_user.short_description = "Unblock selected users"
+
 
 @admin.register(UserImages)
 class UserImagesAdmin(admin.ModelAdmin):
@@ -243,5 +258,26 @@ class UserImagesAdmin(admin.ModelAdmin):
     readonly_fields = ('created_at',)
 
 
-# Register the admin classes
-admin.site.register(User, UserAdmin)
+@admin.register(SocialMedia)
+class SocialMediaAdmin(admin.ModelAdmin):
+    list_display = ('service_provider', 'facebook', 'instagram', 'twitter', 'linkedin')
+    search_fields = ('service_provider__user__username',)
+    readonly_fields = ('facebook', 'instagram', 'twitter', 'linkedin')
+
+
+@admin.register(Interest)
+class InterestAdmin(admin.ModelAdmin):
+    list_display = ('service_provider', 'name', 'description', 'created_at')
+    search_fields = ('service_provider__user__username', 'name')
+    readonly_fields = ('created_at',)
+
+
+@admin.register(Certification)
+class CertificationAdmin(admin.ModelAdmin):
+    list_display = ('service_provider', 'certificate_file', 'is_active', 'created_at')
+    search_fields = ('service_provider__user__username',)
+    readonly_fields = ('created_at', 'updated_at')
+
+
+# Register User with the custom admin
+admin.site.register(User, UserCustomAdmin)
