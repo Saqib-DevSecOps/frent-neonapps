@@ -24,6 +24,7 @@ urlpatterns += [
 """INTERNAL REQUIRED SERVICES --------------------------------------------------------------------------------------"""
 urlpatterns += [
     path('', include('src.services.users.urls',namespace='users')),
+    path('', include('src.services.services.urls',namespace='services')),
 ]
 
 """ EXTERNAL REQUIRED APPS ----------------------------------------------------------------------------------------- """
