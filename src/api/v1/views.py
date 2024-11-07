@@ -100,8 +100,9 @@ class ProviderServiceRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     def get_object(self):
         return get_object_or_404(Service, provider=self.request.user, pk=self.kwargs.get('pk'))
 
-    def perform_destroy(self, instance):
-        instance.delete()
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
         return Response(status=status.HTTP_200_OK, data={'message': 'Service deleted successfully'})
 
 
@@ -126,8 +127,9 @@ class ProviderServiceImageDeleteAPIView(DestroyAPIView):
     def get_object(self):
         return get_object_or_404(ServiceImage, service__provider=self.request.user, pk=self.kwargs.get('pk'))
 
-    def perform_destroy(self, instance):
-        instance.delete()
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
         return Response(status=status.HTTP_200_OK, data={'message': 'Image deleted successfully'})
 
 
@@ -154,8 +156,9 @@ class ServiceAvailabilityUpdateDestroyAPIView(UpdateAPIView, DestroyAPIView):
     def perform_update(self, serializer):
         serializer.save(service=self.get_object())
 
-    def perform_destroy(self, instance):
-        instance.delete()
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
         return Response(status=status.HTTP_200_OK, data={'message': 'Availability slot deleted successfully'})
 
 
@@ -183,8 +186,9 @@ class ServiceLocationUpdateDestroyAPIView(UpdateAPIView, DestroyAPIView):
     def perform_update(self, serializer):
         serializer.save(service=self.get_object())
 
-    def perform_destroy(self, instance):
-        instance.delete()
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
         return Response(status=status.HTTP_200_OK, data={'message': 'Location deleted successfully'})
 
 

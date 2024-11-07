@@ -173,7 +173,7 @@ class ServiceAvailability(models.Model):
 class ServiceLocation(models.Model):
     """Service location for providers"""
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
-    service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='locations')
+    service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='location')
     address = models.CharField(max_length=255, help_text="Service location address.")
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True, related_name="service_locations")
     region = models.ForeignKey(Region, on_delete=models.SET_NULL, null=True, blank=True,
