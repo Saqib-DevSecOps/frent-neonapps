@@ -4,13 +4,13 @@ from dj_rest_auth.views import (
     LogoutView, PasswordChangeView, PasswordResetView, PasswordResetConfirmView,
 )
 from .views import (
-    UserRetrieveChangeAPIView, CustomLoginView, DeactivateUserAPIView, DeleteUserAPIView, GoogleLogin, GoogleConnect,
+    CustomLoginView, DeactivateUserAPIView, DeleteUserAPIView, GoogleLogin, GoogleConnect,
     AppleLogin, AppleConnect
 )
 
 app_name = 'auth'
 urlpatterns = [
-    path('profile/', UserRetrieveChangeAPIView.as_view(), name='user_retrieve_update'),
+    # path('profile/', UserRetrieveChangeAPIView.as_view(), name='user_retrieve_update'),
     path('login/', CustomLoginView.as_view(), name='rest_login'),
     path('logout/', LogoutView.as_view(), name='rest_logout'),
     path('password/change/', PasswordChangeView.as_view(), name='rest_password_change'),

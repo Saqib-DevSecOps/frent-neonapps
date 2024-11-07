@@ -21,6 +21,11 @@ urlpatterns += [
     path('', include('src.apps.whisper.urls')),
 ]
 
+"""INTERNAL REQUIRED SERVICES --------------------------------------------------------------------------------------"""
+urlpatterns += [
+    path('', include('src.services.users.urls',namespace='users')),
+]
+
 """ EXTERNAL REQUIRED APPS ----------------------------------------------------------------------------------------- """
 urlpatterns += [
     path('admin/', admin.site.urls),

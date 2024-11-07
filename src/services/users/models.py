@@ -47,7 +47,6 @@ class User(AbstractUser):
         return None
 
     def get_user_wallet(self):
-        """Helper to get the user wallet if exists"""
         if hasattr(self, 'user_wallet'):
             return self.user_wallet
         return None
@@ -148,7 +147,7 @@ class BlockedUser(models.Model):
         return f"{self.user.username} blocked {self.blocked_user.username}"
 
 
-class UserImages(models.Model):
+class UserImage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='images')
     image = ResizedImageField(
         upload_to='users/images/', size=[800, 800], quality=75, force_format='PNG',
@@ -201,3 +200,18 @@ class ServiceProvider(models.Model):
         verbose_name = "Service Provider"
         verbose_name_plural = "Service Providers"
         ordering = ['-created_at']
+
+    def get_social_media(self):
+        if hasattr(self, 'social_media'):
+            return self.social_media
+        return None
+
+    def get_interests(self):
+        if hasattr(self, 'interests'):
+            return self.interests.all()
+        return None
+
+    def get_certifications(self):
+        if hasattr(self, 'certifications'):
+            return self.certifications.all()
+        return None

@@ -18,7 +18,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 
 from .models import (
-    User, BlockedUser, ServiceProvider, Address, UserImages, SocialMedia, Interest, Certification
+    User, BlockedUser, ServiceProvider, Address, UserImage, SocialMedia, Interest, Certification
 )
 
 csrf_protect_m = method_decorator(csrf_protect)
@@ -251,7 +251,7 @@ class BlockedUserAdmin(admin.ModelAdmin):
     unblock_user.short_description = "Unblock selected users"
 
 
-@admin.register(UserImages)
+@admin.register(UserImage)
 class UserImagesAdmin(admin.ModelAdmin):
     list_display = ('user', 'created_at')
     search_fields = ('user__username',)
@@ -262,7 +262,6 @@ class UserImagesAdmin(admin.ModelAdmin):
 class SocialMediaAdmin(admin.ModelAdmin):
     list_display = ('service_provider', 'facebook', 'instagram', 'twitter', 'linkedin')
     search_fields = ('service_provider__user__username',)
-    readonly_fields = ('facebook', 'instagram', 'twitter', 'linkedin')
 
 
 @admin.register(Interest)

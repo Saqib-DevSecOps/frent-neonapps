@@ -2,7 +2,7 @@
 from cities_light.models import SubRegion, Region, Country
 from rest_framework import serializers
 from src.services.services.models import ServiceCategory, Service, ServiceImage, ServiceAvailability, ServiceReview, \
-    ServiceRequest, ServiceCurrency, ServiceLocation
+    ServiceCurrency, ServiceLocation
 from src.services.users.models import User
 
 """ ---------------------Helper Serializers--------------------- """
