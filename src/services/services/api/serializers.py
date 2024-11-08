@@ -54,9 +54,17 @@ class ServiceLocationSerializer(serializers.ModelSerializer):
 
 
 class ServiceReviewSerializer(serializers.ModelSerializer):
+    reviewer = UserProfileSerializer(read_only=True)  # Make reviewer read-only
+
     class Meta:
         model = ServiceReview
         fields = ['id', 'service', 'reviewer', 'rating', 'comment', 'created_at']
+        read_only_fields = ['service', 'reviewer', 'created_at']
+
+    def validate(self, data):
+        if data['rating'] < 1 or data['rating'] > 5:
+            raise serializers.ValidationError("Rating must be between 1 and 5.")
+        return data
 
 
 class ServiceSerializer(serializers.ModelSerializer):

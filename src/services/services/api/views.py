@@ -7,8 +7,9 @@ from rest_framework.response import Response
 
 from src.services.services.api.filters import ServiceFilter
 from src.services.services.api.serializers import ServiceSerializer, ServiceDetailSerializer, \
-    ServiceCreateUpdateSerializer, ServiceImageSerializer, ServiceAvailabilitySerializer, ServiceLocationSerializer
-from src.services.services.models import Service, ServiceImage
+    ServiceCreateUpdateSerializer, ServiceImageSerializer, ServiceAvailabilitySerializer, ServiceLocationSerializer, \
+    ServiceReviewSerializer
+from src.services.services.models import Service, ServiceImage, ServiceLocation, ServiceAvailability, ServiceReview
 
 """SERVICE SEEKER APIS"""
 
@@ -21,7 +22,6 @@ class ServiceListAPIView(ListAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 
-
 class ServiceDetailAPIView(RetrieveAPIView):
     queryset = Service.objects.filter(is_active=True)
     serializer_class = ServiceDetailSerializer
@@ -29,6 +29,7 @@ class ServiceDetailAPIView(RetrieveAPIView):
 
 
 """SERVICE SEEKER APIS"""
+
 
 # Provider Service
 class ProviderServiceListCreateAPIView(ListCreateAPIView):
@@ -98,7 +99,7 @@ class ProviderServiceImageDeleteAPIView(DestroyAPIView):
 
 # Provider Service Availability
 class ServiceAvailabilityCreateAPIView(CreateAPIView):
-    queryset = Service.objects.all()
+    queryset = ServiceAvailability.objects.all()
     serializer_class = ServiceAvailabilitySerializer
     permission_classes = [IsAuthenticated]
 
@@ -109,15 +110,13 @@ class ServiceAvailabilityCreateAPIView(CreateAPIView):
 
 
 class ServiceAvailabilityUpdateDestroyAPIView(UpdateAPIView, DestroyAPIView):
-    queryset = Service.objects.all()
+    queryset = ServiceAvailability.objects.all()
     serializer_class = ServiceAvailabilitySerializer
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        return get_object_or_404(Service, provider=self.request.user, pk=self.kwargs.get('service_pk'))
-
-    def perform_update(self, serializer):
-        serializer.save(service=self.get_object())
+        service = get_object_or_404(Service, provider=self.request.user, pk=self.kwargs.get('service_pk'))
+        return get_object_or_404(ServiceAvailability, service=service, pk=self.kwargs.get('pk'))
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -128,7 +127,7 @@ class ServiceAvailabilityUpdateDestroyAPIView(UpdateAPIView, DestroyAPIView):
 # Provider Service Location
 
 class ServiceLocationCreateAPIView(CreateAPIView):
-    queryset = Service.objects.all()
+    queryset = ServiceLocation.objects.all()
     serializer_class = ServiceLocationSerializer
     permission_classes = [IsAuthenticated]
 
@@ -139,17 +138,26 @@ class ServiceLocationCreateAPIView(CreateAPIView):
 
 
 class ServiceLocationUpdateDestroyAPIView(UpdateAPIView, DestroyAPIView):
-    queryset = Service.objects.all()
+    queryset = ServiceLocation.objects.all()
     serializer_class = ServiceLocationSerializer
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        return get_object_or_404(Service, provider=self.request.user, pk=self.kwargs.get('pk'))
-
-    def perform_update(self, serializer):
-        serializer.save(service=self.get_object())
+        service = get_object_or_404(Service, provider=self.request.user, pk=self.kwargs.get('service_pk'))
+        return get_object_or_404(ServiceLocation, service=service, pk=self.kwargs.get('pk'))
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_200_OK, data={'message': 'Location deleted successfully'})
+
+
+class ServiceReviewCreateAPIView(CreateAPIView):
+    queryset = ServiceReview.objects.all()
+    serializer_class = ServiceReviewSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        service = get_object_or_404(Service, pk=self.kwargs.get('service_pk'))
+        serializer.save(service=service, reviewer=self.request.user)
+        return Response(status=status.HTTP_201_CREATED, data={'message': 'Review created successfully'})

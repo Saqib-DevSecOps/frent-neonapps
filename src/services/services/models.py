@@ -189,10 +189,7 @@ class ServiceLocation(models.Model):
     class Meta:
         verbose_name_plural = "Service Locations"
         ordering = ['city', 'region', 'country']
-        constraints = [
-            models.UniqueConstraint(fields=['service', 'address', 'city', 'region', 'country'],
-                                    name="unique_service_location")
-        ]
+
 
     def __str__(self):
         return f"{self.service.title} located at {self.address}, {self.city}, {self.region}, {self.country}"

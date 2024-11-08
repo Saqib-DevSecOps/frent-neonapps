@@ -4,11 +4,17 @@ from src.services.users.models import UserImage, Address, Interest, Certificatio
 
 
 class UserSerializer(serializers.ModelSerializer):
+    images = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'profile_image', 'bio', 'date_joined',
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'profile_image', 'bio', 'images', 'date_joined',
                   'last_login', ]
-        read_only_fields = ['date_joined', 'last_login']
+        read_only_fields = ['date_joined', 'images', 'last_login']
+
+    def get_images(self, obj):
+        images = obj.images.all()
+        return UserImageSerializer(images, many=True).data
 
 
 class UserImageSerializer(serializers.ModelSerializer):
@@ -21,6 +27,7 @@ class UserAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
         fields = ['id', 'user', 'address', 'city', 'region', 'country', 'zip_code', ]
+        read_only_fields = ['user']
 
 
 class InterestSerializer(serializers.ModelSerializer):
