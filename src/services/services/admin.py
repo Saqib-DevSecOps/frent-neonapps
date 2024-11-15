@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     ServiceCategory, Service, ServiceImage,
-    ServiceAvailability, ServiceReview, ServiceRequest, FavoriteService,
+    ServiceAvailability, ServiceReview, ServicePurchasing, FavoriteService,
     ServiceCurrency, ServiceLocation
 )
 
@@ -37,13 +37,6 @@ class ServiceReviewInline(admin.TabularInline):
     readonly_fields = ('created_at',)
 
 
-class ServiceRequestInline(admin.TabularInline):
-    """Inline for displaying Service Requests."""
-    model = ServiceRequest
-    extra = 1
-    fields = ('seeker', 'status', 'requested_at', 'completed_at', 'is_paid', 'notes')
-    readonly_fields = ('requested_at', 'completed_at')
-
 
 class ServiceCategoryAdmin(admin.ModelAdmin):
     """Admin interface for ServiceCategory"""
@@ -64,7 +57,7 @@ class ServiceAdmin(admin.ModelAdmin):
     list_display = ('title', 'provider', 'category', 'price', 'currency', 'is_active', 'created_at', 'updated_at')
     search_fields = ('title', 'provider__username', 'category__name', 'price', 'currency__name')
     list_filter = ('is_active', 'category', 'currency')
-    inlines = [ServiceImageInline, ServiceAvailabilityInline, ServiceLocationInline, ServiceReviewInline, ServiceRequestInline]
+    inlines = [ServiceImageInline, ServiceAvailabilityInline, ServiceLocationInline, ServiceReviewInline]
 
 
 class ServiceImageAdmin(admin.ModelAdmin):
@@ -95,7 +88,7 @@ class ServiceReviewAdmin(admin.ModelAdmin):
     list_filter = ('rating', 'is_active')
 
 
-class ServiceRequestAdmin(admin.ModelAdmin):
+class ServicePurchasingAdmin(admin.ModelAdmin):
     """Admin interface for ServiceRequest"""
     list_display = ('seeker', 'service', 'status', 'requested_at', 'completed_at', 'is_paid')
     search_fields = ('seeker__username', 'service__title')
@@ -117,5 +110,5 @@ admin.site.register(ServiceImage, ServiceImageAdmin)
 admin.site.register(ServiceAvailability, ServiceAvailabilityAdmin)
 admin.site.register(ServiceLocation, ServiceLocationAdmin)
 admin.site.register(ServiceReview, ServiceReviewAdmin)
-admin.site.register(ServiceRequest, ServiceRequestAdmin)
+admin.site.register(ServicePurchasing, ServicePurchasingAdmin)
 admin.site.register(FavoriteService, FavoriteServiceAdmin)

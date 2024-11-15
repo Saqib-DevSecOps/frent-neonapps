@@ -190,7 +190,6 @@ class ServiceLocation(models.Model):
         verbose_name_plural = "Service Locations"
         ordering = ['city', 'region', 'country']
 
-
     def __str__(self):
         return f"{self.service.title} located at {self.address}, {self.city}, {self.region}, {self.country}"
 
@@ -215,7 +214,7 @@ class ServiceReview(models.Model):
         ]
 
 
-class ServiceRequest(models.Model):
+class ServicePurchasing(models.Model):
     """Tracks requests made for services"""
     REQUEST_STATUS_CHOICES = [
         ('pending', 'Pending'),
@@ -224,10 +223,33 @@ class ServiceRequest(models.Model):
         ('completed', 'Completed'),
         ('canceled', 'Canceled'),
     ]
+    PAYMENT_METHOD_CHOICES = [
+        ('credit_card', 'Credit Card'),
+        ('paypal', 'Paypal'),
+        ('bank_transfer', 'Bank Transfer'),
+    ]
+    PAYMENT_TYPE_CHOICES = [
+        ('full', 'Full Payment'),
+        ('partial', 'Partial Payment'),
+    ]
+
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     seeker = models.ForeignKey(User, on_delete=models.CASCADE, related_name='service_requests')
     service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='requests')
+    payment_method = models.CharField(max_length=50, choices=PAYMENT_METHOD_CHOICES, null=True, blank=False,
+                                      help_text="Payment method used for the service request.")
+    payment_type = models.CharField(max_length=50, choices=PAYMENT_TYPE_CHOICES, default='full',
+                                    help_text="Payment type for the service request.")
+    amount = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0.01)],
+                                 help_text="Service request amount (up to 10 digits and 2 decimal places).")
+    currency = models.ForeignKey(ServiceCurrency, on_delete=models.SET_NULL, null=True, blank=True,
+                                 related_name='service_requests',
+                                 help_text="The currency for the service request amount.")
+    discount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00,
+                                   validators=[MinValueValidator(0.00), MaxValueValidator(99.00)]
+                                   )
     status = models.CharField(max_length=20, choices=REQUEST_STATUS_CHOICES, default='pending')
+
     requested_at = models.DateTimeField(auto_now_add=True)
     completed_at = models.DateTimeField(null=True, blank=True)
     cancelled_at = models.DateTimeField(null=True, blank=True)
