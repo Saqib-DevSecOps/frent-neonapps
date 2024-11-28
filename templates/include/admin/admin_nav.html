@@ -115,7 +115,7 @@
                     <a class="dropdown-item" href="{% url 'account_change_password' %}">
                         <i class="bx bx-lock-open font-size-16 align-middle mr-1"></i>Password Change
                     </a>
-                    <a class="dropdown-item" href="{% url 'admins:social-accounts' %}">
+                    <a class="dropdown-item" href="{% url 'users:social-accounts' %}">
                         <i class="bx-fw bx bxl-facebook-square font-size-16 align-middle mr-1"></i>Social Accounts
                     </a>
                     <div class="dropdown-divider"></div>
@@ -130,5 +130,5 @@
 </header>
 
 {% if request.user.is_superuser %}
-    {% include 'admins/include/admin_header.html' %}
+    {% include 'include/admin/admin_header.html' %}
 {% endif %}

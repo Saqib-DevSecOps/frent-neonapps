@@ -71,13 +71,13 @@ INSTALLED_APPS = [
     'src.services.services.apps.ServicesConfig',
     'src.services.reporting.apps.ReportingConfig',
     'src.services.wallet.apps.WalletConfig',
+    'src.services.dashboard.apps.DashboardConfig',
     'src.services.chat.apps.ChatConfig',
     'src.apps.stripe.apps.StripeConfig',
 
     # WEB APPS
     'src.web.website',
     'src.web.accounts',
-    'src.web.admins',
     'src.apps.whisper.apps.WhisperConfig',
 
     # mailchimp

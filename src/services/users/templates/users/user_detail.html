@@ -11,7 +11,7 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <p><a href="{% url 'admins:user-list' %}"><i class="fa fa-arrow-left"></i> Go Back</a></p>
+            <p><a href="{% url 'users:user-list' %}"><i class="fa fa-arrow-left"></i> Go Back</a></p>
         </div>
     </div>
 
@@ -78,7 +78,7 @@
                             <p class="mb-0 text-center h3"><i class="fa fa-user-edit"></i></p>
                             <p class="mb-0 text-center h5">Profile</p>
                             <p class="mb-0 text-center">
-                                <a href="{% url 'admins:user-update' user.pk %}">Update</a>
+                                <a href="{% url 'users:user-update' user.pk %}">Update</a>
                             </p>
                         </div>
 
@@ -86,7 +86,7 @@
                             <p class="mb-0 text-center h3"><i class="fa fa-user-lock"></i></p>
                             <p class="mb-0 text-center h5">Password</p>
                             <p class="mb-0 text-center text-danger">
-                                <a href="{% url 'admins:user-password-reset-view' user.pk %}">Change</a>
+                                <a href="{% url 'users:user-password-reset-view' user.pk %}">Change</a>
                             </p>
                         </div>
                     </div>

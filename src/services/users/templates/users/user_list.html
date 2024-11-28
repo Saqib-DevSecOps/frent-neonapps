@@ -69,7 +69,7 @@
 
                                             {% if user.referred_by %}
                                                 <b>
-                                                    <a href="{% url 'admins:user-detail' user.referred_by.pk %}">
+                                                    <a href="{% url 'users:user-detail' user.referred_by.pk %}">
                                                         {{ user.referred_by.username }}
                                                     </a>
                                                 </b>
@@ -91,7 +91,7 @@
                                         </td>
 
                                         <td>
-                                            <a href="{% url 'admins:user-detail' user.pk %}"
+                                            <a href="{% url 'users:user-detail' user.pk %}"
                                                class="text-decoration-none"><i
                                                     class="mdi mdi-eye icon-sm"></i> View
                                             </a>

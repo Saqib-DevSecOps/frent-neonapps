@@ -25,6 +25,7 @@ urlpatterns += [
 urlpatterns += [
     path('', include('src.services.users.urls',namespace='users')),
     path('', include('src.services.services.urls',namespace='services')),
+    path('', include('src.services.dashboard.urls',namespace='dashboard')),
 ]
 
 """ EXTERNAL REQUIRED APPS ----------------------------------------------------------------------------------------- """
