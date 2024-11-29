@@ -19,18 +19,15 @@ from src.web.accounts.decorators import staff_required_decorator
 class UserListView(ListView):
     model = User
     template_name = 'users/user_list.html'
-    paginate_by = 50
 
     def get_context_data(self, **kwargs):
         context = super(UserListView, self).get_context_data(**kwargs)
         user_filter = UserFilter(self.request.GET, queryset=User.objects.filter())
         context['user_filter_form'] = user_filter.form
-
-        paginator = Paginator(user_filter.qs, 50)
+        paginator = Paginator(user_filter.qs, 20)
         page_number = self.request.GET.get('page')
         user_page_object = paginator.get_page(page_number)
-
-        context['user_list'] = user_page_object
+        context['object_list'] = user_page_object
         return context
 
 

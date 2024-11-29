@@ -7,16 +7,16 @@
 {% endblock %}
 
 
+{% block page_heading %} User Detail{% endblock %}
+
 {% block content %}
 
-    <div class="row">
-        <div class="col-sm-12">
-            <p><a href="{% url 'users:user-list' %}"><i class="fa fa-arrow-left"></i> Go Back</a></p>
-        </div>
-    </div>
+
 
     <div class="row">
-        <div class="col-md-12">
+
+
+        <div class="col-lg-8">
             <div class="card">
                 <div class="card-body">
 
@@ -90,55 +90,137 @@
                             </p>
                         </div>
                     </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {# STATISTICS #}
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="card">
-                <div class="card-body border-bottom">
-                    <p class="card-title mb-0">User Statistics</p>
-                </div>
-                <div class="card-body">
-
-                    {% if statistic %}
-                        <div class="row">
-
-                            <div class="col border-right">
-                                <p class="mb-0 text-center h3 text-success"><i class="mdi mdi-arrow-up"></i></p>
-                                <p class="mb-0 text-center small">Current TRX</p>
-                                <p class="mb-0 text-center h4">00</p>
-                            </div>
-
-                            <div class="col">
-                                <p class="mb-0 text-center h3 text-danger"><i class="mdi mdi-arrow-down"></i>
-                                </p>
-                                <p class="mb-0 text-center small">Withdrawal TRX</p>
-                                <p class="mb-0 text-center h4">00</p>
-                            </div>
-
-                            <div class="col">
-                                <p class="mb-0 text-center h3"><i class="fa fa-coins text-warning"></i></p>
-                                <p class="mb-0 text-center small">Generated TRX</p>
-                                <p class="mb-0 text-center h4">00</p>
-                            </div>
-
+                    <div class="row mt-4">
+                        <div class="col">
+                            <p class="mb-0  h5">Bio : </p>
+                            {% if bio %}
+                                <p class="mb-0 ">{{ bio }}</p>
+                            {% else %}
+                                <h6 class="mb-0 text-danger mt-2 ">User Bio Not Found</h6>
+                            {% endif %}
                         </div>
-                    {% else %}
-                        <p class="text-danger h4 mb-0">Statistics are not available for this account - please
-                            consult
-                            developers</p>
-                    {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <!-- Title -->
+                    <h4 class="card-title mb-4"><i class="fas fa-info-circle"></i> User & Company Information</h4>
+
+                    <!-- Address and Company Information -->
+                    <div class="mb-4">
+                        <h5 class="mt-4 mb-3"><i class="fas fa-briefcase"></i> Company Info</h5>
+                        <ul class="list-unstyled">
+                            <li><strong>Company Name:</strong>
+                                {% if company_name %}{{ company_name }}{% else %}Not Provided{% endif %}</li>
+                            <li><strong>Phone Number:</strong>
+                                {% if phone_number %}{{ phone_number }}{% else %}Not Provided{% endif %}</li>
+                            <li><strong>Website:</strong> {% if website %}{{ website }}{% else %}Not Provided{% endif %}
+                            </li>
+                        </ul>
+                        <h5 class="mb-3"><i class="fas fa-map-marker-alt"></i> Address</h5>
+                        <ul class="list-unstyled">
+                            <li><strong>Address:</strong>
+                                {% if address.address %}{{ address.address }}{% else %}Not Provided{% endif %}</li>
+                            <li><strong>City:</strong>
+                                {% if address.city %}{{ address.city }}{% else %}Not Provided{% endif %}</li>
+                            <li><strong>Region:</strong>
+                                {% if address.region %}{{ address.region }}{% else %}Not Provided{% endif %}</li>
+                            <li><strong>Country:</strong>
+                                {% if address.country %}{{ address.country }}{% else %}Not Provided{% endif %}</li>
+                            <li><strong>Zip Code:</strong>
+                                {% if address.zip_code %}{{ address.zip_code }}{% else %}Not Provided{% endif %}</li>
+                        </ul>
+
+
+                    </div>
+
+                    <!-- Rating and Reviews Section -->
+                    <div class="mb-4">
+                        <h5 class="mb-3"><i class="fas fa-star"></i> Rating</h5>
+                        <p><strong>{{ rating }}</strong></p>
+
+                        <h5 class="mt-4 mb-3"><i class="fas fa-comment"></i> Total Reviews</h5>
+                        <p><strong>{{ total_reviews }}</strong></p>
+                    </div>
 
                 </div>
             </div>
         </div>
     </div>
+    <div class="row">
+        <!-- Main Profile Card -->
+        <div class="col-md-12 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <!-- Social Media Section -->
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <h5><strong>Social Media:</strong></h5>
+                            <ul class="list-unstyled">
+                                <li><strong>Facebook:</strong>
+                                    {% if social_media.facebook %}{{ social_media.facebook }}{% else %}Not
+                                        Provided{% endif %}</li>
+                                <li><strong>Instagram:</strong>
+                                    {% if social_media.instagram %}{{ social_media.instagram }}{% else %}Not
+                                        Provided{% endif %}</li>
+                                <li><strong>Twitter:</strong>
+                                    {% if social_media.twitter %}{{ social_media.twitter }}{% else %}Not
+                                        Provided{% endif %}</li>
+                                <li><strong>LinkedIn:</strong>
+                                    {% if social_media.linkedin %}{{ social_media.linkedin }}{% else %}Not
+                                        Provided{% endif %}</li>
+                            </ul>
+                        </div>
 
+                        <!-- Interests Section -->
+                        <div class="col-md-4">
+                            <h5><strong>Interests:</strong></h5>
+                            <ul class="list-unstyled">
+                                {% for interest in interests %}
+                                    <li>{{ interest.name }}</li>
+                                {% empty %}
+                                    <li>No interests provided.</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <!-- Certifications Section -->
+                        <div class="col-md-4">
+                            <h5><strong>Certifications:</strong></h5>
+                            <ul class="list-unstyled">
+                                {% for certification in certifications %}
+                                    <li>
+                                        <a href="{{ certification.certificate_file }}" target="_blank">
+                                            View Certificate
+                                        </a>
+                                    </li>
+                                {% empty %}
+                                    <li>No certifications available.</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Status Section -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <strong>Status:</strong>
+                            <p>{{ status }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <strong>Verified:</strong>
+                            <p>{% if verified %}Yes{% else %}No{% endif %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
 

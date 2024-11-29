@@ -1,0 +1,76 @@
+{% load static %}
+<script src="{% static 'core/libs/jquery/jquery.min.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get the next page number
+        var page = {% if object_list.has_next %}{{ object_list.next_page_number }}{% else %}null{% endif %};
+        var maxPages = {{ object_list.paginator.num_pages }};
+        var loading = false;
+
+        function loadMore() {
+            // Prevent loading if already in progress or if there are no more pages to load
+            if (loading || page === null || page > maxPages) {
+                return;
+            }
+            loading = true;
+            $('#loading-spinner').show();
+
+            // Get the current search query
+            var searchQuery = window.location.search;
+
+            var filter_queryset = null;
+            if (searchQuery) {
+                filter_queryset = searchQuery + '&page=' + page;
+            } else {
+                filter_queryset = '?page=' + page;
+            }
+
+            // Perform the AJAX request to fetch the next page
+            $.ajax({
+                url: filter_queryset,
+                type: 'GET',
+                dataType: 'html',
+                success: function (data) {
+                    var $data = $(data);
+                    var $shopList = $data.find('#object-list');
+
+                    // Check if there are any new items to load
+                    if ($shopList.find('.card').length > 0) {
+                        // Append the new items to the existing list
+                        $('#object-list').append($shopList.html());
+                        $('#loading-spinner').hide();
+                        page++;  // Increment the page number
+                        loading = false;
+
+                        // Update pagination info
+                        updatePaginationInfo();
+                    } else {
+                        $('#loading-spinner').hide();
+                        $('#load-more-btn').hide();  // Hide the load more button if no more items
+                    }
+                },
+                error: function () {
+                    loading = false;
+                }
+            });
+        }
+
+        function updatePaginationInfo() {
+            // Update the pagination info text based on the number of items loaded
+            $('#pagination-info').text('Showing ' + $('#object-list .card').length + ' of {{ object_list.paginator.count }} entries');
+
+            // Hide the "Load More" button if no more pages are available
+            if (page === null || page > maxPages) {
+                $('#load-more-btn').hide();
+            }
+        }
+
+        // Initial check if "Load More" button should be shown or hidden
+        if (page === null || page > maxPages) {
+            $('#load-more-btn').hide();
+        }
+
+        // Attach the loadMore function to the click event of the "Load More" button
+        $('#load-more-btn').on('click', loadMore);
+    });
+</script>
