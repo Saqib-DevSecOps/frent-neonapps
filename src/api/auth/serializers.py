@@ -64,25 +64,29 @@ class CustomLoginSerializer(serializers.Serializer, ValidationMixin):
         return attrs
 
 
-class CustomRegisterSerializer(RegisterSerializer, ValidationMixin):
+class CustomRegisterSerializer(RegisterSerializer):
     """Custom serializer for user registration."""
 
     phone_number = serializers.CharField(max_length=15, required=True)
 
+    def validate_email(self, email):
+        """Validate unique email."""
+        if User.objects.filter(email=email).exists():
+            raise serializers.ValidationError("This email is already registered.")
+        return email
+
     def validate_phone_number(self, value):
-        """Validate the phone number format."""
-        if not self.is_valid_phone(value):
+        """Validate unique phone number and phone number format."""
+        # Check for uniqueness
+        if User.objects.filter(phone_number=value).exists():
+            raise serializers.ValidationError("This phone number is already registered.")
+
+        # Validate phone number format (only digits, 10-15 characters)
+        if not value.isdigit() or not (10 <= len(value) <= 15):
             raise serializers.ValidationError(
                 "Phone number is not valid. It should contain only digits and be 10 to 15 characters long."
             )
         return value
-
-    def save(self, request):
-        """Save user details during registration."""
-        user = super().save(request)
-        user.phone_number = self.validated_data.get('phone_number')
-        user.save()
-        return user
 
 
 class PasswordSerializer(serializers.Serializer):
