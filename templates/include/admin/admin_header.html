@@ -6,7 +6,7 @@
             <div class="collapse navbar-collapse" id="topnav-menu-content">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link dropdown-toggle arrow-none" href="{% url 'admins:dashboard' %}">
+                        <a class="nav-link dropdown-toggle arrow-none" href="{% url 'dashboard:dashboard' %}">
                             <i class="bx bx-home-circle mr-2"></i>Dashboard
                         </a>
                     </li>
@@ -20,7 +20,7 @@
                             <div class="arrow-down"></div>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="topnav-pages">
-                            <a href="{% url 'admins:user-list' %}" class="dropdown-item">Users</a>
+                            <a href="{% url 'users:user-list' %}" class="dropdown-item">Users</a>
                         </div>
                     </li>
                 </ul>

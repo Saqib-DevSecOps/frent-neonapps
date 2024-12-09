@@ -17,3 +17,14 @@ def relative_url(value, field_name, urlencode=None):
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
+
+@register.filter
+def image_or_placeholder(image, placeholder=None):
+    if image:
+        if hasattr(image, 'url') and image.url:
+            return image.url
+        else:
+            return image
+    if placeholder:
+        return f"https://placehold.co/{placeholder}"
+    return "https://placehold.co/100"
