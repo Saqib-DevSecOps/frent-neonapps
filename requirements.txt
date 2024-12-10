@@ -35,3 +35,6 @@ django_ckeditor_5
 django-cities-light
 django_otp
 django-payments
+
+django-storages[boto3]
+
