@@ -7,13 +7,12 @@ from src.services.services.models import Service
 
 class ServicesListView(ListView):
     model = Service
-    template_name = ''
 
     def get_context_data(self, **kwargs):
         context = super(ServicesListView, self).get_context_data(**kwargs)
         service_filter = ServiceFilter(self.request.GET, queryset=self.get_queryset())
         context['service_filter_form'] = service_filter.form
-        paginator = Paginator(service_filter.qs, 50)
+        paginator = Paginator(service_filter.qs, 30)
         page_number = self.request.GET.get('page')
         user_page_object = paginator.get_page(page_number)
         context['object_list'] = user_page_object
