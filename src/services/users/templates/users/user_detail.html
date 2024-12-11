@@ -24,7 +24,7 @@
                             <img class="rounded-circle" src="{{ user.profile_image.url }}" height="150px"
                                  alt="user-image">
                         {% else %}
-                            <img class="rounded-circle" src="{% static 'core/images/base/no-user.png' %}"
+                            <img class="rounded-circle" src="https://avatar.iran.liara.run/public?name={{ user.username|default:'User' }}"
                                  height="150px" alt="no-user-image">
                         {% endif %}
                     </div>

@@ -36,24 +36,28 @@
                             <div class="favorite-icon">
                                 <a href="javascript:void(0)"><i class="uil uil-heart-alt fs-18"></i></a>
                             </div>
-                            <img
-                                    src="
-                                            {% if service.thumbnail %}{{ service.thumbnail.url }}{% else %}https://via.placeholder.com/150{% endif %}"
-                                    alt=""
-                                    height="50"
-                                    class="mb-3"
-                            >
+                            {% if service.thumbnail %}
+                                <img height="50" class="mb-4" src="{{ service.thumbnail.url }}" alt="">
+                            {% else %}
+                                <img height="50" class="mb-4" style="border-radius: 10%;"
+                                     src="https://api.dicebear.com/9.x/icons/svg?seed={{ service.title|default:'Placeholder' }}"
+                                     alt="Service Placeholder"/>
+                            {% endif %}
 
-                            <h5 class="fs-17 mb-2"><a href="javascript:void(0);" class="text-dark">{{ service.title }}</a>
+
+                            <h5 class="fs-17 mb-2"><a href="javascript:void(0);"
+                                                      class="text-dark">{{ service.title }}</a>
                                 <small
                                         class="text-muted fw-normal">({{ service.service_type }})</small></h5>
                             <ul class="list-inline mb-0">
                                 <li class="list-inline-item">
-                                    <p class="text-muted fs-14 mb-1"><b>Provider: </b>{{ service.provider|truncatechars:7 }}</p>
+                                    <p class="text-muted fs-14 mb-1">
+                                        <b>Provider: </b>{{ service.provider|truncatechars:7 }}</p>
                                 </li>
 
                                 <li class="list-inline-item">
-                                    <p class="text-muted fs-14 mb-0"><b>Category: </b> {{ service.category|truncatechars:8 }}</p>
+                                    <p class="text-muted fs-14 mb-0">
+                                        <b>Category: </b> {{ service.category|truncatechars:8 }}</p>
                                 </li>
                                 <br>
                                 <li>
@@ -84,7 +88,8 @@
                             </div>
                             <div class=" mt-4 row gap-2">
                                 <div class="col-md-6 mt-2">
-                                    <a href="{% url 'services:services-detail' service.pk %}" data-bs-toggle="modal" class="btn btn-success w-100">View Details</a>
+                                    <a href="{% url 'services:services-detail' service.pk %}" data-bs-toggle="modal"
+                                       class="btn btn-success w-100">View Details</a>
                                 </div>
                                 <div class="col-md-6 mt-2">
                                     <a href="#applyJobs" data-bs-toggle="modal" class="btn btn-primary w-100">Apply
