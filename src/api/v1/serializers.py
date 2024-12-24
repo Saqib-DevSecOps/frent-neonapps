@@ -82,3 +82,5 @@ class ServiceHomeListSerializer(serializers.Serializer):
     top_categories = ServiceCategorySerializer(many=True)
     my_interest = ServiceHomeSerializer(many=True)
     popular_services = ServiceHomeSerializer(many=True)
+    for_you = ServiceHomeSerializer(many=True)
+    near_you = ServiceHomeSerializer(many=True)
