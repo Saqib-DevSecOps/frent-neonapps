@@ -96,7 +96,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_browser_reload.middleware.BrowserReloadMiddleware',
 
     # YOUR MIDDLEWARES
     # "allauth.account.middleware.AccountMiddleware",
@@ -221,15 +220,6 @@ LOGOUT_ON_PASSWORD_CHANGE = False
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 """ DEBUGGING TOOLS """
-
-# Make sure to remove this in live server - use it on local server
-if ENVIRONMENT != 'server':
-    INSTALLED_APPS += [
-        'django_browser_reload'
-    ]
-    MIDDLEWARE += [
-        'django_browser_reload.middleware.BrowserReloadMiddleware'
-    ]
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
