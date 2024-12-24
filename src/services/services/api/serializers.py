@@ -86,10 +86,12 @@ class ServiceSerializer(serializers.ModelSerializer):
     category = serializers.SerializerMethodField()
     rating = serializers.SerializerMethodField()
     schedule = serializers.SerializerMethodField()
+    images = ServiceImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Service
-        fields = ['id', 'title', 'provider', 'thumbnail', 'category', 'service_type', 'schedule', 'description',
+        fields = ['id', 'title', 'provider', 'images', 'thumbnail', 'category', 'service_type', 'schedule',
+                  'description',
                   'price_type', 'price', 'discount', 'currency', 'rating', 'is_active']
 
     def get_rating(self, obj):
