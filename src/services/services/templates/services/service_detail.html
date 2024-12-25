@@ -212,26 +212,28 @@
                         <table class="table table-hover">
                             <thead class="">
                             <tr>
+                                <th scope="col">ID</th>
                                 <th scope="col">Provider</th>
                                 <th scope="col">Seeker</th>
                                 <th scope="col">Service</th>
-                                <th scope="col">Status</th>
                                 <th scope="col">Payment Method</th>
                                 <th scope="col">Amount</th>
                                 <th scope="col">Currency</th>
+                                <th scope="col">Status</th>
                                 <th scope="col">Paid</th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for obj in object.requests.all %}
                                 <tr>
+                                    <td>{{ forloop.counter }}</td>
                                     <td>{{ obj.service.provider }}</td>
                                     <td>{{ obj.seeker }}</td>
                                     <td>{{ obj.service.title }}</td>
-                                    <td><span class="text-white badge bg-info">{{ obj.status }}</span></td>
                                     <td>{{ obj.payment_method }}</td>
                                     <td>{{ obj.amount }}</td>
                                     <td>{{ obj.currency }}</td>
+                                    <td><span class="text-success badge bg-soft-success">{{ obj.status }}</span></td>
                                     <td>
                                         {% if obj.is_paid %}
                                             <i class="text-success fa fa-check-circle"></i>

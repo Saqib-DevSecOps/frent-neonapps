@@ -39,7 +39,11 @@
                             <h5 class="font-size-15 mb-1"><a href="{% url 'users:user-detail' user.id %}"
                                                              class="text-dark">{{ user.username }}</a>
                             </h5>
+                            {% if user.email %}
                             <p class="text-muted">{{ user.email }}</p>
+                        {% else %}
+                            <p class="text-muted">No Email</p>
+                            {% endif %}
 
                             <ul>
                                 <li class="badge {% if user.is_superuser %}bg-success{% else %}bg-danger{% endif %} font-size-11 m-1 text-white">
