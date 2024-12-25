@@ -35,6 +35,9 @@ class HomeAPIView(ListAPIView):
             'top_categories': top_categories,
             'my_interest': my_interest,
             'popular_services': popular_services,
+            'for_you': my_interest,
+            'near_you': my_interest,
+
         }
         return data
 
