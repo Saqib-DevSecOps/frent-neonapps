@@ -16,6 +16,11 @@ class UserSerializer(serializers.ModelSerializer):
         images = obj.images.all()
         return UserImageSerializer(images, many=True).data
 
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'profile_image', 'bio', ]
+
 
 class UserImageSerializer(serializers.ModelSerializer):
     class Meta:
