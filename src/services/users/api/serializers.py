@@ -10,11 +10,16 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'email', 'first_name', 'last_name', 'profile_image', 'bio', 'images', 'date_joined',
                   'last_login', ]
-        read_only_fields = ['date_joined', 'images', 'last_login']
+        read_only_fields = ['username', 'email', 'date_joined', 'images', 'last_login']
 
     def get_images(self, obj):
         images = obj.images.all()
         return UserImageSerializer(images, many=True).data
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'profile_image', 'bio', ]
 
 
 class UserImageSerializer(serializers.ModelSerializer):

@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from src.services.users.api.serializers import UserSerializer, UserImageSerializer, UserAddressSerializer, \
     ServiceProviderDetailSerializer, ServiceProviderSerializer, SocialMediaSerializer, InterestSerializer, \
-    CertificationSerializer
+    CertificationSerializer, UserUpdateSerializer
 from src.services.users.models import UserImage, User, ServiceProvider, SocialMedia, Interest, Certification
 
 """ ---------------------SERVICE SEEKER APIS------------------------ """
@@ -16,8 +16,12 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
     Retrieve and update user profile
     """
     queryset = User.objects.all()
-    serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return UserSerializer
+        return UserUpdateSerializer
 
     def get_object(self):
         return self.request.user
