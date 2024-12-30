@@ -54,8 +54,7 @@
                                         <td>{{ object.subject }}</td>
                                         <td>{{ object.recipient }}</td>
                                         <td>
-                                            <span class="badge bg-{{ object.status }}">
-{#                                            <span class="badge bg-{{ object.status|alert_type_class }}">#}
+                                            <span class="badge bg-{{ object.status|alert_type_class }}">
                                                 <b>
                                                     {% if object.status == "sent" %}
                                                         <i class="fa fa-check-circle"></i>
@@ -75,8 +74,7 @@
                                         </td>
 
 {#                                        <td class="text-center">{{ object.failed_attempts }}</td>#}
-                                        <td>{{ object.created_at.date }}</td>
-{#                                        <td>{{ object.created_at.date|check_null }}</td>#}
+                                        <td>{{ object.created_at.date|check_null }}</td>
 
 
                                         <td>
@@ -138,6 +136,7 @@
 
 {% block js_code %}
     <script>
+    // TO FORMAT THE FORMS
         $(document).ready(function () {
 
             $('label').hide();
@@ -162,6 +161,11 @@
                 justifyContent: "space-between",
             });
         });
+
+        $("#id_recipient").attr("placeholder", "Enter Recipient Email");
+
+
+
     </script>
 {% endblock %}
 
@@ -184,7 +188,6 @@
             $('label').hide();
             $('input').addClass('form-control form-control-lg bg-inverse bg-opacity-5');
             $('select').addClass('form-select');
-            $("#id_recipient").attr("placeholder", "Enter Recipient Email");
             $("#id_status option:first").text("-- Select Status --");
         });
     </script>
