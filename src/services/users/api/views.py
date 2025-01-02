@@ -5,8 +5,9 @@ from rest_framework.response import Response
 
 from src.services.users.api.serializers import UserSerializer, UserImageSerializer, UserAddressSerializer, \
     ServiceProviderDetailSerializer, ServiceProviderSerializer, SocialMediaSerializer, InterestSerializer, \
-    CertificationSerializer, UserUpdateSerializer
-from src.services.users.models import UserImage, User, ServiceProvider, SocialMedia, Interest, Certification
+    CertificationSerializer, UserUpdateSerializer, ServiceProviderLanguageSerializer
+from src.services.users.models import UserImage, User, ServiceProvider, SocialMedia, Interest, Certification, \
+    ServiceProviderLanguage
 
 """ ---------------------SERVICE SEEKER APIS------------------------ """
 
@@ -91,6 +92,18 @@ class ServiceProviderRetrieveUpdateAPIView(RetrieveUpdateAPIView):
         return self.request.user.service_provider_profile
 
 
+class ServiceProviderLanguageCreateAPIView(CreateAPIView):
+    """
+    Create service provider language
+    """
+    queryset = ServiceProviderLanguage.objects.all()
+    serializer_class = ServiceProviderLanguageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(service_provider=self.request.user.get_service_provider_profile())
+
+
 class ServiceProviderInterestCreateAPIView(CreateAPIView):
     """
     Create service provider interest
@@ -100,7 +113,7 @@ class ServiceProviderInterestCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save(service_provider=self.request.user.get_service_provider_profile())
 
 
 class ServiceProviderCertificationCreateAPIView(CreateAPIView):
@@ -112,7 +125,7 @@ class ServiceProviderCertificationCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(service_provider=self.request.user.service_provider_profile)
+        serializer.save(service_provider=self.request.user.get_service_provider_profile())
 
 
 class ServiceProviderCertificateDestroyAPIView(DestroyAPIView):

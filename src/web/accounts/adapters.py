@@ -32,7 +32,7 @@ class MyAccountAdapter(DefaultAccountAdapter):
         else:
             return HttpResponseRedirect(reverse('/'))
 
-    def send_sms(self,request,user):
+    def send_sms(self, request, user):
         # Send SMS
         pass
 
@@ -45,12 +45,8 @@ class MyAccountAdapter(DefaultAccountAdapter):
             email_address=emailconfirmation.email_address,
             defaults={'key': verification_key}  # Set the key only if the object is created
         )
-
-        # If the object already exists, update the key and the 'sent' field
-        if not created:
-            emailconfirmation.key = verification_key
-            emailconfirmation.sent = timezone.now()  # Set 'sent' timestamp when re-sending
-            emailconfirmation.save()
+        emailconfirmation.sent = timezone.now()
+        emailconfirmation.save()
 
         # Prepare the email context
         context = {

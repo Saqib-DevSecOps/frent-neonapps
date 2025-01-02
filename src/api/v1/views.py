@@ -11,8 +11,9 @@ from rest_framework.views import APIView
 from src.services.services.models import Service, ServiceCategory
 from .serializers import (
     ServiceHomeListSerializer,
-    ServiceCategorySerializer, SubRegionSerializer, RegionSerializer
+    ServiceCategorySerializer, SubRegionSerializer, RegionSerializer, LanguageSerializer
 )
+from ...core.models import Language
 
 
 class HomeAPIView(ListAPIView):
@@ -50,17 +51,19 @@ class HomeAPIView(ListAPIView):
 """-------------------Helper-------------------"""
 
 
-class CategorySubRegionProvinceApiView(APIView):
+class CategorySubRegionProvinceLanguageApiView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get(self, request, *args, **kwargs):
         category = ServiceCategory.objects.all()
         sub_region = SubRegion.objects.all()
         province = Region.objects.all()
+        language = Language.objects.all()
         context = {
             'category': ServiceCategorySerializer(category, many=True).data,
             'sub_region': SubRegionSerializer(sub_region, many=True).data,
-            'province': RegionSerializer(province, many=True).data
+            'province': RegionSerializer(province, many=True).data,
+            'language': LanguageSerializer(language, many=True).data
 
         }
         return Response(data=context, status=status.HTTP_200_OK)
