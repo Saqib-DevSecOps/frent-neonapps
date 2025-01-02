@@ -100,7 +100,7 @@ class ServiceProviderInterestCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save(service_provider=self.request.user.get_service_provider_profile())
 
 
 class ServiceProviderCertificationCreateAPIView(CreateAPIView):
@@ -112,7 +112,7 @@ class ServiceProviderCertificationCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(service_provider=self.request.user.service_provider_profile)
+        serializer.save(service_provider=self.request.user.get_service_provider_profile())
 
 
 class ServiceProviderCertificateDestroyAPIView(DestroyAPIView):
