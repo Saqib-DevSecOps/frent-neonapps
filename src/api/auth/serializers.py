@@ -34,7 +34,7 @@ class UserSerializer(serializers.ModelSerializer):
 class CustomLoginSerializer(serializers.Serializer, ValidationMixin):
     """Custom serializer for login with email or phone number."""
 
-    email = serializers.CharField(label='Email/Phone Number', max_length=20)
+    email = serializers.CharField(label='Email/Phone Number', max_length=50)
     password = serializers.CharField(label='Password', write_only=True)
 
     def validate_email(self, value):
