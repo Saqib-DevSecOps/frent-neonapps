@@ -1,17 +1,18 @@
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.apple.views import AppleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
-from dj_rest_auth.registration.views import SocialLoginView, SocialConnectView
-from dj_rest_auth.views import LoginView
+from dj_rest_auth.registration.views import SocialLoginView, SocialConnectView, VerifyEmailView
+from dj_rest_auth.registration.serializers import VerifyEmailSerializer
 from django.contrib.auth import authenticate, login
 from rest_framework import permissions, status
 from rest_framework.authtoken.models import Token
-from rest_framework.generics import RetrieveUpdateAPIView, CreateAPIView
+from rest_framework.generics import RetrieveUpdateAPIView, CreateAPIView, GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from root.settings import GOOGLE_CALLBACK_ADDRESS, APPLE_CALLBACK_ADDRESS
-from src.api.auth.serializers import PasswordSerializer, UserSerializer, CustomLoginSerializer
+from src.api.auth.serializers import PasswordSerializer, UserSerializer, CustomLoginSerializer, \
+    EmailConfirmationSerializer
 
 
 class GoogleLogin(SocialLoginView):
@@ -49,6 +50,26 @@ class CustomLoginView(CreateAPIView):
         Token.objects.filter(user=user).delete()
         new_token = Token.objects.create(user=user)
         return Response({'key': new_token.key}, status=status.HTTP_200_OK)
+
+
+class EmailConfirmationView(GenericAPIView):
+    serializer_class = EmailConfirmationSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # Confirm email and respond
+        email_address = serializer.confirm_email()
+        if email_address:
+            return Response(
+                {"detail": "Email successfully verified."},
+                status=status.HTTP_200_OK,
+            )
+        return Response(
+            {"detail": "Email is already verified."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 class UserRetrieveChangeAPIView(RetrieveUpdateAPIView):
