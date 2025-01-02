@@ -80,46 +80,20 @@ class Address(models.Model):
         return f"{self.user.username}'s Address"
 
 
-class SocialMedia(models.Model):
-    """Social Media Model for ServiceProvider"""
-    service_provider = models.OneToOneField("ServiceProvider", related_name='social_media', on_delete=models.CASCADE)
-    facebook = models.URLField(blank=True, null=True, verbose_name="Facebook Profile")
-    instagram = models.URLField(blank=True, null=True, verbose_name="Instagram Profile")
-    twitter = models.URLField(blank=True, null=True, verbose_name="Twitter Profile")
-    linkedin = models.URLField(blank=True, null=True, verbose_name="LinkedIn Profile")
-
-    def __str__(self):
-        return f"Social Media for {self.service_provider.user.username}"
-
-
-class Interest(models.Model):
-    """Interests Model: Multiple Interests for Service Providers"""
-    service_provider = models.ForeignKey("ServiceProvider", related_name='interests', on_delete=models.CASCADE)
-    name = models.CharField(max_length=255, verbose_name="Interest Name")
-    description = models.TextField(blank=True, null=True, verbose_name="Interest Description")
-
+class UserImage(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='images')
+    image = ResizedImageField(
+        upload_to='users/images/', size=[800, 800], quality=75, force_format='PNG',
+        help_text='size of logo must be 800*800 and format must be png image file', crop=['middle', 'center']
+    )
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Interest: {self.name}"
-
-
-class Certification(models.Model):
-    """Certification Model for Service Providers"""
-    service_provider = models.ForeignKey("ServiceProvider", related_name='certifications', on_delete=models.CASCADE)
-    certificate_file = models.FileField(upload_to='users/certifications/', blank=True, null=True)
-
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"Certification for {self.service_provider.user.username}"
+        return self.user.username
 
     class Meta:
-        verbose_name = "Certification"
-        verbose_name_plural = "Certifications"
+        verbose_name = 'User Image'
+        verbose_name_plural = 'User Images'
         ordering = ['-created_at']
 
 
@@ -145,23 +119,6 @@ class BlockedUser(models.Model):
 
     def __str__(self):
         return f"{self.user.username} blocked {self.blocked_user.username}"
-
-
-class UserImage(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='images')
-    image = ResizedImageField(
-        upload_to='users/images/', size=[800, 800], quality=75, force_format='PNG',
-        help_text='size of logo must be 800*800 and format must be png image file', crop=['middle', 'center']
-    )
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.user.username
-
-    class Meta:
-        verbose_name = 'User Image'
-        verbose_name_plural = 'User Images'
-        ordering = ['-created_at']
 
 
 class ServiceProvider(models.Model):
@@ -215,3 +172,57 @@ class ServiceProvider(models.Model):
         if hasattr(self, 'certifications'):
             return self.certifications.all()
         return None
+
+
+class SocialMedia(models.Model):
+    """Social Media Model for ServiceProvider"""
+    service_provider = models.OneToOneField("ServiceProvider", related_name='social_media', on_delete=models.CASCADE)
+    facebook = models.URLField(blank=True, null=True, verbose_name="Facebook Profile")
+    instagram = models.URLField(blank=True, null=True, verbose_name="Instagram Profile")
+    twitter = models.URLField(blank=True, null=True, verbose_name="Twitter Profile")
+    linkedin = models.URLField(blank=True, null=True, verbose_name="LinkedIn Profile")
+
+    def __str__(self):
+        return f"Social Media for {self.service_provider.user.username}"
+
+
+class Interest(models.Model):
+    """Interests Model: Multiple Interests for Service Providers"""
+    service_provider = models.ForeignKey("ServiceProvider", related_name='interests', on_delete=models.CASCADE)
+    name = models.CharField(max_length=255, verbose_name="Interest Name")
+    description = models.TextField(blank=True, null=True, verbose_name="Interest Description")
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Interest: {self.name}"
+
+
+class Certification(models.Model):
+    """Certification Model for Service Providers"""
+    service_provider = models.ForeignKey("ServiceProvider", related_name='certifications', on_delete=models.CASCADE)
+    certificate_file = models.FileField(upload_to='users/certifications/', blank=True, null=True)
+
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Certification for {self.service_provider.user.username}"
+
+    class Meta:
+        verbose_name = "Certification"
+        verbose_name_plural = "Certifications"
+        ordering = ['-created_at']
+
+
+class ServiceProviderLanguage(models.Model):
+    """Language Model for User"""
+    service_provider = models.ForeignKey("ServiceProvider", related_name='languages', on_delete=models.CASCADE)
+    language = models.ForeignKey("core.Language", on_delete=models.CASCADE, related_name='service_providers')
+    fluency = models.CharField(max_length=20, choices=[('basic', 'Basic'), ('intermediate', 'Intermediate'),
+                                                       ('advanced', 'Advanced')], default='basic')
+
+    def __str__(self):
+        return f"{self.language} - {self.fluency}"

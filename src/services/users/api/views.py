@@ -5,8 +5,9 @@ from rest_framework.response import Response
 
 from src.services.users.api.serializers import UserSerializer, UserImageSerializer, UserAddressSerializer, \
     ServiceProviderDetailSerializer, ServiceProviderSerializer, SocialMediaSerializer, InterestSerializer, \
-    CertificationSerializer, UserUpdateSerializer
-from src.services.users.models import UserImage, User, ServiceProvider, SocialMedia, Interest, Certification
+    CertificationSerializer, UserUpdateSerializer, ServiceProviderLanguageSerializer
+from src.services.users.models import UserImage, User, ServiceProvider, SocialMedia, Interest, Certification, \
+    ServiceProviderLanguage
 
 """ ---------------------SERVICE SEEKER APIS------------------------ """
 
@@ -89,6 +90,18 @@ class ServiceProviderRetrieveUpdateAPIView(RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user.service_provider_profile
+
+
+class ServiceProviderLanguageCreateAPIView(CreateAPIView):
+    """
+    Create service provider language
+    """
+    queryset = ServiceProviderLanguage.objects.all()
+    serializer_class = ServiceProviderLanguageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(service_provider=self.request.user.get_service_provider_profile())
 
 
 class ServiceProviderInterestCreateAPIView(CreateAPIView):

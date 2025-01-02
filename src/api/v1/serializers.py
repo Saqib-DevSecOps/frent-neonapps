@@ -2,6 +2,7 @@
 from cities_light.models import SubRegion, Region, Country
 from rest_framework import serializers
 
+from src.core.models import Language
 from src.services.services.api.serializers import UserProfileSerializer
 from src.services.services.models import ServiceCategory, Service, \
     ServiceCurrency
@@ -29,6 +30,12 @@ class SubRegionSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubRegion
         fields = ['id', 'name', 'region']
+
+
+class LanguageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Language
+        fields = ['id', 'name', 'short_name']
 
 
 """ ---------------------Service Serializers--------------------- """

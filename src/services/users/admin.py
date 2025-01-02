@@ -18,7 +18,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 
 from .models import (
-    User, BlockedUser, ServiceProvider, Address, UserImage, SocialMedia, Interest, Certification
+    User, BlockedUser, ServiceProvider, Address, UserImage, SocialMedia, Interest, Certification, ServiceProviderLanguage
 )
 
 csrf_protect_m = method_decorator(csrf_protect)
@@ -276,6 +276,11 @@ class CertificationAdmin(admin.ModelAdmin):
     list_display = ('service_provider', 'certificate_file', 'is_active', 'created_at')
     search_fields = ('service_provider__user__username',)
     readonly_fields = ('created_at', 'updated_at')
+
+@admin.register(ServiceProviderLanguage)
+class ServiceProviderLanguageAdmin(admin.ModelAdmin):
+    list_display = ('language', 'fluency')
+    search_fields = ('language', 'fluency')
 
 
 # Register User with the custom admin

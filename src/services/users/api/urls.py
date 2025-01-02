@@ -3,7 +3,7 @@ from django.urls import path
 from src.services.users.api.views import UserRetrieveUpdateAPIView, UserImageCreateAPIView, UserImageDestroyAPIView, \
     UserAddressRetrieveUpdateAPIView, ServiceProviderRetrieveUpdateAPIView, ServiceProviderInterestCreateAPIView, \
     ServiceProviderSocialMediaUpdateAPIView, ServiceProviderCertificateDestroyAPIView, \
-    ServiceProviderCertificationCreateAPIView
+    ServiceProviderCertificationCreateAPIView, ServiceProviderLanguageCreateAPIView
 
 app_name = "users-api"
 
@@ -21,6 +21,8 @@ urlpatterns += [
     path('v1/service-provider/', ServiceProviderRetrieveUpdateAPIView.as_view(), name='service-provider-update'),
     path('v1/service-provider/interest/', ServiceProviderInterestCreateAPIView.as_view(),
          name='service-provider-interest'),
+    path('v1/service-provider/language/', ServiceProviderLanguageCreateAPIView.as_view(),
+         name='service-provider-language'),
     path('v1/service-provider/social-media/', ServiceProviderSocialMediaUpdateAPIView.as_view(),
          name='service-provider-social-media'),
     path('v1/service-provider/certificate/', ServiceProviderCertificationCreateAPIView.as_view(),
