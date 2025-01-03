@@ -27,3 +27,8 @@ django-notifications-hq
 fido2
 django-jazzmin
 autobahn
+django_ckeditor_5
+django-cities-light
+django_otp
+django-payments
+django-storages[boto3]
