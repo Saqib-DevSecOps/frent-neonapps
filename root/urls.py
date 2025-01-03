@@ -23,9 +23,10 @@ urlpatterns += [
 
 """INTERNAL REQUIRED SERVICES --------------------------------------------------------------------------------------"""
 urlpatterns += [
-    path('', include('src.services.users.urls',namespace='users')),
-    path('', include('src.services.services.urls',namespace='services')),
-    path('', include('src.services.dashboard.urls',namespace='dashboard')),
+    path('', include('src.services.users.urls', namespace='users')),
+    path('', include('src.services.services.urls', namespace='services')),
+    path('', include('src.services.dashboard.urls', namespace='dashboard')),
+    path('', include('src.services.order.urls', namespace='order')),
 ]
 
 """ EXTERNAL REQUIRED APPS ----------------------------------------------------------------------------------------- """
@@ -35,7 +36,6 @@ urlpatterns += [
 
     path("ckeditor5/", include('django_ckeditor_5.urls'), name="ck_editor_5_upload_file"),
 
-
 ]
 
 """ STATIC AND MEDIA FILES ----------------------------------------------------------------------------------------- """
@@ -43,4 +43,3 @@ urlpatterns += [
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT}),
     re_path(r'^static/(?P<path>.*)$', serve, {'document_root': STATIC_ROOT}),
 ]
-
