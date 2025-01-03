@@ -1,7 +1,7 @@
 from django.views.generic import DeleteView
 from rest_framework import status
 from rest_framework.generics import UpdateAPIView, CreateAPIView, RetrieveUpdateAPIView, DestroyAPIView, \
-    get_object_or_404
+    get_object_or_404, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -9,9 +9,9 @@ from src.services.services.models import FavoriteService
 from src.services.users.api.serializers import UserSerializer, UserImageSerializer, UserAddressSerializer, \
     ServiceProviderDetailSerializer, ServiceProviderSerializer, SocialMediaSerializer, InterestSerializer, \
     CertificationSerializer, UserUpdateSerializer, ServiceProviderLanguageSerializer, FavoriteServiceSerializer, \
-    FavoriteServiceCreateSerializer
+    FavoriteServiceCreateSerializer, UserContactSerializer
 from src.services.users.models import UserImage, User, ServiceProvider, SocialMedia, Interest, Certification, \
-    ServiceProviderLanguage
+    ServiceProviderLanguage, UserContact
 
 """ ---------------------SERVICE SEEKER APIS------------------------ """
 
@@ -203,3 +203,32 @@ class FavoriteServiceDestroyAPIView(DestroyAPIView):
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_200_OK, data={'message': 'Favorite service deleted successfully'})
+
+
+class UserContactListCreateAPIView(ListCreateAPIView):
+    queryset = UserContact.objects.all()
+    serializer_class = UserContactSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+        return UserContact.objects.filter(user=self.request.user)
+
+
+class UserContactUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
+    queryset = UserContact.objects.all()
+    serializer_class = UserContactSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return get_object_or_404(self.queryset, user=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_200_OK, data={'message': 'Contact deleted successfully'})

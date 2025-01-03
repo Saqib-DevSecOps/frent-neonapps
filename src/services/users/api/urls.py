@@ -4,7 +4,8 @@ from src.services.users.api.views import UserRetrieveUpdateAPIView, UserImageCre
     UserAddressRetrieveUpdateAPIView, ServiceProviderRetrieveUpdateAPIView, ServiceProviderInterestCreateAPIView, \
     ServiceProviderSocialMediaUpdateAPIView, ServiceProviderCertificateDestroyAPIView, \
     ServiceProviderCertificationCreateAPIView, ServiceProviderLanguageCreateAPIView, \
-    ServiceProviderLanguageDestroyAPIView, FavoriteServiceDestroyAPIView, FavoriteServiceListCreateAPIView
+    ServiceProviderLanguageDestroyAPIView, FavoriteServiceDestroyAPIView, FavoriteServiceListCreateAPIView, \
+    UserContactListCreateAPIView, UserContactUpdateDestroyAPIView
 
 app_name = "users-api"
 
@@ -15,11 +16,11 @@ urlpatterns = [
     path('v1/image/<str:pk>/', UserImageDestroyAPIView.as_view(), name='image-delete'),
     path('v1/address/', UserAddressRetrieveUpdateAPIView.as_view(), name='address-update'),
 
-]
-
-urlpatterns += [
     path('v1/favorite-service/', FavoriteServiceListCreateAPIView.as_view(), name='favorite-service'),
     path('v1/favorite-service/<str:pk>/', FavoriteServiceDestroyAPIView.as_view(), name='favorite-service-delete'),
+
+    path('v1/contact/', UserContactListCreateAPIView.as_view(), name='user-contact'),
+    path('v1/contact/<str:pk>/', UserContactUpdateDestroyAPIView.as_view(), name='user-contact-delete'),
 ]
 
 """SERVICE PROVIDER URLS"""

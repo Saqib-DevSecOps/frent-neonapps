@@ -5,7 +5,7 @@ from src.core.models import Language
 from src.services.services.api.serializers import ServiceSerializer
 from src.services.services.models import FavoriteService
 from src.services.users.models import UserImage, Address, Interest, Certification, SocialMedia, User, ServiceProvider, \
-    ServiceProviderLanguage
+    ServiceProviderLanguage, UserContact
 
 
 # """ ---------------------User Serializers--------------------- """
@@ -108,15 +108,22 @@ class FavoriteServiceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FavoriteService
-        fields = ['id','user', 'service']
+        fields = ['id', 'user', 'service']
 
 
 class FavoriteServiceCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = FavoriteService
-        fields = ['id','service']
+        fields = ['id', 'service']
 
     def validate(self, attrs):
         if FavoriteService.objects.filter(user=self.context['request'].user, service=attrs['service']).exists():
             raise serializers.ValidationError("Service already added to favorites")
         return attrs
+
+
+# """ ---------------------User Contact Serializers--------------------- """
+class UserContactSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserContact
+        fields = ['id', 'name', 'phone_number']
