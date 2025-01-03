@@ -97,6 +97,22 @@ class UserImage(models.Model):
         ordering = ['-created_at']
 
 
+class UserContact(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='contacts')
+    name = models.CharField(max_length=255, blank=True, null=True)
+    phone_number = PhoneNumberField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'User Contact'
+        verbose_name_plural = 'User Contacts'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.user.username} - {self.phone_number}"
+
+
 class BlockedUser(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='blocked_users',

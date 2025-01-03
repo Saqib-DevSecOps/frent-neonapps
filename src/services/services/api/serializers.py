@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from src.services.services.models import ServiceCategory, Service, ServiceImage, ServiceAvailability, ServiceReview, \
-    ServiceCurrency, ServiceLocation
+    ServiceCurrency, ServiceLocation, FavoriteService
 from src.services.users.models import User
 
 """ ---------------------Helper Serializers--------------------- """
@@ -98,7 +98,9 @@ class ServiceSerializer(serializers.ModelSerializer):
         return obj.get_total_rating()
 
     def get_category(self, obj):
-        return obj.category.name
+        if obj.category:
+            return obj.category.name
+        return None
 
     def get_schedule(self, obj):
         schedules = obj.get_service_schedule()
@@ -111,20 +113,6 @@ class ServiceSerializer(serializers.ModelSerializer):
                 'timezone': schedule.timezone
             })
         return data
-
-
-class ServiceCreateUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Service
-        fields = ['id', 'title', 'category', 'service_type', 'thumbnail', 'description', 'content', 'price_type',
-                  'price',
-                  'discount', 'currency', 'is_active']
-
-    def validate_title(self, value):
-        request = self.context.get("request")
-        if Service.objects.filter(provider=request.user, title=value).exists():
-            raise serializers.ValidationError("You already have a service with this title.")
-        return value
 
 
 class ServiceDetailSerializer(serializers.ModelSerializer):
@@ -145,4 +133,15 @@ class ServiceDetailSerializer(serializers.ModelSerializer):
         ]
 
 
-""" ---------------------User Serializers--------------------- """
+class ServiceCreateUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Service
+        fields = ['id', 'title', 'category', 'service_type', 'thumbnail', 'description', 'content', 'price_type',
+                  'price',
+                  'discount', 'currency', 'is_active']
+
+    def validate_title(self, value):
+        request = self.context.get("request")
+        if Service.objects.filter(provider=request.user, title=value).exists():
+            raise serializers.ValidationError("You already have a service with this title.")
+        return value
