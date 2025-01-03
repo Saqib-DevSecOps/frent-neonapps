@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from src.services.services.models import ServiceCategory, Service, ServiceImage, ServiceAvailability, ServiceReview, \
-    ServiceCurrency, ServiceLocation
+    ServiceCurrency, ServiceLocation, FavoriteService
 from src.services.users.models import User
 
 """ ---------------------Helper Serializers--------------------- """
@@ -113,20 +113,6 @@ class ServiceSerializer(serializers.ModelSerializer):
         return data
 
 
-class ServiceCreateUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Service
-        fields = ['id', 'title', 'category', 'service_type', 'thumbnail', 'description', 'content', 'price_type',
-                  'price',
-                  'discount', 'currency', 'is_active']
-
-    def validate_title(self, value):
-        request = self.context.get("request")
-        if Service.objects.filter(provider=request.user, title=value).exists():
-            raise serializers.ValidationError("You already have a service with this title.")
-        return value
-
-
 class ServiceDetailSerializer(serializers.ModelSerializer):
     provider = UserProfileSerializer()
     images = ServiceImageSerializer(many=True, read_only=True)
@@ -145,4 +131,17 @@ class ServiceDetailSerializer(serializers.ModelSerializer):
         ]
 
 
-""" ---------------------User Serializers--------------------- """
+class ServiceCreateUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Service
+        fields = ['id', 'title', 'category', 'service_type', 'thumbnail', 'description', 'content', 'price_type',
+                  'price',
+                  'discount', 'currency', 'is_active']
+
+    def validate_title(self, value):
+        request = self.context.get("request")
+        if Service.objects.filter(provider=request.user, title=value).exists():
+            raise serializers.ValidationError("You already have a service with this title.")
+        return value
+
+

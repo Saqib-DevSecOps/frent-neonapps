@@ -2,10 +2,13 @@ from rest_framework import serializers
 
 from src.api.v1.serializers import LanguageSerializer
 from src.core.models import Language
+from src.services.services.api.serializers import ServiceSerializer
+from src.services.services.models import FavoriteService
 from src.services.users.models import UserImage, Address, Interest, Certification, SocialMedia, User, ServiceProvider, \
     ServiceProviderLanguage
 
 
+# """ ---------------------User Serializers--------------------- """
 class UserSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
 
@@ -39,12 +42,14 @@ class UserAddressSerializer(serializers.ModelSerializer):
         read_only_fields = ['user']
 
 
+# """ ---------------------Service Provider Interest  Serializers--------------------- """
 class InterestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Interest
         fields = ['id', 'name']
 
 
+# """ ---------------------Service Provider Language Serializers--------------------- """
 class ServiceProviderLanguageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceProviderLanguage
@@ -58,17 +63,22 @@ class ServiceProviderLanguageDetailSerializer(ServiceProviderLanguageSerializer)
         pass
 
 
+# """ ---------------------Service Provider Certificate Serializers--------------------- """
+
 class CertificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Certification
         fields = ['id', 'certificate_file', ]
 
 
+# """ ---------------------Service Provider Social Media Serializers--------------------- """
 class SocialMediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = SocialMedia
         fields = ['id', 'facebook', 'instagram', 'twitter', 'linkedin', ]
 
+
+# """ ---------------------Service Provider Serializers--------------------- """
 
 class ServiceProviderSerializer(serializers.ModelSerializer):
     class Meta:
@@ -90,3 +100,18 @@ class ServiceProviderDetailSerializer(serializers.ModelSerializer):
                   'verified', 'status', 'social_media', 'interests', 'certifications', 'languages']
         read_only_fields = ['user', 'social_media', 'interests', 'certifications', 'address', 'rating', 'total_reviews',
                             'verified', 'status', ]
+
+
+# """ ---------------------Favorite Service Serializers--------------------- """
+class FavoriteServiceSerializer(serializers.ModelSerializer):
+    service = ServiceSerializer()
+
+    class Meta:
+        model = FavoriteService
+        fields = ['user', 'service']
+
+
+class FavoriteServiceCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FavoriteService
+        fields = ['service']

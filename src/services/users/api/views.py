@@ -5,9 +5,11 @@ from rest_framework.generics import UpdateAPIView, CreateAPIView, RetrieveUpdate
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from src.services.services.models import FavoriteService
 from src.services.users.api.serializers import UserSerializer, UserImageSerializer, UserAddressSerializer, \
     ServiceProviderDetailSerializer, ServiceProviderSerializer, SocialMediaSerializer, InterestSerializer, \
-    CertificationSerializer, UserUpdateSerializer, ServiceProviderLanguageSerializer
+    CertificationSerializer, UserUpdateSerializer, ServiceProviderLanguageSerializer, FavoriteServiceSerializer, \
+    FavoriteServiceCreateSerializer
 from src.services.users.models import UserImage, User, ServiceProvider, SocialMedia, Interest, Certification, \
     ServiceProviderLanguage
 
@@ -91,7 +93,8 @@ class ServiceProviderRetrieveUpdateAPIView(RetrieveUpdateAPIView):
         return ServiceProviderSerializer
 
     def get_object(self):
-        return get_object_or_404(self.queryset, id = self.request.user.get_service_provider_profile().id)
+        return get_object_or_404(self.queryset, id=self.request.user.get_service_provider_profile().id)
+
 
 class ServiceProviderLanguageCreateAPIView(CreateAPIView):
     """
@@ -170,3 +173,33 @@ class ServiceProviderSocialMediaUpdateAPIView(UpdateAPIView):
 
     def get_object(self):
         return get_object_or_404(self.queryset, service_provider=self.request.user.get_service_provider_profile())
+
+
+# User Favorite Service
+
+class FavoriteServiceListCreateAPIView(CreateAPIView):
+    queryset = FavoriteService.objects.all()
+    serializer_class = FavoriteServiceSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return FavoriteServiceSerializer
+        return FavoriteServiceCreateSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class FavoriteServiceDestroyAPIView(DestroyAPIView):
+    queryset = FavoriteService.objects.all()
+    serializer_class = FavoriteServiceSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return get_object_or_404(self.queryset, user=self.request.user)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_200_OK, data={'message': 'Favorite service deleted successfully'})
