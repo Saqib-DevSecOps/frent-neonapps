@@ -108,10 +108,15 @@ class FavoriteServiceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FavoriteService
-        fields = ['user', 'service']
+        fields = ['id','user', 'service']
 
 
 class FavoriteServiceCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = FavoriteService
-        fields = ['service']
+        fields = ['id','service']
+
+    def validate(self, attrs):
+        if FavoriteService.objects.filter(user=self.context['request'].user, service=attrs['service']).exists():
+            raise serializers.ValidationError("Service already added to favorites")
+        return attrs

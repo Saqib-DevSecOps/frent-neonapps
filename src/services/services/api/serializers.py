@@ -98,7 +98,9 @@ class ServiceSerializer(serializers.ModelSerializer):
         return obj.get_total_rating()
 
     def get_category(self, obj):
-        return obj.category.name
+        if obj.category:
+            return obj.category.name
+        return None
 
     def get_schedule(self, obj):
         schedules = obj.get_service_schedule()
@@ -143,5 +145,3 @@ class ServiceCreateUpdateSerializer(serializers.ModelSerializer):
         if Service.objects.filter(provider=request.user, title=value).exists():
             raise serializers.ValidationError("You already have a service with this title.")
         return value
-
-
