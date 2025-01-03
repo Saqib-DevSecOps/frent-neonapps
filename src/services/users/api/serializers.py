@@ -45,8 +45,6 @@ class InterestSerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 
-
-
 class ServiceProviderLanguageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceProviderLanguage

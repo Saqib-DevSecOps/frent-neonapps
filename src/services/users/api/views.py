@@ -1,5 +1,7 @@
+from django.views.generic import DeleteView
 from rest_framework import status
-from rest_framework.generics import UpdateAPIView, CreateAPIView, RetrieveUpdateAPIView, DestroyAPIView
+from rest_framework.generics import UpdateAPIView, CreateAPIView, RetrieveUpdateAPIView, DestroyAPIView, \
+    get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -25,7 +27,7 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
         return UserUpdateSerializer
 
     def get_object(self):
-        return self.request.user
+        return get_object_or_404(self.queryset, id=self.request.user.id)
 
     def perform_update(self, serializer):
         serializer.save()
@@ -89,8 +91,7 @@ class ServiceProviderRetrieveUpdateAPIView(RetrieveUpdateAPIView):
         return ServiceProviderSerializer
 
     def get_object(self):
-        return self.request.user.service_provider_profile
-
+        return get_object_or_404(self.queryset, id = self.request.user.get_service_provider_profile().id)
 
 class ServiceProviderLanguageCreateAPIView(CreateAPIView):
     """
@@ -116,6 +117,23 @@ class ServiceProviderInterestCreateAPIView(CreateAPIView):
         serializer.save(service_provider=self.request.user.get_service_provider_profile())
 
 
+class ServiceProviderLanguageDestroyAPIView(DestroyAPIView):
+    """
+    Delete service provider language
+    """
+    queryset = ServiceProviderLanguage.objects.all()
+    serializer_class = ServiceProviderLanguageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return get_object_or_404(self.queryset, service_provider=self.request.user.get_service_provider_profile())
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_200_OK, data={'message': 'Language deleted successfully'})
+
+
 class ServiceProviderCertificationCreateAPIView(CreateAPIView):
     """
     Create service provider certification
@@ -137,7 +155,7 @@ class ServiceProviderCertificateDestroyAPIView(DestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        return self.request.user.service_provider_profile
+        return get_object_or_404(self.queryset, service_provider=self.request.user.get_service_provider_profile())
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -151,4 +169,4 @@ class ServiceProviderSocialMediaUpdateAPIView(UpdateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        return self.request.user.service_provider_profile.social_media
+        return get_object_or_404(self.queryset, service_provider=self.request.user.get_service_provider_profile())
