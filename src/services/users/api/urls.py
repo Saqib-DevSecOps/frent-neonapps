@@ -5,7 +5,7 @@ from src.services.users.api.views import UserRetrieveUpdateAPIView, UserImageCre
     ServiceProviderSocialMediaUpdateAPIView, ServiceProviderCertificateDestroyAPIView, \
     ServiceProviderCertificationCreateAPIView, ServiceProviderLanguageCreateAPIView, \
     ServiceProviderLanguageDestroyAPIView, FavoriteServiceDestroyAPIView, FavoriteServiceListCreateAPIView, \
-    UserContactListCreateAPIView, UserContactUpdateDestroyAPIView
+    UserContactListCreateAPIView, UserContactUpdateDestroyAPIView, ServiceProviderInterestDestroyAPIView
 
 app_name = "users-api"
 
@@ -28,7 +28,9 @@ urlpatterns += [
     path('v1/service-provider/', ServiceProviderRetrieveUpdateAPIView.as_view(), name='service-provider-update'),
     path('v1/service-provider/interest/', ServiceProviderInterestCreateAPIView.as_view(),
          name='service-provider-interest'),
-    path('v1/service-provider/interest/<str:pk>/', ServiceProviderLanguageDestroyAPIView.as_view(),
+    path('v1/service-provider/interest/<str:pk>/', ServiceProviderInterestDestroyAPIView.as_view(),
+         name='service-provider-interest-destroy'),
+    path('v1/service-provider/language/<str:pk>/', ServiceProviderLanguageDestroyAPIView.as_view(),
          name='service-provider-language-destroy'),
     path('v1/service-provider/language/', ServiceProviderLanguageCreateAPIView.as_view(),
          name='service-provider-language'),
