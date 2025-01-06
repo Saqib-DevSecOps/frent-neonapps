@@ -120,6 +120,25 @@ class ServiceProviderInterestCreateAPIView(CreateAPIView):
         serializer.save(service_provider=self.request.user.get_service_provider_profile())
 
 
+class ServiceProviderInterestDestroyAPIView(DestroyAPIView):
+    """
+    Delete service provider Interest
+    """
+
+    queryset = Interest.objects.all()
+    serializer_class = InterestSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return get_object_or_404(self.queryset, service_provider=self.request.user.get_service_provider_profile())
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_200_OK, data={'message': 'Interest'
+                                                                    ' deleted successfully'})
+
+
 class ServiceProviderLanguageDestroyAPIView(DestroyAPIView):
     """
     Delete service provider language
