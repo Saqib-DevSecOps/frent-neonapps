@@ -130,7 +130,7 @@ class ServiceProviderInterestDestroyAPIView(DestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        return get_object_or_404(self.queryset, service_provider=self.request.user.get_service_provider_profile())
+        return get_object_or_404(self.queryset, service_provider=self.request.user.get_service_provider_profile(), pk=self.kwargs.get('pk'))
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
