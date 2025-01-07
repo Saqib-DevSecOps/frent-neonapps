@@ -37,7 +37,7 @@
                                 <a href="javascript:void(0)"><i class="uil uil-heart-alt fs-18"></i></a>
                             </div>
                             {% if service.thumbnail %}
-                                <img height="50" class="mb-4" src="{{ service.thumbnail.url }}" alt="">
+                                <img style="border-radius:10px;" height="50" class="mb-4" src="{{ service.thumbnail.url }}" alt="">
                             {% else %}
                                 <img height="50" class="mb-4" style="border-radius: 10%;"
                                      src="https://api.dicebear.com/9.x/icons/svg?seed={{ service.title|default:'Placeholder' }}"
@@ -88,11 +88,11 @@
                             </div>
                             <div class=" mt-4 row gap-2">
                                 <div class="col-md-6 mt-2">
-                                    <a href="{% url 'services:services-detail' service.pk %}" data-bs-toggle="modal"
-                                       class="btn btn-success w-100">View Details</a>
+                                    <a href="{% url 'users:user-detail' service.provider.pk %}" data-bs-toggle="modal" class="btn btn-primary w-100">Provider</a>
                                 </div>
                                 <div class="col-md-6 mt-2">
-                                    <a href="{% url 'users:user-detail' service.provider.pk %}" data-bs-toggle="modal" class="btn btn-primary w-100">Provider</a>
+                                    <a href="{% url 'services:services-detail' service.pk %}" data-bs-toggle="modal"
+                                       class="btn btn-success w-100">View Details</a>
                                 </div>
                             </div>
                         </div>

@@ -106,7 +106,7 @@
                 <div class="card-body border-bottom">
                     <div class="d-flex">
                         {% if object.thumbnail %}
-                            <img height="65" class="mb-4" src="{{ object.thumbnail.url }}" alt="">
+                            <img style="border-radius: 10px;" height="65" class="mb-4" src="{{ object.thumbnail.url }}" alt="">
                         {% else %}
                             <img height="65" style="border-radius: 10%;"
                                  src="https://api.dicebear.com/9.x/icons/svg?seed={{ object.title|default:'Placeholder' }}"

@@ -7,7 +7,7 @@
 {% endblock %}
 
 
-{% block page_heading %} User Detail{% endblock %}
+{% block page_heading %} User Detail {% endblock %}
 
 {% block content %}
 
@@ -22,8 +22,11 @@
                             <img class="rounded-circle" src="{{ user.profile_image.url }}" height="150px"
                                  alt="user-image">
                         {% else %}
+{#                            <img class="rounded-circle"#}
+{#                                 src="https://avatar.iran.liara.run/public?name={{ user.username|default:'User' }}"#}
+{#                                 height="150px" alt="no-user-image">#}
                             <img class="rounded-circle"
-                                 src="https://avatar.iran.liara.run/public?name={{ user.username|default:'User' }}"
+                                 src="https://placehold.co/400"
                                  height="150px" alt="no-user-image">
                         {% endif %}
                     </div>
@@ -105,7 +108,7 @@
                         <table class="table">
                             <tbody>
                             <tr>
-                                <th scope="col">Company Name</th>
+                                <th scope="col">Wallet Name</th>
                                 <td scope="col"> {% if  user.get_service_provider_profile.company_name %}
                                     {{ user.get_service_provider_profile.company_name }}{% else %}Not
                                     Provided{% endif %}</td>
@@ -171,16 +174,29 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row mb-2">
-                          <div class="col">
-                            <p class="mb-0  h5">User Bio: </p>
+                        <div class="col-md-9">
+                            <p class="mb-0  h5">User Biology: </p>
                             {% if user.bio %}
                                 <p class="mb-0 mt-2">{{ user.bio }}</p>
                             {% else %}
                                 <h6 class="mb-0 text-danger mt-2 ">User Bio Not Found</h6>
                             {% endif %}
-                          <hr>
                         </div>
+
+                        <div class="col-md-3 p-0">
+                            <a href="{% url 'wallet:user-wallet' user.wallet.pk %}" class="btn btn-success float-right">
+                                <i class="fa fa-money-bill"></i> Wallet
+{#                            </a>#}
+                            <a href="#" class="btn btn-primary float-right" style="margin-right:5px;">
+                                Baddies
+                            </a>
+                        </div>
+                        <br>
                     </div>
+                <div class="row" style="height: 10px;">
+                   {# PLACEHOLDER #}
+                    <hr>
+                </div>
                     <!-- Social Media Section -->
                     <div class="row mb-4">
                         <div class="col-md-3">
@@ -207,16 +223,19 @@
                                     {% endif %}</div>
                                 </div>
                                 <div class="row mt-2">
-                                    <div class="col-md-6"> {% if user.service_provider_profile.social_media.twitter %}
-                                        <a href="{{ user.service_provider_profile.social_media.twitter }}"
-                                           target="_blank"
-                                           title="Twitter">
-                                            <img height="20px"
-                                                 src="{% static 'core/images/socialmedia/twitter_5968830.png' %}">
-                                            Twitter
-
-                                        </a>
-                                    {% endif %}</div>
+                                    <div class="col-md-6">
+                                        {% if user.service_provider_profile.social_media.twitter %}
+                                            <a href="{{ user.service_provider_profile.social_media.twitter }}"
+                                               target="_blank"
+                                               title="Twitter">
+                                                <img height="20px"
+                                                     src="{% static 'core/images/socialmedia/twitter_5968830.png' %}">
+                                                Twitter
+                                            </a>
+                                        {% else %}
+                                            <span class="text-dark text-center">Not Provided</span>
+                                        {% endif %}
+                                    </div>
                                     <div class="col-md-6"> {% if user.service_provider_profile.social_media.linkedin %}
                                         <a href="{{ user.service_provider_profile.social_media.linkedin }}"
                                            target="_blank"
@@ -273,6 +292,8 @@
                                      <span class="badge badge-soft-danger">{{ emailaddress.email }}</span>
                                 {% endif %}
                                 <br>
+                            {% empty %}
+                                <span class="text-dark">No email addresses available.</span>
                             {% endfor %}
                         </div>
 

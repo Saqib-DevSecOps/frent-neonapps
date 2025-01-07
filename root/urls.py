@@ -25,6 +25,8 @@ urlpatterns += [
 urlpatterns += [
     path('', include('src.services.users.urls', namespace='users')),
     path('', include('src.services.services.urls', namespace='services')),
+
+    path('', include('src.services.wallet.urls', namespace='wallet')),
     path('', include('src.services.dashboard.urls', namespace='dashboard')),
     path('', include('src.services.order.urls', namespace='order')),
 ]
