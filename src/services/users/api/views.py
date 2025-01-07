@@ -1,12 +1,17 @@
+from django.views.generic import DeleteView
 from rest_framework import status
-from rest_framework.generics import UpdateAPIView, CreateAPIView, RetrieveUpdateAPIView, DestroyAPIView
+from rest_framework.generics import UpdateAPIView, CreateAPIView, RetrieveUpdateAPIView, DestroyAPIView, \
+    get_object_or_404, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from src.services.services.models import FavoriteService
 from src.services.users.api.serializers import UserSerializer, UserImageSerializer, UserAddressSerializer, \
     ServiceProviderDetailSerializer, ServiceProviderSerializer, SocialMediaSerializer, InterestSerializer, \
-    CertificationSerializer, UserUpdateSerializer
-from src.services.users.models import UserImage, User, ServiceProvider, SocialMedia, Interest, Certification
+    CertificationSerializer, UserUpdateSerializer, ServiceProviderLanguageSerializer, FavoriteServiceSerializer, \
+    FavoriteServiceCreateSerializer, UserContactSerializer
+from src.services.users.models import UserImage, User, ServiceProvider, SocialMedia, Interest, Certification, \
+    ServiceProviderLanguage, UserContact
 
 """ ---------------------SERVICE SEEKER APIS------------------------ """
 
@@ -24,7 +29,7 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
         return UserUpdateSerializer
 
     def get_object(self):
-        return self.request.user
+        return get_object_or_404(self.queryset, id=self.request.user.id)
 
     def perform_update(self, serializer):
         serializer.save()
@@ -88,7 +93,19 @@ class ServiceProviderRetrieveUpdateAPIView(RetrieveUpdateAPIView):
         return ServiceProviderSerializer
 
     def get_object(self):
-        return self.request.user.service_provider_profile
+        return get_object_or_404(self.queryset, id=self.request.user.get_service_provider_profile().id)
+
+
+class ServiceProviderLanguageCreateAPIView(CreateAPIView):
+    """
+    Create service provider language
+    """
+    queryset = ServiceProviderLanguage.objects.all()
+    serializer_class = ServiceProviderLanguageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(service_provider=self.request.user.get_service_provider_profile())
 
 
 class ServiceProviderInterestCreateAPIView(CreateAPIView):
@@ -100,7 +117,43 @@ class ServiceProviderInterestCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save(service_provider=self.request.user.get_service_provider_profile())
+
+
+class ServiceProviderInterestDestroyAPIView(DestroyAPIView):
+    """
+    Delete service provider Interest
+    """
+
+    queryset = Interest.objects.all()
+    serializer_class = InterestSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return get_object_or_404(self.queryset, service_provider=self.request.user.get_service_provider_profile(), pk=self.kwargs.get('pk'))
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_200_OK, data={'message': 'Interest'
+                                                                    ' deleted successfully'})
+
+
+class ServiceProviderLanguageDestroyAPIView(DestroyAPIView):
+    """
+    Delete service provider language
+    """
+    queryset = ServiceProviderLanguage.objects.all()
+    serializer_class = ServiceProviderLanguageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return get_object_or_404(self.queryset, service_provider=self.request.user.get_service_provider_profile())
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_200_OK, data={'message': 'Language deleted successfully'})
 
 
 class ServiceProviderCertificationCreateAPIView(CreateAPIView):
@@ -112,7 +165,7 @@ class ServiceProviderCertificationCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(service_provider=self.request.user.service_provider_profile)
+        serializer.save(service_provider=self.request.user.get_service_provider_profile())
 
 
 class ServiceProviderCertificateDestroyAPIView(DestroyAPIView):
@@ -124,7 +177,7 @@ class ServiceProviderCertificateDestroyAPIView(DestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        return self.request.user.service_provider_profile
+        return get_object_or_404(self.queryset, service_provider=self.request.user.get_service_provider_profile())
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -138,4 +191,63 @@ class ServiceProviderSocialMediaUpdateAPIView(UpdateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        return self.request.user.service_provider_profile.social_media
+        return get_object_or_404(self.queryset, service_provider=self.request.user.get_service_provider_profile())
+
+
+# User Favorite Service
+
+class FavoriteServiceListCreateAPIView(CreateAPIView):
+    queryset = FavoriteService.objects.all()
+    serializer_class = FavoriteServiceSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return FavoriteServiceSerializer
+        return FavoriteServiceCreateSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class FavoriteServiceDestroyAPIView(DestroyAPIView):
+    queryset = FavoriteService.objects.all()
+    serializer_class = FavoriteServiceSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return get_object_or_404(self.queryset, user=self.request.user)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_200_OK, data={'message': 'Favorite service deleted successfully'})
+
+
+class UserContactListCreateAPIView(ListCreateAPIView):
+    queryset = UserContact.objects.all()
+    serializer_class = UserContactSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+        return UserContact.objects.filter(user=self.request.user)
+
+
+class UserContactUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
+    queryset = UserContact.objects.all()
+    serializer_class = UserContactSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return get_object_or_404(self.queryset, user=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_200_OK, data={'message': 'Contact deleted successfully'})
