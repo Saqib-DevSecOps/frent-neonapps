@@ -108,7 +108,6 @@ class Interest(models.Model):
 class Certification(models.Model):
     """Certification Model for Service Providers"""
     service_provider = models.ForeignKey("ServiceProvider", related_name='certifications', on_delete=models.CASCADE)
-    certificate_name = models.CharField(max_length=255, verbose_name="Certificate Name")
     certificate_file = models.FileField(upload_to='users/certifications/', blank=True, null=True)
 
     is_active = models.BooleanField(default=True)
