@@ -8,8 +8,9 @@ from rest_framework.response import Response
 from src.services.services.api.filters import ServiceFilter
 from src.services.services.api.serializers import ServiceSerializer, ServiceDetailSerializer, \
     ServiceCreateUpdateSerializer, ServiceImageSerializer, ServiceAvailabilitySerializer, ServiceLocationSerializer, \
-    ServiceReviewSerializer
-from src.services.services.models import Service, ServiceImage, ServiceLocation, ServiceAvailability, ServiceReview
+    ServiceReviewSerializer, ServiceCurrencySerializer
+from src.services.services.models import Service, ServiceImage, ServiceLocation, ServiceAvailability, ServiceReview, \
+    ServiceCurrency
 
 """SERVICE SEEKER APIS"""
 
@@ -150,6 +151,12 @@ class ServiceLocationUpdateDestroyAPIView(UpdateAPIView, DestroyAPIView):
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_200_OK, data={'message': 'Location deleted successfully'})
+
+
+class ServiceCurrencyListAPIView(ListAPIView):
+    queryset = ServiceCurrency.objects.all()
+    serializer_class = ServiceCurrencySerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class ServiceReviewCreateAPIView(CreateAPIView):
