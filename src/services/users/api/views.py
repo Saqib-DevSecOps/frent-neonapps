@@ -199,7 +199,7 @@ class ServiceProviderSocialMediaUpdateAPIView(UpdateAPIView):
 
 # User Favorite Service
 
-class FavoriteServiceListCreateAPIView(CreateAPIView):
+class FavoriteServiceListCreateAPIView(ListCreateAPIView):
     queryset = FavoriteService.objects.all()
     serializer_class = FavoriteServiceSerializer
     permission_classes = [IsAuthenticated]
