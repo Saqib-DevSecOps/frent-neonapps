@@ -6,7 +6,7 @@ from src.services.users.models import User
 
 
 class Wallet(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='wallet')
     description = models.TextField(null=True, blank=True)
 
     # STRIPE

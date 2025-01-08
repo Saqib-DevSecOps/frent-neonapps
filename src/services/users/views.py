@@ -51,7 +51,7 @@ class UserUpdateView(UpdateView):
     template_name = 'users/user_update_form.html'
 
     def get_success_url(self):
-        return reverse('admins:user-detail', kwargs={'pk': self.object.pk})
+            return reverse('users:user-detail', kwargs={'pk': self.object.pk})
 
 
 @method_decorator(staff_required_decorator, name='dispatch')
@@ -91,4 +91,4 @@ class SocialsView(TemplateView):
 def remove_social_account(request, account_id):
     account = get_object_or_404(SocialAccount, id=account_id, user=request.user)
     account.delete()
-    return redirect('admins:social-accounts')  # Update with your actual view name
+    return redirect('admins:social-accounts')

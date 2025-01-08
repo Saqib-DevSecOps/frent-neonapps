@@ -1,31 +1,28 @@
-{% extends 'base_content.html' %}
-{% load crispy_forms_filters %}
+{% extends 'base.html' %}
+{% load static %}
 {% load crispy_forms_tags %}
 {% load core_tags %}
 
 {% block subtitle %}
-    Emails
+    Emails List
 {% endblock %}
 
-{% block content_head_title %}
-    Email Management
-{% endblock %}
-
+{% block page_heading %} Email List {% endblock %}
 
 {% block content %}
     <div class="row">
         <div class="col-12">
-            <form method="get">
+            <form method="get" id="search-form">
                 <div class="input-group mb-3">
                     {{ filter_form }}
-                    <div class="input-group-append">
-                        <button class="btn btn-lg d-block btn-outline-theme" type="submit">
-                            <i class="fa fa-search"></i> Search
-                        </button>
-                    </div>
+                    <button style="margin-left: 3px" class="btn btn-primary ms-3S" type="submit">
+                        <i class="fa fa-search"></i> Search
+                    </button>
+                    <a style="margin-left: 2px" class="btn btn-danger" href="{% url 'services:services-list' %}">
+                        <i class="fa fa-brush"></i>
+                    </a>
                 </div>
             </form>
-
         </div>
     </div>
 
@@ -100,8 +97,6 @@
                             {% endif %}
                         </table>
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -139,6 +134,41 @@
 
 {% endblock %}
 
+{% block js_code %}
+    <script>
+    // TO FORMAT THE FORMS
+        $(document).ready(function () {
+
+            $('label').hide();
+            $('input').addClass('form-control');
+            $('select').addClass('form-control');
+
+        });
+
+        $(document).ready(function () {
+            const inputs = $(".input-group > div");
+
+            inputs.css({
+                display: "flex",
+                flex: "1",
+                marginRight: "10px",
+            });
+
+            inputs.last().css("marginRight", "0");
+
+            $(".input-group").css({
+                display: "flex",
+                justifyContent: "space-between",
+            });
+        });
+
+        $("#id_recipient").attr("placeholder", "Enter Recipient Email");
+
+
+
+    </script>
+{% endblock %}
+
 {% block jsout %}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -158,10 +188,7 @@
             $('label').hide();
             $('input').addClass('form-control form-control-lg bg-inverse bg-opacity-5');
             $('select').addClass('form-select');
-            $("#id_recipient").attr("placeholder", "Enter Recipient Email");
             $("#id_status option:first").text("-- Select Status --");
         });
     </script>
 {% endblock %}
-
-

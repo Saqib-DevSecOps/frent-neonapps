@@ -50,7 +50,7 @@
                     <div class="hstack gap-2">
                         <a class="btn btn-outline-success w-100"
                            href="{% url 'users:user-detail' object.provider.pk %}">
-                            {{ object.provider.username }} Details
+                            Provider Details
                         </a>
                     </div>
                 </div>
@@ -106,7 +106,7 @@
                 <div class="card-body border-bottom">
                     <div class="d-flex">
                         {% if object.thumbnail %}
-                            <img height="65" class="mb-4" src="{{ object.thumbnail.url }}" alt="">
+                            <img style="border-radius: 10px;" height="65" class="mb-4" src="{{ object.thumbnail.url }}" alt="">
                         {% else %}
                             <img height="65" style="border-radius: 10%;"
                                  src="https://api.dicebear.com/9.x/icons/svg?seed={{ object.title|default:'Placeholder' }}"
@@ -212,26 +212,28 @@
                         <table class="table table-hover">
                             <thead class="">
                             <tr>
+                                <th scope="col">ID</th>
                                 <th scope="col">Provider</th>
                                 <th scope="col">Seeker</th>
                                 <th scope="col">Service</th>
-                                <th scope="col">Status</th>
                                 <th scope="col">Payment Method</th>
                                 <th scope="col">Amount</th>
                                 <th scope="col">Currency</th>
+                                <th scope="col">Status</th>
                                 <th scope="col">Paid</th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for obj in object.requests.all %}
                                 <tr>
+                                    <td>{{ forloop.counter }}</td>
                                     <td>{{ obj.service.provider }}</td>
                                     <td>{{ obj.seeker }}</td>
                                     <td>{{ obj.service.title }}</td>
-                                    <td><span class="text-white badge bg-info">{{ obj.status }}</span></td>
                                     <td>{{ obj.payment_method }}</td>
                                     <td>{{ obj.amount }}</td>
                                     <td>{{ obj.currency }}</td>
+                                    <td><span class="text-success badge bg-soft-success">{{ obj.status }}</span></td>
                                     <td>
                                         {% if obj.is_paid %}
                                             <i class="text-success fa fa-check-circle"></i>
@@ -242,7 +244,7 @@
                                 </tr>
                             {% empty %}
                                 <tr>
-                                    <td colspan="8" class="text-center">
+                                    <td colspan="8" class="">
                                         <p class="text-danger">No Requests for this service have been added.</p>
                                     </td>
                                 </tr>

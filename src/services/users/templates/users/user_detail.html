@@ -7,11 +7,9 @@
 {% endblock %}
 
 
-{% block page_heading %} User Detail{% endblock %}
+{% block page_heading %} User Detail {% endblock %}
 
 {% block content %}
-
-
 
     <div class="row">
         <div class="col-lg-12">
@@ -24,7 +22,11 @@
                             <img class="rounded-circle" src="{{ user.profile_image.url }}" height="150px"
                                  alt="user-image">
                         {% else %}
-                            <img class="rounded-circle" src="https://avatar.iran.liara.run/public?name={{ user.username|default:'User' }}"
+{#                            <img class="rounded-circle"#}
+{#                                 src="https://avatar.iran.liara.run/public?name={{ user.username|default:'User' }}"#}
+{#                                 height="150px" alt="no-user-image">#}
+                            <img class="rounded-circle"
+                                 src="https://placehold.co/400"
                                  height="150px" alt="no-user-image">
                         {% endif %}
                     </div>
@@ -90,21 +92,14 @@
                     </div>
                     <hr>
                     <div class="row mt-4">
-                        <div class="col">
-                            <p class="mb-0  h5">Bio : </p>
-                            {% if user.bio %}
-                                <p class="mb-0 ">{{ user.bio }}</p>
-                            {% else %}
-                                <h6 class="mb-0 text-danger mt-2 ">User Bio Not Found</h6>
-                            {% endif %}
-                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="row">
-            <div class="col-lg-3">
+        <div class="col-lg-3">
             <div class="card">
                 <div class="card-body">
                     <h5 class="fw-semibold">Company Information</h5>
@@ -113,7 +108,7 @@
                         <table class="table">
                             <tbody>
                             <tr>
-                                <th scope="col">Company Name</th>
+                                <th scope="col">Wallet Name</th>
                                 <td scope="col"> {% if  user.get_service_provider_profile.company_name %}
                                     {{ user.get_service_provider_profile.company_name }}{% else %}Not
                                     Provided{% endif %}</td>
@@ -178,31 +173,81 @@
         <div class="col-md-9 mx-auto">
             <div class="card">
                 <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-md-9">
+                            <p class="mb-0  h5">User Biology: </p>
+                            {% if user.bio %}
+                                <p class="mb-0 mt-2">{{ user.bio }}</p>
+                            {% else %}
+                                <h6 class="mb-0 text-danger mt-2 ">User Bio Not Found</h6>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-3 p-0">
+                            <a href="{% url 'wallet:user-wallet' user.wallet.pk %}" class="btn btn-success float-right">
+                                <i class="fa fa-money-bill"></i> User Wallet
+                            </a>
+    {#                            <a href="#" class="btn btn-primary float-right" style="margin-right:5px;">#}
+    {#                                Baddies#}
+    {#                            </a>#}
+                        </div>
+                        <br>
+                    </div>
+                <div class="row" style="height: 10px;">
+                   {# PLACEHOLDER #}
+                    <hr>
+                </div>
                     <!-- Social Media Section -->
                     <div class="row mb-4">
                         <div class="col-md-3">
                             <h5><strong>Social Media:</strong></h5>
-                            <div>
-                                {% if social_media.facebook %}
-                                    <a href="{{ social_media.facebook }}" target="_blank" title="Facebook">
-                                        <i class="fa fa-facebook"></i>
-                                    </a>
-                                {% endif %}
-                                {% if social_media.instagram %}
-                                    <a href="{{ social_media.instagram }}" target="_blank" title="Instagram">
-                                        <i class="fa fa-instagram"></i>
-                                    </a>
-                                {% endif %}
-                                {% if social_media.twitter %}
-                                    <a href="{{ social_media.twitter }}" target="_blank" title="Twitter">
-                                        <i class="fa fa-twitter"></i>
-                                    </a>
-                                {% endif %}
-                                {% if social_media.linkedin %}
-                                    <a href="{{ social_media.linkedin }}" target="_blank" title="LinkedIn">
-                                        <i class="fa fa-linkedin"></i>
-                                    </a>
-                                {% endif %}
+                            <div class="">
+                                <div class="row">
+                                    <div class="col-md-6">{% if user.service_provider_profile.social_media.facebook %}
+                                        <a href="{{ user.service_provider_profile.social_media.facebook }}"
+                                           target="_blank"
+                                           title="Facebook">
+                                            <img height="20px"
+                                                 src="{% static 'core/images/socialmedia/facebook_5968764.png' %}">
+                                            Facebook
+                                        </a>
+                                    {% endif %}</div>
+                                    <div class="col-md-6">{% if user.service_provider_profile.social_media.instagram %}
+                                        <a href="{{ user.service_provider_profile.social_media.instagram }}"
+                                           target="_blank"
+                                           title="Instagram">
+                                            <img height="20px"
+                                                 src="{% static 'core/images/socialmedia/instagram_2111463.png' %}">
+                                            Instagram
+                                        </a>
+                                    {% endif %}</div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-6">
+                                        {% if user.service_provider_profile.social_media.twitter %}
+                                            <a href="{{ user.service_provider_profile.social_media.twitter }}"
+                                               target="_blank"
+                                               title="Twitter">
+                                                <img height="20px"
+                                                     src="{% static 'core/images/socialmedia/twitter_5968830.png' %}">
+                                                Twitter
+                                            </a>
+                                        {% else %}
+                                            <span class="text-dark text-center">Not Provided</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6"> {% if user.service_provider_profile.social_media.linkedin %}
+                                        <a href="{{ user.service_provider_profile.social_media.linkedin }}"
+                                           target="_blank"
+                                           title="LinkedIn">
+                                            <img height="20px"
+                                                 src="{% static 'core/images/socialmedia/linkedin_3536569.png' %}">
+                                            LinkedIn
+                                        </a>
+                                    {% endif %}</div>
+                                </div>
+
+
                             </div>
 
                         </div>
@@ -210,42 +255,55 @@
                         <!-- Interests Section -->
                         <div class="col-md-3">
                             <h5><strong>Interests:</strong></h5>
-                            <ul class="list-unstyled">
-                                {% for interest in interests %}
-                                    <li>{{ interest.name }}</li>
-                                {% empty %}
-                                    <li>No interests provided.</li>
+                            {% if user.service_provider_profile.interests.all %}
+                                {% for interest in user.service_provider_profile.interests.all %}
+                                    {{ interest.name }}{% if forloop.last %}.{% else %},{% endif %}
                                 {% endfor %}
-                            </ul>
+                            {% else %}
+                                <div>No interests provided.</div>
+                            {% endif %}
                         </div>
+
                         <div class="col-md-3 mb-3">
-                            <strong>Status:</strong>
-                            <p>{{ status }}</p>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <strong>Verified:</strong>
-                            <p>{% if verified %}Yes{% else %}No{% endif %}</p>
-                        </div>
-
-                        <!-- Certifications Section -->
-
-                    </div>
-
-                    <!-- Status Section -->
-                    <div class="row">
-                        <div class="col-md-4">
                             <h5><strong>Certifications:</strong></h5>
                             <ul class="list-unstyled">
-                                {% for certification in certifications %}
+                                {% for certification in user.service_provider_profile.certifications.all %}
                                     <li>
-                                        <a href="{{ certification.certificate_file }}" target="_blank">
-                                            View Certificate
+                                        {{ forloop.counter }}. {{ certification.name }}
+                                        <a href="{{ certification.certificate_file.url }}"
+                                           download="{{ certification.certificate_file.name }}"
+                                           class="text-muted">
+                                            <i class="fa fa-sm fa-download ms-2"></i>
                                         </a>
                                     </li>
                                 {% empty %}
                                     <li>No certifications available.</li>
                                 {% endfor %}
+
                             </ul>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <strong>Verified:</strong><br>
+                            {% for emailaddress in user.emailaddress_set.all %}
+                                {{ forloop.counter }}.
+                                {% if emailaddress.verified %}
+                                     <span class="badge badge-soft-success">{{ emailaddress.email }}</span>
+                                {% else %}
+                                     <span class="badge badge-soft-danger">{{ emailaddress.email }}</span>
+                                {% endif %}
+                                <br>
+                            {% empty %}
+                                <span class="text-dark">No email addresses available.</span>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Certifications Section -->
+                    </div>
+
+                    <!-- Status Section -->
+                    <div class="row">
+                        <div class="col-md-4">
+
                         </div>
 
                     </div>

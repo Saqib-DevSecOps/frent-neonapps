@@ -28,3 +28,24 @@ def image_or_placeholder(image, placeholder=None):
     if placeholder:
         return f"https://placehold.co/{placeholder}"
     return "https://placehold.co/100"
+
+
+@register.filter
+def check_null(value):
+    if value:
+        return value
+    return "-"
+
+
+@register.filter
+def alert_type_class(value):
+    if value in ['cod', 'delivery', 'in_transit', 'bank_account']:
+        return 'primary'
+    elif value in ['completed', 'success', 'approved', 'paid', 'online', 'card', 'accepted']:
+        return 'success'
+    elif value in ['pending']:
+        return 'warning'
+    elif value in ['online', 'cancel', 'rejected', 'cancelled', 'unpaid', 'failed']:
+        return 'danger'
+    else:
+        return 'secondary'
