@@ -2,7 +2,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.generics import ListAPIView, RetrieveAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, \
     get_object_or_404, CreateAPIView, DestroyAPIView, UpdateAPIView
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
 from src.services.services.api.filters import ServiceFilter
@@ -153,10 +153,9 @@ class ServiceLocationUpdateDestroyAPIView(UpdateAPIView, DestroyAPIView):
         return Response(status=status.HTTP_200_OK, data={'message': 'Location deleted successfully'})
 
 
-class ServiceCurrencyListAPIView(ListAPIView):
+class ServiceCurrencyView(ListAPIView):
     queryset = ServiceCurrency.objects.all()
     serializer_class = ServiceCurrencySerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class ServiceReviewCreateAPIView(CreateAPIView):

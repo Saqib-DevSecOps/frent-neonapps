@@ -29,7 +29,7 @@ class ServiceCategorySerializer(serializers.ModelSerializer):
         ref_name = 'ServiceCategoryServices'
 
 
-class ServiceCurrentSerializer(serializers.ModelSerializer):
+class ServiceCurrencySerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceCurrency
         fields = ['id', 'name']
@@ -133,7 +133,7 @@ class ServiceDetailSerializer(serializers.ModelSerializer):
     category = ServiceCategorySerializer()
     availability_slots = ServiceAvailabilitySerializer(many=True, read_only=True)
     reviews = ServiceReviewSerializer(many=True, read_only=True)
-    currency = ServiceCurrentSerializer()
+    currency = ServiceCurrencySerializer()
     location = ServiceLocationSerializer(many=True, read_only=True)
 
     class Meta:

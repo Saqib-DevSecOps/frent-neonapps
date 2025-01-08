@@ -6,7 +6,7 @@ from .views import (
     ProviderServiceImageUploadCreateAPIView, ProviderServiceImageDeleteAPIView,
     ServiceAvailabilityCreateAPIView, ServiceAvailabilityUpdateDestroyAPIView,
     ServiceLocationCreateAPIView, ServiceLocationUpdateDestroyAPIView, ServiceReviewCreateAPIView,
-    ServiceCurrencyListAPIView
+    ServiceCurrencyView,
 )
 
 app_name = "services-api"
@@ -32,8 +32,7 @@ urlpatterns = [
          ServiceAvailabilityUpdateDestroyAPIView.as_view(),
          name='provider-service-availability-update-destroy'),
 
-    path('v1/services/currencies/', ServiceCurrencyListAPIView.as_view(), name='service-currency-list'),
-
+    path('services/api/v1/services/currency/', ServiceCurrencyView.as_view(), name='service-currency'),
     # Provider Service Location Endpoints
     path('v1/provider/services/<str:service_pk>/location/', ServiceLocationCreateAPIView.as_view(),
          name='provider-service-location-create'),
