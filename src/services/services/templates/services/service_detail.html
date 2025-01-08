@@ -50,7 +50,7 @@
                     <div class="hstack gap-2">
                         <a class="btn btn-outline-success w-100"
                            href="{% url 'users:user-detail' object.provider.pk %}">
-                            {{ object.provider.username }} Details
+                            Provider Details
                         </a>
                     </div>
                 </div>
@@ -244,7 +244,7 @@
                                 </tr>
                             {% empty %}
                                 <tr>
-                                    <td colspan="8" class="text-center">
+                                    <td colspan="8" class="">
                                         <p class="text-danger">No Requests for this service have been added.</p>
                                     </td>
                                 </tr>
