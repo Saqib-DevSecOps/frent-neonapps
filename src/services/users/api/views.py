@@ -130,7 +130,8 @@ class ServiceProviderInterestDestroyAPIView(DestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        return get_object_or_404(self.queryset, service_provider=self.request.user.get_service_provider_profile(), pk=self.kwargs.get('pk'))
+        return get_object_or_404(self.queryset, service_provider=self.request.user.get_service_provider_profile(),
+                                 pk=self.kwargs.get('pk'))
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -148,7 +149,8 @@ class ServiceProviderLanguageDestroyAPIView(DestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        return get_object_or_404(self.queryset, service_provider=self.request.user.get_service_provider_profile())
+        return get_object_or_404(self.queryset, service_provider=self.request.user.get_service_provider_profile(),
+                                 id=self.kwargs.get('pk'))
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -177,7 +179,8 @@ class ServiceProviderCertificateDestroyAPIView(DestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        return get_object_or_404(self.queryset, service_provider=self.request.user.get_service_provider_profile())
+        return get_object_or_404(self.queryset, service_provider=self.request.user.get_service_provider_profile(),
+                                 id=self.kwargs.get('pk'))
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -216,7 +219,7 @@ class FavoriteServiceDestroyAPIView(DestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        return get_object_or_404(self.queryset, user=self.request.user)
+        return get_object_or_404(self.queryset, user=self.request.user, id=self.kwargs.get('pk'))
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -242,7 +245,7 @@ class UserContactUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        return get_object_or_404(self.queryset, user=self.request.user)
+        return get_object_or_404(self.queryset, user=self.request.user, id=self.kwargs.get('pk'))
 
     def perform_update(self, serializer):
         serializer.save(user=self.request.user)

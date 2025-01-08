@@ -46,6 +46,9 @@ class BookingRequest(models.Model):
     def __str__(self):
         return f"{self.advert.service} - {self.service_provider}"
 
+    def get_service_name(self):
+        return self.advert.service
+
 
 class Order(models.Model):
     PAYMENT_TYPES = [

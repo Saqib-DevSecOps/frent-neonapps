@@ -14,7 +14,7 @@ class BookingRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookingRequest
         fields = ['id', 'advert', 'service_provider', 'message', 'status', 'date_time', 'created_at']
-        read_only_fields = ['id', 'advert', 'service_provider', 'created_at']
+        read_only_fields = ['id', 'advert', 'service_provider', 'status','created_at']
 
 
 class BookingRequestUpdateSerializer(serializers.ModelSerializer):
