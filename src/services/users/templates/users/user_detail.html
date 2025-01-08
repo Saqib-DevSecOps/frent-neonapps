@@ -269,7 +269,7 @@
                             <ul class="list-unstyled">
                                 {% for certification in user.service_provider_profile.certifications.all %}
                                     <li>
-                                        {{ forloop.counter }}. {{ certification.certificate_name }}
+                                        {{ forloop.counter }}. {{ certification.name }}
                                         <a href="{{ certification.certificate_file.url }}"
                                            download="{{ certification.certificate_file.name }}"
                                            class="text-muted">
