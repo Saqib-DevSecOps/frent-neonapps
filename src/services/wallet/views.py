@@ -12,7 +12,7 @@ class UserWalletView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(UserWalletView, self).get_context_data(**kwargs)
-        context['object_list'] = Transaction.objects.filter(wallet=self.object)
+        context['object_list'] = Transaction.objects.filter(wallet=self.object)[:7]
         return context
 
 class TransactionListView(ListView):
