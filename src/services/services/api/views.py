@@ -167,3 +167,4 @@ class ServiceReviewCreateAPIView(CreateAPIView):
         service = get_object_or_404(Service, pk=self.kwargs.get('service_pk'))
         serializer.save(service=service, reviewer=self.request.user)
         return Response(status=status.HTTP_201_CREATED, data={'message': 'Review created successfully'})
+

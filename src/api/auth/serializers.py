@@ -1,10 +1,13 @@
 import re
 
-from dj_rest_auth.registration.serializers import RegisterSerializer
+from allauth.account.models import EmailConfirmation
+from autobahn.wamp.gen.wamp.proto.Serializer import Serializer
+from dj_rest_auth.registration.serializers import RegisterSerializer, VerifyEmailSerializer
 from django.db import models
 from rest_framework import serializers
 
 from src.services.users.models import User
+from django.utils.translation import gettext_lazy as _
 
 
 class ValidationMixin:
@@ -34,7 +37,7 @@ class UserSerializer(serializers.ModelSerializer):
 class CustomLoginSerializer(serializers.Serializer, ValidationMixin):
     """Custom serializer for login with email or phone number."""
 
-    email = serializers.CharField(label='Email/Phone Number', max_length=20)
+    email = serializers.CharField(label='Email/Phone Number', max_length=50)
     password = serializers.CharField(label='Password', write_only=True)
 
     def validate_email(self, value):
@@ -93,3 +96,32 @@ class PasswordSerializer(serializers.Serializer):
     """Serializer for password input."""
 
     password = serializers.CharField(required=True, write_only=True)
+
+
+class EmailConfirmationSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    otp = serializers.CharField()
+
+    def validate(self, attrs):
+        email = attrs.get('email')
+        otp = attrs.get('otp')
+
+        # Validate EmailConfirmation existence
+        try:
+            email_confirmation = EmailConfirmation.objects.get(
+                email_address__email=email, key=otp
+            )
+        except EmailConfirmation.DoesNotExist:
+            raise serializers.ValidationError(_("Invalid email or OTP."))
+
+        # Check if the OTP has expired
+        if email_confirmation.key_expired():
+            raise serializers.ValidationError(_("The OTP has expired."))
+
+        attrs['email_confirmation'] = email_confirmation
+        return attrs
+
+    def confirm_email(self):
+        email_confirmation = self.validated_data['email_confirmation']
+        email_address = email_confirmation.confirm(self.context.get('request'))
+        return email_address

@@ -1,3 +1,4 @@
+from dj_rest_auth.registration.views import RegisterView, ResendEmailVerificationView
 from django.urls import path, re_path, include
 
 from dj_rest_auth.views import (
@@ -5,7 +6,7 @@ from dj_rest_auth.views import (
 )
 from .views import (
     CustomLoginView, DeactivateUserAPIView, DeleteUserAPIView, GoogleLogin, GoogleConnect,
-    AppleLogin, AppleConnect
+    AppleLogin, AppleConnect, EmailConfirmationView
 )
 
 app_name = 'auth'
@@ -16,7 +17,9 @@ urlpatterns = [
     path('password/change/', PasswordChangeView.as_view(), name='rest_password_change'),
     path('password/reset/', PasswordResetView.as_view(), name='rest_password_reset'),
     re_path(r'^password/reset/confirm/$', PasswordResetConfirmView.as_view(), name='rest_password_reset_confirm'),
-    re_path('registration/', include('dj_rest_auth.registration.urls')),
+    path('registration/', RegisterView.as_view(), name='rest_register'),
+    path('registration/verify-email/', EmailConfirmationView.as_view(), name='rest_verify_email'),
+    path('resend-email/', ResendEmailVerificationView.as_view(), name="rest_resend_email"),
     path('deactivate/', DeactivateUserAPIView.as_view(), name='deactivate'),
     path('delete/', DeleteUserAPIView.as_view(), name='deactivate'),
 
