@@ -6,10 +6,7 @@ from .views import (
     ProviderServiceImageUploadCreateAPIView, ProviderServiceImageDeleteAPIView,
     ServiceAvailabilityCreateAPIView, ServiceAvailabilityUpdateDestroyAPIView,
     ServiceLocationCreateAPIView, ServiceLocationUpdateDestroyAPIView, ServiceReviewCreateAPIView,
-    ServiceCurrencyView, ServiceBookingRequestListCreateAPIView, ServiceBookingRequestUpdateAPIView,
-    ServiceAdvertisementListCreateAPIView, ServiceAdvertisementRequestListAPIView,
-    ServiceAdvertisementRequestCreateAPIView,
-    ServiceAdvertisementRequestUpdateAPIView
+    ServiceCurrencyView
 )
 
 app_name = "services-api"
@@ -19,21 +16,6 @@ urlpatterns = [
 
     path('v1/services/', ServiceListAPIView.as_view(), name='service-list'),
     path('v1/services/<str:pk>/', ServiceDetailAPIView.as_view(), name='service-detail'),
-
-    path('v1/service-advertisement/', ServiceAdvertisementListCreateAPIView.as_view(),
-         name='service-advertisement-list-create'),
-
-    path('v1/service-advertisement-request/<str:advertisement_id>/',
-         ServiceAdvertisementRequestListAPIView.as_view(),
-         name='service-advertisement-request-list'),
-
-    path('v1/provider/service-advertisement-request/<str:advertisement_id>/',
-         ServiceAdvertisementRequestCreateAPIView.as_view(),
-         name='service-advertisement-request-create'),
-
-    path('v1/service-advertisement-request/<str:pk>/update/',
-         ServiceAdvertisementRequestUpdateAPIView.as_view(),
-         name='service-advertisement-request-update'),
 
     # Provider Service Endpoints
     path('v1/provider/services/', ProviderServiceListCreateAPIView.as_view(), name='provider-service-list-create'),
@@ -62,12 +44,4 @@ urlpatterns = [
     path('v1/provider/services/<str:service_pk>/review/', ServiceReviewCreateAPIView.as_view(),
          name='provider-service-review-create'),
 
-]
-
-"""Service Providers Bookings Requests API Endpoints"""
-urlpatterns += [
-    path('v1/provider/service/service-booking-requests/', ServiceBookingRequestListCreateAPIView.as_view(),
-         name='service-booking-request-list-create'),
-    path('v1/provider/service/service-booking-requests/<str:pk>/', ServiceBookingRequestUpdateAPIView.as_view(),
-         name='service-booking-request-update'),
 ]

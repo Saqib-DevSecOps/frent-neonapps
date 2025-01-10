@@ -1,48 +1,51 @@
 from django.contrib import admin
-from .models import Advert, BookingRequest, Order, Payment
+
+from src.services.order.models import AdvertisementRequest, Advertisement, Payment, ServiceBookingRequest, Order
 
 
-@admin.register(Advert)
-class AdvertAdmin(admin.ModelAdmin):
-    list_display = ('user', 'service_type', 'service', 'created_at')
-    list_filter = ('service_type', 'created_at')
+class ServiceAdvertisementAdmin(admin.ModelAdmin):
+    list_display = ('service', 'user', 'service_type', 'start_datetime', 'end_datetime', 'created_at', 'updated_at')
+    list_filter = ('service_type', 'created_at', 'updated_at')
     search_fields = ('service', 'user__username')
+    date_hierarchy = 'created_at'
     ordering = ('-created_at',)
 
 
-@admin.register(BookingRequest)
-class BookingRequestAdmin(admin.ModelAdmin):
-    list_display = ('advert', 'service_provider', 'status', 'date_time', 'created_at')
+class ServiceAdvertisementRequestAdmin(admin.ModelAdmin):
+    list_display = ('advertisement', 'service_provider', 'service', 'status', 'created_at')
     list_filter = ('status', 'created_at')
-    search_fields = ('advert__service', 'service_provider__user__username')
+    search_fields = ('advertisement__service',)
     ordering = ('-created_at',)
 
 
-@admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
-    list_display = ('user', 'service_provider', 'service', 'total_price', 'status', 'payment_status', 'created_at')
-    list_filter = ('status', 'payment_status', 'created_at')
-    search_fields = ('user__username', 'service_provider__user__username')
-    ordering = ('-created_at',)
-
-
-@admin.register(Payment)
-class PaymentAdmin(admin.ModelAdmin):
-    list_display = (
-        'user', 'order', 'amount', 'payment_method',
-        'status', 'created_at'
-    )
-    list_filter = ('status', 'payment_method')
-    search_fields = ('user__username', 'billing_email')
+class ServiceBookingRequestAdmin(admin.ModelAdmin):
+    """Admin panel for managing service booking requests."""
+    list_display = ('user', 'service', 'start_datetime', 'end_datetime', 'status')
+    list_filter = ('status', 'start_datetime', 'end_datetime',)
+    search_fields = ('user__username', 'service__title')
     ordering = ('-created_at',)
     readonly_fields = ('created_at', 'updated_at')
 
-    fieldsets = (
-        ('Payment Info', {
-            'fields': ('user', 'order', 'amount', 'tax', 'total_price', 'payment_type', 'payment_method', 'status')
-        }),
-        ('Billing Details', {'fields': (
-            'billing_first_name', 'billing_last_name', 'billing_address', 'billing_city',
-            'billing_state', 'billing_zip', 'billing_country', 'billing_phone', 'billing_email'
-        )}),
-        ('Timestamps', {'fields': ('created_at', 'updated_at')}),)
+
+class ServiceOrderAdmin(admin.ModelAdmin):
+    """Admin panel for managing service orders."""
+    list_display = (
+        'user', 'payment_type', 'total_price', 'paid_price', 'order_status', 'payment_status')
+    list_filter = ('order_status', 'payment_status', 'payment_type')
+    search_fields = ('user__username',)
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at', 'updated_at')
+
+
+class ServicePaymentAdmin(admin.ModelAdmin):
+    """Admin panel for managing service payments."""
+    list_display = ('user', 'order', 'amount', 'payment_method', 'created_at')
+    list_filter = ('payment_method', 'created_at')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at', 'updated_at')
+
+admin.site.register(Order, ServiceOrderAdmin)
+admin.site.register(Payment, ServicePaymentAdmin)
+admin.site.register(Advertisement, ServiceAdvertisementAdmin)
+admin.site.register(AdvertisementRequest, ServiceAdvertisementRequestAdmin)
+admin.site.register(ServiceBookingRequest, ServiceBookingRequestAdmin)

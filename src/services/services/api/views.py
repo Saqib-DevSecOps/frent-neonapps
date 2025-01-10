@@ -1,18 +1,16 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.generics import ListAPIView, RetrieveAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, \
-    get_object_or_404, CreateAPIView, DestroyAPIView, UpdateAPIView
+    get_object_or_404, CreateAPIView, DestroyAPIView, UpdateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
 from src.services.services.api.filters import ServiceFilter
 from src.services.services.api.serializers import ServiceSerializer, ServiceDetailSerializer, \
     ServiceCreateUpdateSerializer, ServiceImageSerializer, ServiceAvailabilitySerializer, ServiceLocationSerializer, \
-    ServiceReviewSerializer, ServiceCurrencySerializer, ServiceBookingRequestSerializer, \
-    ServiceBookingRequestUpdateSerializer, ServiceAdvertisementSerializer, ServiceAdvertisementRequestSerializer, \
-    ServiceAdvertisementRequestUpdateSerializer, ServiceAdvertisementRequestCreateSerializer
+    ServiceReviewSerializer, ServiceCurrencySerializer
 from src.services.services.models import Service, ServiceImage, ServiceLocation, ServiceAvailability, ServiceReview, \
-    ServiceCurrency, ServiceBookingRequest, ServiceAdvertisement, ServiceAdvertisementRequest
+    ServiceCurrency
 
 """SERVICE SEEKER APIS"""
 
@@ -32,55 +30,6 @@ class ServiceDetailAPIView(RetrieveAPIView):
 
     def get_object(self):
         return get_object_or_404(Service, is_active=True, pk=self.kwargs.get('pk'))
-
-
-class ServiceAdvertisementListCreateAPIView(ListCreateAPIView):
-    queryset = ServiceAdvertisement.objects.all()
-    serializer_class = ServiceAdvertisementSerializer
-    permission_classes = [IsAuthenticated]
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-    def get_queryset(self):
-        return ServiceAdvertisement.objects.filter(user=self.request.user)
-
-
-class ServiceAdvertisementRequestListAPIView(ListAPIView):
-    queryset = ServiceAdvertisementRequest.objects.all()
-    serializer_class = ServiceAdvertisementRequestSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return ServiceAdvertisementRequest.objects.filter(advertisement__user=self.request.user,
-                                                          advertisement_id=self.kwargs.get('advertisement_id'))
-
-
-class ServiceAdvertisementRequestCreateAPIView(CreateAPIView):
-    queryset = ServiceAdvertisementRequest.objects.all()
-    serializer_class = ServiceAdvertisementRequestCreateSerializer
-    permission_classes = [IsAuthenticated]
-
-    def perform_create(self, serializer):
-        advertisement = get_object_or_404(ServiceAdvertisement,
-                                          pk=self.kwargs.get('advertisement_id')
-                                          )
-        serializer.save(advertisement=advertisement, service_provider=self.request.user.service_provider_profile)
-
-
-class ServiceAdvertisementRequestUpdateAPIView(UpdateAPIView):
-    """STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('accepted', 'Accepted'),
-        ('rejected', 'Rejected'),
-    ]"""
-    queryset = ServiceAdvertisementRequest.objects.all()
-    permission_classes = [IsAuthenticated]
-    serializer_class = ServiceAdvertisementRequestUpdateSerializer
-
-    def get_object(self):
-        return get_object_or_404(ServiceAdvertisementRequest, advertisement__user=self.request.user,
-                                 pk=self.kwargs.get('pk'))
 
 
 """SERVICE SEEKER APIS"""
@@ -221,42 +170,3 @@ class ServiceReviewCreateAPIView(CreateAPIView):
         service = get_object_or_404(Service, pk=self.kwargs.get('service_pk'))
         serializer.save(service=service, reviewer=self.request.user)
         return Response(status=status.HTTP_201_CREATED, data={'message': 'Review created successfully'})
-
-
-class ServiceBookingRequestListCreateAPIView(ListCreateAPIView):
-    """
-    List and create booking requests for the service provider.
-    Remove The User from the CreateApi Request
-    """
-    queryset = ServiceBookingRequest.objects.all()
-    serializer_class = ServiceBookingRequestSerializer
-    permission_classes = [IsAuthenticated]
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-    def get_queryset(self):
-        return ServiceBookingRequest.objects.filter(service__provider=self.request.user)
-
-
-class ServiceBookingRequestUpdateAPIView(UpdateAPIView):
-    """
-    Update the status of the booking request.
-      REQUEST_STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('accepted', 'Accepted'),
-        ('rejected', 'Rejected'),
-        ('completed', 'Completed'),
-        ('canceled', 'Canceled'),
-    ]
-
-    """
-    queryset = ServiceBookingRequest.objects.all()
-    serializer_class = ServiceBookingRequestUpdateSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_object(self):
-        return get_object_or_404(ServiceBookingRequest, service__provider=self.request.user, pk=self.kwargs.get('pk'))
-
-
-"""Order Management APIS"""

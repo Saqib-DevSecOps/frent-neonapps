@@ -2,10 +2,10 @@ from django.apps import apps
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from src.services.services.models import Service, ServiceOrder
+from src.services.order.models import Order
 
 
-@receiver(post_save, sender=ServiceOrder)
+@receiver(post_save, sender=Order)
 def handle_order_payment(sender, instance, created, **kwargs):
     """Handles the wallet balance when order is created and Payment is completed."""
     if instance.order_status == 'pending' and instance.payment_status == 'completed':
@@ -15,7 +15,7 @@ def handle_order_payment(sender, instance, created, **kwargs):
         provider_wallet.save()
 
 
-@receiver(post_save, sender=ServiceOrder)
+@receiver(post_save, sender=Order)
 def transfer_pending_to_balance(sender, instance, created, **kwargs):
     """Transfers the pending balance to available balance once the order is completed."""
     if instance.order_status == 'completed' and instance.payment_status == 'completed':

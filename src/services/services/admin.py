@@ -1,9 +1,8 @@
 from django.contrib import admin
 from .models import (
     ServiceCategory, Service, ServiceImage,
-    ServiceAvailability, ServiceReview, FavoriteService, ServiceBookingRequest, ServiceOrder, ServicePayment,
-    ServiceCurrency, ServiceLocation
-)
+    ServiceAvailability, ServiceReview, FavoriteService,
+    ServiceCurrency, ServiceLocation)
 
 
 class ServiceImageInline(admin.TabularInline):
@@ -88,52 +87,12 @@ class ServiceReviewAdmin(admin.ModelAdmin):
     list_filter = ('rating', 'is_active')
 
 
-class ServiceBookingRequestAdmin(admin.ModelAdmin):
-    """Admin panel for managing service booking requests."""
-    list_display = ('user', 'service',  'start_datetime', 'end_datetime','status')
-    list_filter = ('status',  'start_datetime', 'end_datetime',)
-    search_fields = ('user__username', 'service__title')
-    ordering = ('-created_at',)
-    readonly_fields = ('created_at', 'updated_at')
-
-
-class ServiceOrderAdmin(admin.ModelAdmin):
-    """Admin panel for managing service orders."""
-    list_display = (
-        'user', 'payment_type', 'total_price', 'paid_price', 'order_status', 'payment_status')
-    list_filter = ('order_status', 'payment_status', 'payment_type')
-    search_fields = ('user__username',)
-    ordering = ('-created_at',)
-    readonly_fields = ('created_at', 'updated_at')
-
-
-class ServicePaymentAdmin(admin.ModelAdmin):
-    """Admin panel for managing service payments."""
-    list_display = ('user', 'order', 'amount', 'payment_method', 'created_at')
-    list_filter = ('payment_method', 'created_at')
-    ordering = ('-created_at',)
-    readonly_fields = ('created_at', 'updated_at')
-
-
 class FavoriteServiceAdmin(admin.ModelAdmin):
     """Admin interface for FavoriteService"""
     list_display = ('user', 'service', 'created_at')
     search_fields = ('user__username', 'service__title')
     list_filter = ('created_at',)
 
-
-class ServiceAdvertisementAdmin(admin.ModelAdmin):
-    list_display = ('service', 'user', 'service_type', 'start_datetime', 'end_datetime', 'created_at', 'updated_at')
-    list_filter = ('service_type', 'created_at', 'updated_at')
-    search_fields = ('service', 'user__username')
-    date_hierarchy = 'created_at'
-    ordering = ('-created_at',)
-
-class ServiceAdvertisementRequestAdmin(admin.ModelAdmin):
-    list_display = ('advertisement', 'service_provider', 'service', 'status', 'created_at')
-    list_filter = ('status', 'created_at')
-    search_fields = ('advertisement__service', 'service_provider__name', 'service__name')
-    ordering = ('-created_at',)
 
 admin.site.register(ServiceCategory, ServiceCategoryAdmin)
 admin.site.register(ServiceCurrency, ServiceCurrencyAdmin)
@@ -143,6 +102,3 @@ admin.site.register(ServiceAvailability, ServiceAvailabilityAdmin)
 admin.site.register(ServiceLocation, ServiceLocationAdmin)
 admin.site.register(ServiceReview, ServiceReviewAdmin)
 admin.site.register(FavoriteService, FavoriteServiceAdmin)
-admin.site.register(ServiceBookingRequest, ServiceBookingRequestAdmin)
-admin.site.register(ServiceOrder, ServiceOrderAdmin)
-admin.site.register(ServicePayment, ServicePaymentAdmin)
