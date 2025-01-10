@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from src.services.services.models import ServiceCategory, Service, ServiceImage, ServiceAvailability, ServiceReview, \
-    ServiceCurrency, ServiceLocation, FavoriteService
+    ServiceCurrency, ServiceLocation, FavoriteService, ServiceBookingRequest
 from src.services.users.models import User
 
 """ ---------------------Helper Serializers--------------------- """
@@ -146,3 +146,27 @@ class ServiceCreateUpdateSerializer(serializers.ModelSerializer):
         if Service.objects.filter(provider=request.user, title=value).exists():
             raise serializers.ValidationError("You already have a service with this title.")
         return value
+
+
+class ServiceBookingRequestSerializer(serializers.ModelSerializer):
+    user = UserProfileSerializer(read_only=True)
+
+    class Meta:
+        model = ServiceBookingRequest
+        fields = ['id', 'user', 'service', 'start_datetime', 'end_datetime', 'status', 'message', 'created_at',
+                  'updated_at']
+        read_only_fields = ['id', 'user', 'created_at', 'updated_at']
+
+    def validate(self, data):
+        if data['start_datetime'] > data['end_datetime']:
+            raise serializers.ValidationError("End date should be greater than start date.")
+        return data
+
+
+class ServiceBookingRequestUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceBookingRequest
+        fields = ['id', 'status']
+        read_only_fields = ['id']
+
+

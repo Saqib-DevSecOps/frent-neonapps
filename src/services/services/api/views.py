@@ -8,9 +8,10 @@ from rest_framework.response import Response
 from src.services.services.api.filters import ServiceFilter
 from src.services.services.api.serializers import ServiceSerializer, ServiceDetailSerializer, \
     ServiceCreateUpdateSerializer, ServiceImageSerializer, ServiceAvailabilitySerializer, ServiceLocationSerializer, \
-    ServiceReviewSerializer, ServiceCurrencySerializer
+    ServiceReviewSerializer, ServiceCurrencySerializer, ServiceBookingRequestSerializer, \
+    ServiceBookingRequestUpdateSerializer
 from src.services.services.models import Service, ServiceImage, ServiceLocation, ServiceAvailability, ServiceReview, \
-    ServiceCurrency
+    ServiceCurrency, ServiceBookingRequest
 
 """SERVICE SEEKER APIS"""
 
@@ -167,4 +168,40 @@ class ServiceReviewCreateAPIView(CreateAPIView):
         service = get_object_or_404(Service, pk=self.kwargs.get('service_pk'))
         serializer.save(service=service, reviewer=self.request.user)
         return Response(status=status.HTTP_201_CREATED, data={'message': 'Review created successfully'})
+
+
+class ServiceBookingRequestListCreateAPIView(ListCreateAPIView):
+    """
+    List and create booking requests for the service provider.
+    Remove The User from the CreateApi Request
+    """
+    queryset = ServiceBookingRequest.objects.all()
+    serializer_class = ServiceBookingRequestSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+        return ServiceBookingRequest.objects.filter(service__provider=self.request.user)
+
+
+class ServiceBookingRequestUpdateAPIView(UpdateAPIView):
+    """
+    Update the status of the booking request.
+      REQUEST_STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('rejected', 'Rejected'),
+        ('completed', 'Completed'),
+        ('canceled', 'Canceled'),
+    ]
+
+    """
+    queryset = ServiceBookingRequest.objects.all()
+    serializer_class = ServiceBookingRequestUpdateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return get_object_or_404(ServiceBookingRequest, service__provider=self.request.user, pk=self.kwargs.get('pk'))
 

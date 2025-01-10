@@ -100,9 +100,9 @@ class ServiceBookingRequestAdmin(admin.ModelAdmin):
 class ServiceOrderAdmin(admin.ModelAdmin):
     """Admin panel for managing service orders."""
     list_display = (
-        'user', 'service_request', 'payment_type', 'total_price', 'paid_price', 'order_status', 'payment_status')
+        'user', 'payment_type', 'total_price', 'paid_price', 'order_status', 'payment_status')
     list_filter = ('order_status', 'payment_status', 'payment_type')
-    search_fields = ('user__username', 'service_request__service__title')
+    search_fields = ('user__username',)
     ordering = ('-created_at',)
     readonly_fields = ('created_at', 'updated_at')
 
@@ -121,6 +121,19 @@ class FavoriteServiceAdmin(admin.ModelAdmin):
     search_fields = ('user__username', 'service__title')
     list_filter = ('created_at',)
 
+
+class ServiceAdvertisementAdmin(admin.ModelAdmin):
+    list_display = ('service', 'user', 'service_type', 'start_datetime', 'end_datetime', 'created_at', 'updated_at')
+    list_filter = ('service_type', 'created_at', 'updated_at')
+    search_fields = ('service', 'user__username')
+    date_hierarchy = 'created_at'
+    ordering = ('-created_at',)
+
+class ServiceAdvertisementRequestAdmin(admin.ModelAdmin):
+    list_display = ('advert', 'service_provider', 'service', 'status', 'created_at')
+    list_filter = ('status', 'created_at')
+    search_fields = ('advert__service', 'service_provider__name', 'service__name')
+    ordering = ('-created_at',)
 
 admin.site.register(ServiceCategory, ServiceCategoryAdmin)
 admin.site.register(ServiceCurrency, ServiceCurrencyAdmin)

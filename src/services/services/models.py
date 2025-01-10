@@ -214,6 +214,59 @@ class ServiceReview(models.Model):
         ]
 
 
+class ServiceAdvertisement(models.Model):
+    """Stores advertisements for services"""
+    SERVICE_TYPES = [
+        ('online', 'Online'),
+        ('offline', 'Offline'),
+    ]
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    service_type = models.CharField(max_length=20, choices=SERVICE_TYPES, default='online')
+    service = models.CharField(max_length=255, help_text="Service Name or Category")
+    start_datetime = models.DateTimeField(
+        help_text="The starting date and time for the service.",
+        null=True, blank=True
+    )
+    end_datetime = models.DateTimeField(
+        help_text="The ending date and time for the service.",
+        null=True, blank=True
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.service} for {self.service.title}"
+
+    class Meta:
+        ordering = ['service']
+
+
+class ServiceAdvertisementRequest(models.Model):
+    """Stores requests for services"""
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('rejected', 'Rejected'),
+    ]
+    advert = models.ForeignKey(ServiceAdvertisement, on_delete=models.CASCADE)
+    service_provider = models.ForeignKey(ServiceProvider, on_delete=models.CASCADE)
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    message = models.TextField(blank=True, null=True)
+
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.advert.service} - {self.service_provider}"
+
+    def get_service_name(self):
+        return self.advert.service
+
+
 class ServiceBookingRequest(models.Model):
     """Tracks requests made for services"""
     REQUEST_STATUS_CHOICES = [
@@ -227,7 +280,6 @@ class ServiceBookingRequest(models.Model):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='service_requests')
     service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='requests')
-    # Using start and end schedule datetime fields instead of separate date and time fields
     start_datetime = models.DateTimeField(
         help_text="The starting date and time for the service.",
         null=True, blank=True
@@ -268,7 +320,12 @@ class ServiceOrder(models.Model):
     ]
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='service_payments')
-    service_request = models.ForeignKey(ServiceBookingRequest, on_delete=models.CASCADE, related_name='service_request')
+
+    service_booking_request = models.ForeignKey(ServiceBookingRequest, on_delete=models.SET_NULL, null=True, blank=True,
+                                                related_name='service_booking_request')
+    service_advertisement_request = models.ForeignKey(ServiceAdvertisementRequest, on_delete=models.SET_NULL, null=True,
+                                                      blank=True, related_name='service_advertisement_request')
+
     payment_type = models.CharField(max_length=50, choices=PAYMENT_TYPE_CHOICES, default='full',
                                     help_text="Payment type for the service payment.")
     total_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -281,14 +338,17 @@ class ServiceOrder(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return f"Payment for {self.service_request.service.title} by {self.service_request.seeker.username}"
-
     class Meta:
         ordering = ['-created_at']
 
+    def __str__(self):
+        return f"{self.user.username}'s order for {self.get_service}"
     def remaining_price(self):
         return self.total_price - self.paid_price
+
+    @property
+    def get_service(self):
+        return self.service_booking_request.service if self.service_booking_request else self.service_advertisement_request.service
 
 
 class ServicePayment(models.Model):

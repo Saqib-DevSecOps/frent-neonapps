@@ -6,12 +6,14 @@ from .views import (
     ProviderServiceImageUploadCreateAPIView, ProviderServiceImageDeleteAPIView,
     ServiceAvailabilityCreateAPIView, ServiceAvailabilityUpdateDestroyAPIView,
     ServiceLocationCreateAPIView, ServiceLocationUpdateDestroyAPIView, ServiceReviewCreateAPIView,
-    ServiceCurrencyView,
+    ServiceCurrencyView, ServiceBookingRequestListCreateAPIView, ServiceBookingRequestUpdateAPIView
 )
 
 app_name = "services-api"
 
 urlpatterns = [
+    path('v1/services/currency/', ServiceCurrencyView.as_view(), name='service-currency'),
+
     path('v1/services/', ServiceListAPIView.as_view(), name='service-list'),
     path('v1/services/<str:pk>/', ServiceDetailAPIView.as_view(), name='service-detail'),
 
@@ -32,7 +34,6 @@ urlpatterns = [
          ServiceAvailabilityUpdateDestroyAPIView.as_view(),
          name='provider-service-availability-update-destroy'),
 
-    path('services/api/v1/services/currency/', ServiceCurrencyView.as_view(), name='service-currency'),
     # Provider Service Location Endpoints
     path('v1/provider/services/<str:service_pk>/location/', ServiceLocationCreateAPIView.as_view(),
          name='provider-service-location-create'),
@@ -42,4 +43,14 @@ urlpatterns = [
     # Provider Service Review Endpoints
     path('v1/provider/services/<str:service_pk>/review/', ServiceReviewCreateAPIView.as_view(),
          name='provider-service-review-create'),
+
+]
+
+
+"""Service Providers Bookings Requests API Endpoints"""
+urlpatterns += [
+    path('v1/provider/service/service-booking-requests/', ServiceBookingRequestListCreateAPIView.as_view(),
+         name='service-booking-request-list-create'),
+    path('v1/provider/service/service-booking-requests/<str:pk>/', ServiceBookingRequestUpdateAPIView.as_view(),
+         name='service-booking-request-update'),
 ]
