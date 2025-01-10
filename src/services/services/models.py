@@ -214,7 +214,7 @@ class ServiceReview(models.Model):
         ]
 
 
-class ServicePurchasing(models.Model):
+class ServiceBookingRequest(models.Model):
     """Tracks requests made for services"""
     REQUEST_STATUS_CHOICES = [
         ('pending', 'Pending'),
@@ -223,47 +223,107 @@ class ServicePurchasing(models.Model):
         ('completed', 'Completed'),
         ('canceled', 'Canceled'),
     ]
-    PAYMENT_METHOD_CHOICES = [
-        ('credit_card', 'Credit Card'),
-        ('paypal', 'Paypal'),
-        ('bank_transfer', 'Bank Transfer'),
-    ]
+
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='service_requests')
+    service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='requests')
+    # Using start and end schedule datetime fields instead of separate date and time fields
+    start_datetime = models.DateTimeField(
+        help_text="The starting date and time for the service.",
+        null=True, blank=True
+    )
+    end_datetime = models.DateTimeField(
+        help_text="The ending date and time for the service.",
+        null=True, blank=True
+    )
+    message = models.TextField(blank=True, null=True, help_text="Additional notes for the request.")
+
+    status = models.CharField(max_length=20, choices=REQUEST_STATUS_CHOICES, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s request for {self.service.title}"
+
+
+class ServiceOrder(models.Model):
+    """Tracks Orders made for services"""
     PAYMENT_TYPE_CHOICES = [
         ('full', 'Full Payment'),
         ('partial', 'Partial Payment'),
     ]
-
+    ORDER_STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+    ]
+    PAYMENT_STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('processing', 'Processing'),
+        ('accepted', 'Accepted'),
+        ('rejected', 'Rejected'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+        ('refunded', 'Refunded'),
+    ]
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
-    seeker = models.ForeignKey(User, on_delete=models.CASCADE, related_name='service_requests')
-    service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='requests')
-    payment_method = models.CharField(max_length=50, choices=PAYMENT_METHOD_CHOICES, null=True, blank=False,
-                                      help_text="Payment method used for the service request.")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='service_payments')
+    service_request = models.ForeignKey(ServiceBookingRequest, on_delete=models.CASCADE, related_name='service_request')
     payment_type = models.CharField(max_length=50, choices=PAYMENT_TYPE_CHOICES, default='full',
-                                    help_text="Payment type for the service request.")
-    amount = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0.01)],
-                                 help_text="Service request amount (up to 10 digits and 2 decimal places).")
-    currency = models.ForeignKey(ServiceCurrency, on_delete=models.SET_NULL, null=True, blank=True,
-                                 related_name='service_requests',
-                                 help_text="The currency for the service request amount.")
-    discount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00,
-                                   validators=[MinValueValidator(0.00), MaxValueValidator(99.00)]
-                                   )
-    status = models.CharField(max_length=20, choices=REQUEST_STATUS_CHOICES, default='pending')
+                                    help_text="Payment type for the service payment.")
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    paid_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    tip = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
-    requested_at = models.DateTimeField(auto_now_add=True)
-    completed_at = models.DateTimeField(null=True, blank=True)
-    cancelled_at = models.DateTimeField(null=True, blank=True)
-    is_paid = models.BooleanField(default=False, help_text="Indicates if the service request has been paid.")
-    notes = models.TextField(blank=True, null=True, help_text="Additional notes for the request.")
+    order_status = models.CharField(max_length=20, choices=ORDER_STATUS_CHOICES, default='pending')
+    payment_status = models.CharField(max_length=20, choices=PAYMENT_STATUS_CHOICES, default='pending')
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.seeker.username}'s request for {self.service.title}"
+        return f"Payment for {self.service_request.service.title} by {self.service_request.seeker.username}"
 
     class Meta:
-        ordering = ['-requested_at']
-        constraints = [
-            models.UniqueConstraint(fields=['seeker', 'service'], name="unique_service_request_per_user")
-        ]
+        ordering = ['-created_at']
+
+    def remaining_price(self):
+        return self.total_price - self.paid_price
+
+
+class ServicePayment(models.Model):
+    payment_methods = [
+        ('credit_card', 'Credit Card'),
+        ('debit_card', 'Debit Card'),
+        ('by_cash', 'By Cash'),
+    ]
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    order = models.ForeignKey(ServiceOrder, on_delete=models.CASCADE)
+
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    service_charges = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    tax = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+
+    payment_method = models.CharField(max_length=20, choices=payment_methods, default='credit_card')
+
+    billing_first_name = models.CharField(max_length=255, blank=True, null=True)
+    billing_last_name = models.CharField(max_length=255, blank=True, null=True)
+    billing_address = models.TextField(blank=True, null=True)
+    billing_city = models.CharField(max_length=255, blank=True, null=True)
+    billing_state = models.CharField(max_length=255, blank=True, null=True)
+    billing_zip = models.CharField(max_length=255, blank=True, null=True)
+    billing_country = models.CharField(max_length=255, blank=True, null=True)
+    billing_phone = models.CharField(max_length=20, blank=True, null=True)
+    billing_email = models.EmailField(blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user} - {self.order} - {self.amount}"
+
+    class Meta:
+        ordering = ['-created_at']
 
 
 class FavoriteService(models.Model):

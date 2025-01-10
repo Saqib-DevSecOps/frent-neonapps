@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     ServiceCategory, Service, ServiceImage,
-    ServiceAvailability, ServiceReview, ServicePurchasing, FavoriteService,
+    ServiceAvailability, ServiceReview, FavoriteService, ServiceBookingRequest, ServiceOrder, ServicePayment,
     ServiceCurrency, ServiceLocation
 )
 
@@ -37,7 +37,6 @@ class ServiceReviewInline(admin.TabularInline):
     readonly_fields = ('created_at',)
 
 
-
 class ServiceCategoryAdmin(admin.ModelAdmin):
     """Admin interface for ServiceCategory"""
     list_display = ('name', 'is_active', 'created_at', 'updated_at')
@@ -69,7 +68,8 @@ class ServiceImageAdmin(admin.ModelAdmin):
 
 class ServiceAvailabilityAdmin(admin.ModelAdmin):
     """Admin interface for ServiceAvailability"""
-    list_display = ('service', 'day_of_week', 'start_time', 'end_time', 'timezone', 'is_active', 'created_at', 'updated_at')
+    list_display = (
+        'service', 'day_of_week', 'start_time', 'end_time', 'timezone', 'is_active', 'created_at', 'updated_at')
     search_fields = ('service__title', 'day_of_week')
     list_filter = ('is_active', 'day_of_week')
 
@@ -88,11 +88,31 @@ class ServiceReviewAdmin(admin.ModelAdmin):
     list_filter = ('rating', 'is_active')
 
 
-class ServicePurchasingAdmin(admin.ModelAdmin):
-    """Admin interface for ServiceRequest"""
-    list_display = ('seeker', 'service', 'status', 'requested_at', 'completed_at', 'is_paid')
-    search_fields = ('seeker__username', 'service__title')
-    list_filter = ('status', 'is_paid')
+class ServiceBookingRequestAdmin(admin.ModelAdmin):
+    """Admin panel for managing service booking requests."""
+    list_display = ('user', 'service',  'start_datetime', 'end_datetime','status')
+    list_filter = ('status',  'start_datetime', 'end_datetime',)
+    search_fields = ('user__username', 'service__title')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at', 'updated_at')
+
+
+class ServiceOrderAdmin(admin.ModelAdmin):
+    """Admin panel for managing service orders."""
+    list_display = (
+        'user', 'service_request', 'payment_type', 'total_price', 'paid_price', 'order_status', 'payment_status')
+    list_filter = ('order_status', 'payment_status', 'payment_type')
+    search_fields = ('user__username', 'service_request__service__title')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at', 'updated_at')
+
+
+class ServicePaymentAdmin(admin.ModelAdmin):
+    """Admin panel for managing service payments."""
+    list_display = ('user', 'order', 'amount', 'payment_method', 'created_at')
+    list_filter = ('payment_method', 'created_at')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at', 'updated_at')
 
 
 class FavoriteServiceAdmin(admin.ModelAdmin):
@@ -102,7 +122,6 @@ class FavoriteServiceAdmin(admin.ModelAdmin):
     list_filter = ('created_at',)
 
 
-# Register models with the admin site
 admin.site.register(ServiceCategory, ServiceCategoryAdmin)
 admin.site.register(ServiceCurrency, ServiceCurrencyAdmin)
 admin.site.register(Service, ServiceAdmin)
@@ -110,5 +129,7 @@ admin.site.register(ServiceImage, ServiceImageAdmin)
 admin.site.register(ServiceAvailability, ServiceAvailabilityAdmin)
 admin.site.register(ServiceLocation, ServiceLocationAdmin)
 admin.site.register(ServiceReview, ServiceReviewAdmin)
-admin.site.register(ServicePurchasing, ServicePurchasingAdmin)
 admin.site.register(FavoriteService, FavoriteServiceAdmin)
+admin.site.register(ServiceBookingRequest, ServiceBookingRequestAdmin)
+admin.site.register(ServiceOrder, ServiceOrderAdmin)
+admin.site.register(ServicePayment, ServicePaymentAdmin)
