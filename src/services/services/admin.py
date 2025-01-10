@@ -130,9 +130,9 @@ class ServiceAdvertisementAdmin(admin.ModelAdmin):
     ordering = ('-created_at',)
 
 class ServiceAdvertisementRequestAdmin(admin.ModelAdmin):
-    list_display = ('advert', 'service_provider', 'service', 'status', 'created_at')
+    list_display = ('advertisement', 'service_provider', 'service', 'status', 'created_at')
     list_filter = ('status', 'created_at')
-    search_fields = ('advert__service', 'service_provider__name', 'service__name')
+    search_fields = ('advertisement__service', 'service_provider__name', 'service__name')
     ordering = ('-created_at',)
 
 admin.site.register(ServiceCategory, ServiceCategoryAdmin)

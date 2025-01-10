@@ -249,7 +249,7 @@ class ServiceAdvertisementRequest(models.Model):
         ('accepted', 'Accepted'),
         ('rejected', 'Rejected'),
     ]
-    advert = models.ForeignKey(ServiceAdvertisement, on_delete=models.CASCADE)
+    advertisement = models.ForeignKey(ServiceAdvertisement, on_delete=models.CASCADE)
     service_provider = models.ForeignKey(ServiceProvider, on_delete=models.CASCADE)
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
     message = models.TextField(blank=True, null=True)
@@ -261,10 +261,10 @@ class ServiceAdvertisementRequest(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.advert.service} - {self.service_provider}"
+        return f"{self.advertisement.service} - {self.service_provider}"
 
     def get_service_name(self):
-        return self.advert.service
+        return self.advertisement.service
 
 
 class ServiceBookingRequest(models.Model):

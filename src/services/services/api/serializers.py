@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from src.services.services.models import ServiceCategory, Service, ServiceImage, ServiceAvailability, ServiceReview, \
-    ServiceCurrency, ServiceLocation, FavoriteService, ServiceBookingRequest
+    ServiceCurrency, ServiceLocation, FavoriteService, ServiceBookingRequest, ServiceAdvertisement, \
+    ServiceAdvertisementRequest
 from src.services.users.models import User
 
 """ ---------------------Helper Serializers--------------------- """
@@ -170,3 +171,32 @@ class ServiceBookingRequestUpdateSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
 
+class ServiceAdvertisementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceAdvertisement
+        fields = ['id', 'user', 'service_type', 'service', 'start_datetime', 'end_datetime', 'created_at']
+        read_only_fields = ['id', 'user', 'created_at']
+
+
+class ServiceAdvertisementRequestSerializer(serializers.ModelSerializer):
+    advertisement = ServiceAdvertisementSerializer(read_only=True)
+    service = ServiceSerializer(read_only=True)
+
+    class Meta:
+        model = ServiceAdvertisementRequest
+        fields = ['id', 'advertisement', 'service_provider', 'service', 'status', 'created_at']
+        read_only_fields = ['id', 'advertisement', 'service_provider', 'service', 'created_at']
+
+
+class ServiceAdvertisementRequestCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceAdvertisementRequest
+        fields = ['id','service','message']
+
+
+
+class ServiceAdvertisementRequestUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceAdvertisementRequest
+        fields = ['id', 'status']
+        read_only_fields = ['id']

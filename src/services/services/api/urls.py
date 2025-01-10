@@ -6,7 +6,10 @@ from .views import (
     ProviderServiceImageUploadCreateAPIView, ProviderServiceImageDeleteAPIView,
     ServiceAvailabilityCreateAPIView, ServiceAvailabilityUpdateDestroyAPIView,
     ServiceLocationCreateAPIView, ServiceLocationUpdateDestroyAPIView, ServiceReviewCreateAPIView,
-    ServiceCurrencyView, ServiceBookingRequestListCreateAPIView, ServiceBookingRequestUpdateAPIView
+    ServiceCurrencyView, ServiceBookingRequestListCreateAPIView, ServiceBookingRequestUpdateAPIView,
+    ServiceAdvertisementListCreateAPIView, ServiceAdvertisementRequestListAPIView,
+    ServiceAdvertisementRequestCreateAPIView,
+    ServiceAdvertisementRequestUpdateAPIView
 )
 
 app_name = "services-api"
@@ -16,6 +19,21 @@ urlpatterns = [
 
     path('v1/services/', ServiceListAPIView.as_view(), name='service-list'),
     path('v1/services/<str:pk>/', ServiceDetailAPIView.as_view(), name='service-detail'),
+
+    path('v1/service-advertisement/', ServiceAdvertisementListCreateAPIView.as_view(),
+         name='service-advertisement-list-create'),
+
+    path('v1/service-advertisement-request/<str:advertisement_id>/',
+         ServiceAdvertisementRequestListAPIView.as_view(),
+         name='service-advertisement-request-list'),
+
+    path('v1/provider/service-advertisement-request/<str:advertisement_id>/',
+         ServiceAdvertisementRequestCreateAPIView.as_view(),
+         name='service-advertisement-request-create'),
+
+    path('v1/service-advertisement-request/<str:pk>/update/',
+         ServiceAdvertisementRequestUpdateAPIView.as_view(),
+         name='service-advertisement-request-update'),
 
     # Provider Service Endpoints
     path('v1/provider/services/', ProviderServiceListCreateAPIView.as_view(), name='provider-service-list-create'),
@@ -45,7 +63,6 @@ urlpatterns = [
          name='provider-service-review-create'),
 
 ]
-
 
 """Service Providers Bookings Requests API Endpoints"""
 urlpatterns += [

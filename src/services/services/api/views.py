@@ -9,9 +9,10 @@ from src.services.services.api.filters import ServiceFilter
 from src.services.services.api.serializers import ServiceSerializer, ServiceDetailSerializer, \
     ServiceCreateUpdateSerializer, ServiceImageSerializer, ServiceAvailabilitySerializer, ServiceLocationSerializer, \
     ServiceReviewSerializer, ServiceCurrencySerializer, ServiceBookingRequestSerializer, \
-    ServiceBookingRequestUpdateSerializer
+    ServiceBookingRequestUpdateSerializer, ServiceAdvertisementSerializer, ServiceAdvertisementRequestSerializer, \
+    ServiceAdvertisementRequestUpdateSerializer, ServiceAdvertisementRequestCreateSerializer
 from src.services.services.models import Service, ServiceImage, ServiceLocation, ServiceAvailability, ServiceReview, \
-    ServiceCurrency, ServiceBookingRequest
+    ServiceCurrency, ServiceBookingRequest, ServiceAdvertisement, ServiceAdvertisementRequest
 
 """SERVICE SEEKER APIS"""
 
@@ -25,9 +26,61 @@ class ServiceListAPIView(ListAPIView):
 
 
 class ServiceDetailAPIView(RetrieveAPIView):
-    queryset = Service.objects.filter(is_active=True)
+    queryset = Service.objects.all()
     serializer_class = ServiceDetailSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_object(self):
+        return get_object_or_404(Service, is_active=True, pk=self.kwargs.get('pk'))
+
+
+class ServiceAdvertisementListCreateAPIView(ListCreateAPIView):
+    queryset = ServiceAdvertisement.objects.all()
+    serializer_class = ServiceAdvertisementSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+        return ServiceAdvertisement.objects.filter(user=self.request.user)
+
+
+class ServiceAdvertisementRequestListAPIView(ListAPIView):
+    queryset = ServiceAdvertisementRequest.objects.all()
+    serializer_class = ServiceAdvertisementRequestSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return ServiceAdvertisementRequest.objects.filter(advertisement__user=self.request.user,
+                                                          advertisement_id=self.kwargs.get('advertisement_id'))
+
+
+class ServiceAdvertisementRequestCreateAPIView(CreateAPIView):
+    queryset = ServiceAdvertisementRequest.objects.all()
+    serializer_class = ServiceAdvertisementRequestCreateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        advertisement = get_object_or_404(ServiceAdvertisement,
+                                          pk=self.kwargs.get('advertisement_id')
+                                          )
+        serializer.save(advertisement=advertisement, service_provider=self.request.user.service_provider_profile)
+
+
+class ServiceAdvertisementRequestUpdateAPIView(UpdateAPIView):
+    """STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('rejected', 'Rejected'),
+    ]"""
+    queryset = ServiceAdvertisementRequest.objects.all()
+    permission_classes = [IsAuthenticated]
+    serializer_class = ServiceAdvertisementRequestUpdateSerializer
+
+    def get_object(self):
+        return get_object_or_404(ServiceAdvertisementRequest, advertisement__user=self.request.user,
+                                 pk=self.kwargs.get('pk'))
 
 
 """SERVICE SEEKER APIS"""
@@ -205,3 +258,5 @@ class ServiceBookingRequestUpdateAPIView(UpdateAPIView):
     def get_object(self):
         return get_object_or_404(ServiceBookingRequest, service__provider=self.request.user, pk=self.kwargs.get('pk'))
 
+
+"""Order Management APIS"""
