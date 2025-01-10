@@ -1,3 +1,6 @@
+import uuid
+
+from cities_light.models import Country
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
@@ -35,8 +38,8 @@ class Wallet(models.Model):
     connect_pending_balance_currency = models.CharField(max_length=3, null=True, blank=True)
 
     # DATES
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['-id']
@@ -61,6 +64,46 @@ class Wallet(models.Model):
 
     def get_connect_balance(self):
         return self.connect_available_balance
+
+
+class Bank(models.Model):
+    name = models.CharField(max_length=150)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name})"
+
+
+class BankAccount(models.Model):
+    ACCOUNT_TYPES = [
+        ('savings', 'Savings'),
+        ('checking', 'Checking'),
+        ('business', 'Business'),
+        ('other', 'Other'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bank_accounts')
+    account_holder_name = models.CharField(max_length=150)
+    account_number = models.CharField(max_length=30, blank=True, null=True)
+    account_iban = models.CharField(max_length=34, blank=True, null=True)
+    account_type = models.CharField(max_length=20, choices=ACCOUNT_TYPES, default='checking')
+    account_currency = models.CharField(max_length=3, default='USD')
+    swift_code = models.CharField(max_length=20, blank=True, null=True)
+    routing_number = models.CharField(max_length=20, blank=True, null=True)
+
+    bank = models.ForeignKey(Bank, on_delete=models.CASCADE)
+    country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True)
+    bank_city = models.CharField(max_length=100, blank=True, null=True)
+    bank_address = models.CharField(max_length=255, blank=True, null=True)
+    bank_postal_code = models.CharField(max_length=20, blank=True, null=True)
+
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.account_holder_name} - {self.bank.name} ({self.account_number})"
 
 
 class Transaction(models.Model):
@@ -101,14 +144,14 @@ class Transaction(models.Model):
     )
     status = models.CharField(max_length=50, choices=STATUS_TYPE, default='pending')
     payment_type = models.CharField(
-        max_length=50, choices=PAYMENT_TYPE, null=True, blank=True
+        max_length=50, choices=PAYMENT_TYPE, default='bank_account', null=True, blank=True
     )
 
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['-created_on']
+        ordering = ['-created_at']
         verbose_name_plural = "Transactions"
 
     def __str__(self):
@@ -154,75 +197,3 @@ class Transaction(models.Model):
         if self.wallet:
             self.wallet.balance_available += self.amount
             self.wallet.save()
-
-
-class Charge(models.Model):
-    CHARGE_TYPE_CHOICES = [
-        ('product_listing_fee', 'Product Listing Fee'),
-        ('transaction_fee', 'Transaction Fee'),
-        ('payment_processing', 'Payment Processing Fee'),
-        ('deposit_fee', 'Deposit Fee'),
-        ('currency_conversion', 'Currency Conversion Fee'),
-        ('vat_processing', 'VAT on Processing Fees'),
-        ('vat_seller_services', 'VAT on Seller Services'),
-    ]
-    STATUS_TYPE = [
-        ('init', 'Initialized'),
-        ('pending', 'Pending'),
-        ('completed', 'Completed'),
-    ]
-
-    # Using GenericForeignKey
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    fee_amount = models.FloatField(default=0)
-    fee_type = models.CharField(choices=CHARGE_TYPE_CHOICES, max_length=30)
-    currency = models.CharField(max_length=3, default='USD')
-    description = models.TextField()
-    status = models.CharField(max_length=30, choices=STATUS_TYPE, default=STATUS_TYPE[0][0])
-
-    is_active = models.BooleanField(default=False)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        verbose_name = 'Charge'
-        verbose_name_plural = 'Charges'
-        ordering = ['-created_on']
-
-    def __str__(self):
-        return self.fee_type
-
-    def clean(self):
-
-        # AMOUNT CHECK
-        if self.fee_amount <= 0:
-            raise ValidationError('Fee amount must be greater than 0')
-
-        # IF PREVIOUS STATUS IS COMPLETED DON"T ALLOW TO CHANGE
-        if self.pk:
-            previous_status = Charge.objects.get(pk=self.pk).status
-
-            if previous_status == self.status:
-                raise ValidationError('Cannot change status to same status')
-
-            if previous_status == 'completed':
-                raise ValidationError('Cannot change status of completed charge')
-
-        # IF STATUS IS COMPLETED
-
-        if self.status == 'completed':
-            wallet = self.user.get_user_wallet()
-            available_balance = wallet.balance_available
-
-            if available_balance < self.fee_amount:
-                self.status = 'pending'
-                raise ValidationError('Insufficient balance')
-
-    def charge_wallet(self):
-        wallet = self.user.get_user_wallet()
-        self.status = 'completed'
-        self.save()
