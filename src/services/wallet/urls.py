@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from src.services.wallet.views import UserWalletView, TransactionListView, UserTransactionListView
 
 app_name = "wallet"
@@ -7,4 +7,9 @@ urlpatterns = [
     path('wallet/list/', TransactionListView.as_view(), name='wallet-list'),
     path('user-transaction/<int:pk>/', UserTransactionListView.as_view(), name='user-transaction'),
 
+]
+
+
+urlpatterns += [
+    path('wallet/api/', include('src.services.wallet.api.urls', namespace='wallet-api')),
 ]

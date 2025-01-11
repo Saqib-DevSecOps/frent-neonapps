@@ -146,3 +146,4 @@ class ServiceCreateUpdateSerializer(serializers.ModelSerializer):
         if Service.objects.filter(provider=request.user, title=value).exists():
             raise serializers.ValidationError("You already have a service with this title.")
         return value
+

@@ -1,16 +1,17 @@
-from .models import Wallet, Transaction, Charge
+from .models import Wallet, Transaction, Bank, BankAccount
 from django.contrib import admin
+
 
 @admin.register(Wallet)
 class WalletAdmin(admin.ModelAdmin):
     list_display = (
         'user', 'stripe_account_id', 'stripe_account_email',
         'stripe_is_active', 'total_amounts', 'total_earnings',
-        'balance_available', 'connect_available_balance', 'created_on'
+        'balance_available', 'connect_available_balance', 'created_at'
     )
     list_filter = ('stripe_is_active', 'stripe_account_country')
     search_fields = ('user__username', 'stripe_account_email', 'stripe_account_id')
-    readonly_fields = ('created_on', 'updated_on')
+    readonly_fields = ('created_at', 'updated_at')
     fieldsets = (
         ('User Information', {
             'fields': ('user', 'description')
@@ -43,19 +44,18 @@ class WalletAdmin(admin.ModelAdmin):
             )
         }),
         ('Timestamps', {
-            'fields': ('created_on', 'updated_on')
+            'fields': ('created_at', 'updated_at')
         }),
     )
-    ordering = ('-created_on',)
-
+    ordering = ('-created_at',)
 
 
 @admin.register(Transaction)
 class TransactionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'transaction_type', 'amount', 'status', 'payment_type', 'created_on', 'updated_on')
-    list_filter = ('transaction_type', 'status', 'payment_type', 'created_on')
+    list_display = ('id', 'user', 'transaction_type', 'amount', 'status', 'payment_type', 'created_at', 'updated_at')
+    list_filter = ('transaction_type', 'status', 'payment_type', 'created_at')
     search_fields = ('user__username', 'description', 'transaction_type')
-    readonly_fields = ('created_on', 'updated_on')
+    readonly_fields = ('created_at', 'updated_at')
 
     fieldsets = (
         (None, {
@@ -65,7 +65,7 @@ class TransactionAdmin(admin.ModelAdmin):
             'fields': ('payment_type', 'status')
         }),
         ('Timestamps', {
-            'fields': ('created_on', 'updated_on')
+            'fields': ('created_at', 'updated_at')
         }),
     )
 
@@ -75,19 +75,43 @@ class TransactionAdmin(admin.ModelAdmin):
         return super().has_change_permission(request, obj)
 
 
-@admin.register(Charge)
-class ChargeAdmin(admin.ModelAdmin):
-    list_display = ('user', 'fee_amount', 'fee_type', 'status', 'is_active', 'created_on', 'updated_on')
-    search_fields = ('user__username', 'user__email', 'fee_type')
-    list_filter = ('fee_type', 'status', 'is_active', 'created_on')
-    readonly_fields = ('created_on', 'updated_on')
+class BankAdmin(admin.ModelAdmin):
+    list_display = ('name', 'is_active', 'created_at')
+    list_filter = ('is_active',)
+    search_fields = ('name',)
+    ordering = ('created_at',)
+    date_hierarchy = 'created_at'
 
-    def get_readonly_fields(self, request, obj=None):
-        """
-        Prevent modification of the status if the charge is completed.
-        """
-        if obj:
-            previous_status = obj.status
-            if previous_status == 'completed':
-                return self.readonly_fields + ('status', 'user', 'fee_amount', 'fee_type', 'currency')
-        return self.readonly_fields
+
+class BankAccountAdmin(admin.ModelAdmin):
+    list_display = (
+        'account_holder_name', 'account_number', 'bank',
+        'account_type', 'account_currency', 'is_active', 'created_at'
+    )
+    list_filter = ('account_type', 'is_active', 'account_currency')
+    search_fields = ('account_holder_name', 'account_number', 'bank__name')
+    ordering = ('created_at',)
+    date_hierarchy = 'created_at'
+    readonly_fields = ('created_at',)
+    fieldsets = (
+        ('Account Information', {
+            'fields': (
+                'user', 'account_holder_name', 'account_number',
+                'account_iban', 'account_type', 'account_currency',
+                'swift_code', 'routing_number'
+            )
+        }),
+        ('Bank Details', {
+            'fields': (
+                'bank', 'country', 'bank_city', 'bank_address',
+                'bank_postal_code'
+            )
+        }),
+        ('Status', {
+            'fields': ('is_active', 'created_at')
+        }),
+    )
+
+
+admin.site.register(Bank, BankAdmin)
+admin.site.register(BankAccount, BankAccountAdmin)

@@ -1,7 +1,7 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.generics import ListAPIView, RetrieveAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, \
-    get_object_or_404, CreateAPIView, DestroyAPIView, UpdateAPIView
+    get_object_or_404, CreateAPIView, DestroyAPIView, UpdateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
@@ -24,9 +24,12 @@ class ServiceListAPIView(ListAPIView):
 
 
 class ServiceDetailAPIView(RetrieveAPIView):
-    queryset = Service.objects.filter(is_active=True)
+    queryset = Service.objects.all()
     serializer_class = ServiceDetailSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_object(self):
+        return get_object_or_404(Service, is_active=True, pk=self.kwargs.get('pk'))
 
 
 """SERVICE SEEKER APIS"""
@@ -167,4 +170,3 @@ class ServiceReviewCreateAPIView(CreateAPIView):
         service = get_object_or_404(Service, pk=self.kwargs.get('service_pk'))
         serializer.save(service=service, reviewer=self.request.user)
         return Response(status=status.HTTP_201_CREATED, data={'message': 'Review created successfully'})
-
