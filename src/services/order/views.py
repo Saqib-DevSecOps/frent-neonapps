@@ -1,11 +1,13 @@
 from django.core.paginator import Paginator
+from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView
 from rest_framework.generics import get_object_or_404
-
 from src.services.order.filters import AdvertisementFilter, OrderFilter, AdvertisementRequestFilter
 from src.services.order.models import Advertisement, Order, AdvertisementRequest
+from src.web.accounts.decorators import staff_required_decorator
 
 
+@method_decorator(staff_required_decorator, name='dispatch')
 class AdvertisementListView(ListView):
     model = Advertisement
 
@@ -20,6 +22,7 @@ class AdvertisementListView(ListView):
         return context
 
 
+@method_decorator(staff_required_decorator, name='dispatch')
 class AdvertisementRequesterListView(ListView):
     model = AdvertisementRequest
 
@@ -37,6 +40,7 @@ class AdvertisementRequesterListView(ListView):
         return context
 
 
+@method_decorator(staff_required_decorator, name='dispatch')
 class OrderListView(ListView):
     model = Order
 
@@ -51,6 +55,7 @@ class OrderListView(ListView):
         return context
 
 
+@method_decorator(staff_required_decorator, name='dispatch')
 class OrderDetailView(DetailView):
     model = Order
 

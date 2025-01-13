@@ -143,7 +143,12 @@ class Order(models.Model):
 
     @property
     def get_service(self):
-        return self.service_booking_request.service if self.service_booking_request else self.service_advertisement_request.service
+        if self.service_booking_request:
+            return self.service_booking_request.service
+        elif self.service_advertisement_request:
+            return self.service_advertisement_request.service
+        else:
+            return None
 
 
 class Payment(models.Model):

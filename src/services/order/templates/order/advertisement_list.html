@@ -71,8 +71,8 @@
                                             {{ object.end_datetime }}
                                         </td>
                                         <td>
-                                            <a href="{% url 'order:advertisement-request-list' object.id %}">{{ object.get_total_requests }}
-                                                Requests </a>
+                                            <a href="{% url 'order:advertisement-request-list' object.id %}"><i class="fa fa-eye"></i> <b>{{ object.get_total_requests }}
+                                                Requests</b> </a>
                                         </td>
                                     </tr>
                                 {% endfor %}
