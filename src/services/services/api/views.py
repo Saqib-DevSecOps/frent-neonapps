@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from src.services.services.api.filters import ServiceFilter
 from src.services.services.api.serializers import ServiceSerializer, ServiceDetailSerializer, \
     ServiceCreateUpdateSerializer, ServiceImageSerializer, ServiceAvailabilitySerializer, ServiceLocationSerializer, \
-    ServiceReviewSerializer, ServiceCurrencySerializer, ServiceRuleInstructionSerializer
+    ServiceReviewSerializer, ServiceCurrencySerializer
 from src.services.services.models import Service, ServiceImage, ServiceLocation, ServiceAvailability, ServiceReview, \
     ServiceCurrency, ServiceRuleInstruction
 
@@ -174,7 +174,6 @@ class ServiceReviewCreateAPIView(CreateAPIView):
 
 class ServiceRuleListCreateAPIView(ListCreateAPIView):
     queryset = ServiceRuleInstruction.objects.all()
-    serializer_class = ServiceRuleInstructionSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -186,7 +185,6 @@ class ServiceRuleListCreateAPIView(ListCreateAPIView):
 
 class ServiceRuleInstructionListCreateAPIView(ListCreateAPIView):
     queryset = ServiceRuleInstruction.objects.all()
-    serializer_class = ServiceRuleInstructionSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
