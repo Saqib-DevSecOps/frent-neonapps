@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (
     ServiceCategory, Service, ServiceImage,
     ServiceAvailability, ServiceReview, FavoriteService,
-    ServiceCurrency, ServiceLocation)
+    ServiceCurrency, ServiceLocation, ServiceLanguage, ServiceRule, ServiceRuleInstruction)
 
 
 class ServiceImageInline(admin.TabularInline):
@@ -52,7 +52,9 @@ class ServiceCurrencyAdmin(admin.ModelAdmin):
 
 class ServiceAdmin(admin.ModelAdmin):
     """Admin interface for Service"""
-    list_display = ('title', 'provider', 'category', 'price', 'currency', 'is_active', 'created_at', 'updated_at')
+    list_display = (
+        'title', 'provider', 'category', 'number_of_people', 'price', 'currency', 'is_active', 'created_at',
+        'updated_at')
     search_fields = ('title', 'provider__username', 'category__name', 'price', 'currency__name')
     list_filter = ('is_active', 'category', 'currency')
     inlines = [ServiceImageInline, ServiceAvailabilityInline, ServiceLocationInline, ServiceReviewInline]
@@ -94,11 +96,29 @@ class FavoriteServiceAdmin(admin.ModelAdmin):
     list_filter = ('created_at',)
 
 
+class ServiceLanguageAdmin(admin.ModelAdmin):
+    list_display = ['service', 'language']
+
+
+class ServiceRuleAdmin(admin.ModelAdmin):
+    """Admin configuration for ServiceRule model"""
+    list_display = ['id', 'service', 'event_rule', 'created_at', 'updated_at']
+
+
+class ServiceRuleInstructionAdmin(admin.ModelAdmin):
+    """Admin configuration for ServiceRuleInstruction model"""
+    list_display = ['id', 'service_rule', 'required_material', 'created_at', 'updated_at']
+
+
+
 admin.site.register(ServiceCategory, ServiceCategoryAdmin)
 admin.site.register(ServiceCurrency, ServiceCurrencyAdmin)
 admin.site.register(Service, ServiceAdmin)
 admin.site.register(ServiceImage, ServiceImageAdmin)
 admin.site.register(ServiceAvailability, ServiceAvailabilityAdmin)
 admin.site.register(ServiceLocation, ServiceLocationAdmin)
+admin.site.register(ServiceLanguage, ServiceLanguageAdmin)
 admin.site.register(ServiceReview, ServiceReviewAdmin)
 admin.site.register(FavoriteService, FavoriteServiceAdmin)
+admin.site.register(ServiceRule, ServiceRuleAdmin)
+admin.site.register(ServiceRuleInstruction, ServiceRuleInstructionAdmin)
