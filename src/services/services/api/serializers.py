@@ -129,7 +129,7 @@ class ServiceDetailSerializer(serializers.ModelSerializer):
         model = Service
         fields = [
             'id', 'title', 'provider', 'service_type', 'thumbnail', 'description', 'content', 'price_type', 'price',
-            'discount', 'currency',
+            'discount', 'currency', 'number_of_people',
             'category', 'is_active', 'images', 'availability_slots', 'location', 'reviews', 'created_at'
         ]
 
@@ -138,7 +138,7 @@ class ServiceCreateUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
         fields = ['id', 'title', 'category', 'service_type', 'thumbnail', 'description', 'content', 'price_type',
-                  'price',
+                  'price', 'number_of_people',
                   'discount', 'currency', 'is_active']
 
     def validate_title(self, value):
