@@ -239,7 +239,7 @@ class ServiceProviderLanguage(models.Model):
     service_provider = models.ForeignKey("ServiceProvider", related_name='languages', on_delete=models.CASCADE)
     language = models.ForeignKey("core.Language", on_delete=models.CASCADE, related_name='service_providers')
     fluency = models.CharField(max_length=20, choices=[('basic', 'Basic'), ('intermediate', 'Intermediate'),
-                                                       ('advanced', 'Advanced')], default='basic')
+                                                       ('advanced', 'Advanced')], default='advance')
 
     def __str__(self):
         return f"{self.language} - {self.fluency}"

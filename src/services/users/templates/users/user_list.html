@@ -10,16 +10,18 @@
 {% block page_heading %} User List{% endblock %}
 {% block content %}
 
+
     <div class="row">
         <div class="col-12">
             <form method="get" id="search-form">
                 <div class="input-group mb-3">
                     {{ user_filter_form }}
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="submit">
-                            <i class="fa fa-search"></i> Search
-                        </button>
-                    </div>
+                    <button style="margin-left: 3px" class="btn btn-primary ms-3S" type="submit">
+                        <i class="fa fa-search"></i> Search
+                    </button>
+                    <a style="margin-left: 2px" class="btn btn-danger" href="{% url 'services:services-list' %}">
+                        <i class="fa fa-brush"></i>
+                    </a>
                 </div>
             </form>
         </div>
@@ -85,6 +87,8 @@
 {% endblock %}
 
 {% block js_code %}
+
+
     <script>
         $(document).ready(function () {
 
@@ -92,6 +96,22 @@
             $('input').addClass('form-control ms-3 ps-3');
             $('select').addClass('form-control');
 
+        });
+                $(document).ready(function () {
+            const inputs = $(".input-group > div");
+
+            inputs.css({
+                display: "flex",
+                flex: "1",
+                marginRight: "10px",
+            });
+
+            inputs.last().css("marginRight", "0");
+
+            $(".input-group").css({
+                display: "flex",
+                justifyContent: "space-between",
+            });
         });
     </script>
 {% endblock %}

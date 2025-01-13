@@ -39,11 +39,11 @@ def check_null(value):
 
 @register.filter
 def alert_type_class(value):
-    if value in ['cod', 'delivery', 'in_transit', 'bank_account']:
+    if value in ['cod', 'delivery', 'in_transit', 'bank_account','full']:
         return 'primary'
     elif value in ['completed', 'success', 'approved', 'paid', 'online', 'card', 'accepted']:
         return 'success'
-    elif value in ['pending']:
+    elif value in ['pending',"processing"]:
         return 'warning'
     elif value in ['online', 'cancel', 'rejected', 'cancelled', 'unpaid', 'failed']:
         return 'danger'

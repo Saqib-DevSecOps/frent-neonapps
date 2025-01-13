@@ -86,6 +86,9 @@ class Service(models.Model):
                                   help_text="The type of pricing for the service.")
     price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0.01)],
                                 help_text="Service price (up to 10 digits and 2 decimal places).")
+    number_of_people = models.PositiveIntegerField(null=True, blank=False, validators=[MinValueValidator(1)],
+                                                   help_text="Specify the number of people for the service.")
+
     currency = models.ForeignKey(ServiceCurrency, on_delete=models.SET_NULL, null=True, blank=True,
                                  related_name='services',
                                  help_text="The currency for the service price(e.g.,Lira, USD, EUR, etc.).")
@@ -192,6 +195,58 @@ class ServiceLocation(models.Model):
 
     def __str__(self):
         return f"{self.service.title} located at {self.address}, {self.city}, {self.region}, {self.country}"
+
+
+class ServiceLanguage(models.Model):
+    """Service Language Model"""
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    language = models.ForeignKey("core.Language", on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=True, help_text="Indicates if the language is currently active.")
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.language
+
+    class Meta:
+        verbose_name_plural = "Service Languages"
+        ordering = ['language']
+
+
+class ServiceRule(models.Model):
+    """Service Rule  Model"""
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    event_rule = models.CharField(max_length=300, help_text="Small instruction for your project")
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.event_rule
+
+    class Meta:
+        verbose_name_plural = "Service Rule Instructions"
+        ordering = ['created_at']
+
+
+class ServiceRuleInstruction(models.Model):
+    """Service Rule Instruction Model"""
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+    service_rule = models.ForeignKey(ServiceRule, on_delete=models.CASCADE)
+    required_material = models.CharField(max_length=50, help_text="Name of the material")
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.required_material
+
+    class Meta:
+        verbose_name_plural = "Service Rule Instructions"
+        ordering = ['created_at']
 
 
 class ServiceReview(models.Model):
