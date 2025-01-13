@@ -28,6 +28,9 @@ class Advertisement(models.Model):
     def __str__(self):
         return f"{self.service} for {self.service.title}"
 
+    def get_total_requests(self):
+        return AdvertisementRequest.objects.filter(advertisement=self).count()
+
     class Meta:
         ordering = ['service']
 

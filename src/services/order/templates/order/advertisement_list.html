@@ -4,10 +4,10 @@
 {% load core_tags %}
 
 {% block subtitle %}
-    Emails List
+    Advertisement List
 {% endblock %}
 
-{% block page_heading %} Email List {% endblock %}
+{% block page_heading %} Advertisement List {% endblock %}
 
 {% block content %}
     <div class="row">
@@ -18,7 +18,7 @@
                     <button style="margin-left: 3px" class="btn btn-primary ms-3S" type="submit">
                         <i class="fa fa-search"></i> Search
                     </button>
-                    <a style="margin-left: 2px" class="btn btn-danger" href="{% url 'services:services-list' %}">
+                    <a style="margin-left: 2px" class="btn btn-danger" href="{% url 'order:advertisement-list' %}">
                         <i class="fa fa-brush"></i>
                     </a>
                 </div>
@@ -37,12 +37,12 @@
                                 <thead class="border-bottom">
                                 <tr>
                                     <th>ID</th>
-                                    <th>Subject</th>
-                                    <th>Recipient</th>
-                                    <th>Status</th>
-{#                                    <th>Failed Attempts</th>#}
-                                    <th>Created at</th>
-                                    <th>Active</th>
+                                    <th>User</th>
+                                    <th>Service</th>
+                                    <th>Service Type</th>
+                                    <th>StartTime</th>
+                                    <th>EndTime</th>
+                                    <th>-</th>
                                 </tr>
                                 </thead>
 
@@ -51,49 +51,35 @@
                                 {% for object in object_list %}
                                     <tr>
                                         <td>{{ object.pk }}</td>
-                                        <td>{{ object.subject }}</td>
-                                        <td>{{ object.recipient }}</td>
+                                        <td><a href="{% url 'users:user-detail' object.user.id %}">{{ object.user }}</a>
+                                        </td>
+                                        <td>{{ object.service }}</td>
                                         <td>
-                                            <span class="badge bg-{{ object.status|alert_type_class }}">
-                                                <b>
-                                                    {% if object.status == "sent" %}
-                                                        <i class="fa fa-check-circle"></i>
-                                                    {% else %}
-                                                        <i class="fa fa-times-circle"></i>
-                                                    {% endif %}
-                                                    {{ object.status }}
-                                                </b>
+                                            {% if object.service_type == "online" %}
+                                                <span class="badge bg-success text-white">{{ object.service_type }}</span>
+                                            {% else %}
+                                                <span class="badge bg-primary text-white">{{ object.service_type }}</span>
 
-                                            </span>
-
-                                            {% if object.status == 'failed' %}
-                                                 | <i class="fa fa-eye text-danger"
-                                                   data-object-value="{{ object.error_message }}"
-                                                   onclick="showError(this)"></i>
                                             {% endif %}
                                         </td>
 
-{#                                        <td class="text-center">{{ object.failed_attempts }}</td>#}
-                                        <td>{{ object.created_at.date|check_null }}</td>
-
 
                                         <td>
-                                            {% if request.user.is_superuser or perms.whisper.change_emailnotification %}
-
-                                                <a href="{% url 'whisper:emailnotification-retry' object.pk %}"
-                                                   class="text-decoration-none"><i
-                                                        class="fa fa-repeat"></i> Retry
-                                                </a>
-                                            {% else %}
-                                                -
-                                            {% endif %}
+                                            {{ object.start_datetime }}
+                                        </td>
+                                        <td>
+                                            {{ object.end_datetime }}
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'order:advertisement-request-list' object.id %}">{{ object.get_total_requests }}
+                                                Requests </a>
                                         </td>
                                     </tr>
                                 {% endfor %}
 
                                 </tbody>
                             {% else %}
-                                <th class="text-danger">No Emails data available.</th>
+                                <th class="text-danger">No Advertisement data available.</th>
                             {% endif %}
                         </table>
                     </div>
@@ -136,7 +122,7 @@
 
 {% block js_code %}
     <script>
-    // TO FORMAT THE FORMS
+        // TO FORMAT THE FORMS
         $(document).ready(function () {
 
             $('label').hide();
@@ -162,30 +148,9 @@
             });
         });
 
-        $("#id_recipient").attr("placeholder", "Enter Recipient Email");
+        $("#id_service__icontains").attr("placeholder", "Enter Service Name or Category");
+        $("#id_service_type option:first").text("-- Select Service Type --");
 
 
-
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <script>
-        function showError(element) {
-            const errorMessage = $(element).data('object-value');
-            Swal.fire({
-                icon: 'error',
-                title: 'Error Reason',
-                text: errorMessage
-            });
-        }
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            $('label').hide();
-            $('input').addClass('form-control form-control-lg bg-inverse bg-opacity-5');
-            $('select').addClass('form-select');
-            $("#id_status option:first").text("-- Select Status --");
-        });
     </script>
 {% endblock %}
