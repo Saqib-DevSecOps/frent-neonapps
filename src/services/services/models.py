@@ -134,6 +134,7 @@ class Service(models.Model):
         return self.availability_slots.filter(is_active=True)
 
 
+
 class ServiceImage(models.Model):
     """Service Image Model"""
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
@@ -200,7 +201,7 @@ class ServiceLocation(models.Model):
 class ServiceLanguage(models.Model):
     """Service Language Model"""
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
-    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    service = models.ForeignKey(Service, on_delete=models.CASCADE,related_name='languages')
     language = models.ForeignKey("core.Language", on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True, help_text="Indicates if the language is currently active.")
 
@@ -208,7 +209,7 @@ class ServiceLanguage(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.language
+        return self.language.name
 
     class Meta:
         verbose_name_plural = "Service Languages"
@@ -228,7 +229,7 @@ class ServiceRule(models.Model):
         return self.event_rule
 
     class Meta:
-        verbose_name_plural = "Service Rule Instructions"
+        verbose_name_plural = "Service Rule "
         ordering = ['created_at']
 
 

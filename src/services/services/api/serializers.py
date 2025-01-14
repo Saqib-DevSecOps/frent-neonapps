@@ -1,6 +1,8 @@
+from django.apps import apps
 from rest_framework import serializers
+
 from src.services.services.models import ServiceCategory, Service, ServiceImage, ServiceAvailability, ServiceReview, \
-    ServiceCurrency, ServiceLocation, FavoriteService
+    ServiceCurrency, ServiceLocation, FavoriteService, ServiceLanguage, ServiceRule, ServiceRuleInstruction
 from src.services.users.models import User
 
 """ ---------------------Helper Serializers--------------------- """
@@ -116,6 +118,45 @@ class ServiceSerializer(serializers.ModelSerializer):
         return data
 
 
+class LanguageSerializer(serializers.ModelSerializer):
+    class Meta:
+        language = apps.get_model('core', 'Language')
+        model = language
+        fields = ['name', 'short_name']
+        ref_name = 'LanguageServices'
+
+
+class ServiceLanguageSerializer(serializers.ModelSerializer):
+    language = LanguageSerializer(read_only=True)
+
+    class Meta:
+        model = ServiceLanguage
+        fields = ['id', 'language']
+
+
+class ServiceLanguageCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceLanguage
+        fields = ['id', 'language', 'is_active']
+        read_only_fields = ['is_active']
+
+
+class ServiceRuleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceRule
+        fields = ['id', 'service', 'event_rule']
+        read_only_fields = ['event_rule', 'service']
+
+
+class ServiceRuleInstructionSerializer(serializers.ModelSerializer):
+    service_rule = ServiceRuleSerializer()
+
+    class Meta:
+        model = ServiceRuleInstruction
+        fields = ['id', 'service_rule', 'required_material', 'created_at', 'updated_at']
+        read_only_fields = ['service_rule', 'required_material', 'created_at', 'updated_at']
+
+
 class ServiceDetailSerializer(serializers.ModelSerializer):
     provider = UserProfileSerializer()
     images = ServiceImageSerializer(many=True, read_only=True)
@@ -124,14 +165,34 @@ class ServiceDetailSerializer(serializers.ModelSerializer):
     reviews = ServiceReviewSerializer(many=True, read_only=True)
     currency = ServiceCurrencySerializer()
     location = ServiceLocationSerializer(many=True, read_only=True)
+    languages = ServiceLanguageSerializer(many=True, read_only=True)
+    rules_and_instructions = serializers.SerializerMethodField()
 
     class Meta:
         model = Service
         fields = [
             'id', 'title', 'provider', 'service_type', 'thumbnail', 'description', 'content', 'price_type', 'price',
             'discount', 'currency', 'number_of_people',
-            'category', 'is_active', 'images', 'availability_slots', 'location', 'reviews', 'created_at'
+            'category', 'is_active', 'images', 'availability_slots', 'rules_and_instructions', 'location', 'languages',
+            'reviews', 'created_at'
         ]
+
+    def get_rules_and_instructions(self, obj):
+        rules = ServiceRule.objects.filter(service=obj)
+        data = []
+        for rule in rules:
+            instructions = ServiceRuleInstruction.objects.filter(service_rule=rule)
+            instructions_data = []
+            for instruction in instructions:
+                instructions_data.append({
+                    'required_material': instruction.required_material
+                })
+            data.append({
+                'id': rule.id,
+                'event_rule': rule.event_rule,
+                'instructions': instructions_data
+            })
+        return data
 
 
 class ServiceCreateUpdateSerializer(serializers.ModelSerializer):
@@ -147,3 +208,8 @@ class ServiceCreateUpdateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("You already have a service with this title.")
         return value
 
+
+class ServiceRuleInstructionCreateSerializer(serializers.Serializer):
+    """Get Event Rule  and multiple required_material"""
+    event_rule = serializers.CharField()
+    required_material = serializers.ListField(child=serializers.CharField())
