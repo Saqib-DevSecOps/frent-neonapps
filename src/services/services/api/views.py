@@ -1,3 +1,4 @@
+from django.apps import apps
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.generics import ListAPIView, RetrieveAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, \
@@ -8,9 +9,10 @@ from rest_framework.response import Response
 from src.services.services.api.filters import ServiceFilter
 from src.services.services.api.serializers import ServiceSerializer, ServiceDetailSerializer, \
     ServiceCreateUpdateSerializer, ServiceImageSerializer, ServiceAvailabilitySerializer, ServiceLocationSerializer, \
-    ServiceReviewSerializer, ServiceCurrencySerializer
+    ServiceReviewSerializer, ServiceCurrencySerializer, ServiceLanguageSerializer, \
+    ServiceRuleInstructionCreateSerializer, ServiceLanguageCreateSerializer
 from src.services.services.models import Service, ServiceImage, ServiceLocation, ServiceAvailability, ServiceReview, \
-    ServiceCurrency, ServiceRuleInstruction
+    ServiceCurrency, ServiceRuleInstruction, ServiceLanguage, ServiceRule
 
 """SERVICE SEEKER APIS"""
 
@@ -110,7 +112,6 @@ class ServiceAvailabilityCreateAPIView(CreateAPIView):
     def perform_create(self, serializer):
         service = get_object_or_404(Service, provider=self.request.user, pk=self.kwargs.get('service_pk'))
         serializer.save(service=service)
-        return Response(status=status.HTTP_201_CREATED, data={'message': 'Availability slot created successfully'})
 
 
 class ServiceAvailabilityUpdateDestroyAPIView(UpdateAPIView, DestroyAPIView):
@@ -138,7 +139,6 @@ class ServiceLocationCreateAPIView(CreateAPIView):
     def perform_create(self, serializer):
         service = get_object_or_404(Service, provider=self.request.user, pk=self.kwargs.get('service_pk'))
         serializer.save(service=service)
-        return Response(status=status.HTTP_201_CREATED, data={'message': 'Location created successfully'})
 
 
 class ServiceLocationUpdateDestroyAPIView(UpdateAPIView, DestroyAPIView):
@@ -169,26 +169,52 @@ class ServiceReviewCreateAPIView(CreateAPIView):
     def perform_create(self, serializer):
         service = get_object_or_404(Service, pk=self.kwargs.get('service_pk'))
         serializer.save(service=service, reviewer=self.request.user)
-        return Response(status=status.HTTP_201_CREATED, data={'message': 'Review created successfully'})
 
 
-class ServiceRuleListCreateAPIView(ListCreateAPIView):
-    queryset = ServiceRuleInstruction.objects.all()
+class ServiceLanguageCreateAPIView(CreateAPIView):
+    queryset = ServiceLanguage.objects.all()
+    serializer_class = ServiceLanguageCreateSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def create(self, request, *args, **kwargs):
+        service = get_object_or_404(Service, provider=self.request.user, pk=self.kwargs.get('service_pk'))
+        language = apps.get_model('core', 'Language').objects.get(pk=request.data.get('language'))
+        service_language = ServiceLanguage.objects.filter(service=service, language=language).filter()
+        if service_language.exists():
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'message': 'Language already exists'})
+        service_language = ServiceLanguage.objects.create(service=service, language=language)
+        serializer = ServiceLanguageSerializer(service_language)
+        return Response(status=status.HTTP_201_CREATED, data=serializer.data)
+
+
+class ServiceLanguageDestroyAPIView(DestroyAPIView):
+    queryset = ServiceLanguage.objects.all()
+    serializer_class = ServiceLanguageSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_object(self):
+        return get_object_or_404(ServiceLanguage, pk=self.kwargs.get('pk'),
+                                 service_id=self.kwargs.get('service_pk'),
+                                 service__provider=self.request.user)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_200_OK, data={'message': 'Language deleted successfully'})
+
+
+class ServiceRuleInstructionCreateAPIView(CreateAPIView):
+    """
+    API view to create a Service Rule with multiple required materials.
+    """
+    queryset = ServiceRule.objects.all()
+    serializer_class = ServiceRuleInstructionCreateSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        pass
-
     def perform_create(self, serializer):
-        pass
-
-
-class ServiceRuleInstructionListCreateAPIView(ListCreateAPIView):
-    queryset = ServiceRuleInstruction.objects.all()
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        pass
-
-    def perform_create(self, serializer):
-        pass
+        service = get_object_or_404(Service, provider=self.request.user, pk=self.kwargs.get('service_pk'))
+        event_rule = serializer.validated_data.get('event_rule')
+        service_rule = ServiceRule.objects.create(service=service, event_rule=event_rule)
+        for material in serializer.validated_data.get('required_material'):
+            ServiceRuleInstruction.objects.create(service_rule=service_rule, required_material=material)
+        return Response(status=status.HTTP_201_CREATED, data={'message': 'Service rule created successfully'})
