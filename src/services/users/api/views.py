@@ -209,6 +209,9 @@ class FavoriteServiceListCreateAPIView(ListCreateAPIView):
             return FavoriteServiceSerializer
         return FavoriteServiceCreateSerializer
 
+    def get_queryset(self):
+        return FavoriteService.objects.filter(user=self.request.user)
+
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
