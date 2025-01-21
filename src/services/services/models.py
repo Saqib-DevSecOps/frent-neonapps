@@ -134,7 +134,6 @@ class Service(models.Model):
         return self.availability_slots.filter(is_active=True)
 
 
-
 class ServiceImage(models.Model):
     """Service Image Model"""
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
@@ -201,7 +200,7 @@ class ServiceLocation(models.Model):
 class ServiceLanguage(models.Model):
     """Service Language Model"""
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
-    service = models.ForeignKey(Service, on_delete=models.CASCADE,related_name='languages')
+    service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='languages')
     language = models.ForeignKey("core.Language", on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True, help_text="Indicates if the language is currently active.")
 

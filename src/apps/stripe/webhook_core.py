@@ -64,7 +64,7 @@ class WebhookControl:
 
         elif self.event_type == 'account.external_account.updated':
             print(f"HOOK -> {self.event_type}")
-            # webhook_external_account_updated(self.event, self.data)
+            webhook_external_account_updated(self.event, self.data)
 
     def hooks_transfers(self):
         if self.event_type == 'transfer.created':
@@ -212,6 +212,7 @@ def hooks_view(request):
 
         event = stripe.Webhook.construct_event(payload=payload, sig_header=signature, secret=webhook_secret)
         webhook_control = WebhookControl(event, event['type'], event['data'])
+        print(f"WEBHOOK -> {webhook_control}")
         webhook_control.command_control()
         return HttpResponse(status=200)
 

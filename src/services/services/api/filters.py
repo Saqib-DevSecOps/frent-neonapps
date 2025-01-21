@@ -5,7 +5,7 @@ from src.services.services.models import Service
 
 
 class ServiceFilter(django_filters.FilterSet):
-    search = django_filters.CharFilter(method='search_services')
+    search = django_filters.CharFilter(method='search_services', field_name='search By Title ')
     category = django_filters.UUIDFilter(field_name="category__id")
     location = django_filters.CharFilter(field_name="provider__service_provider_profile__address",
                                          lookup_expr='icontains')

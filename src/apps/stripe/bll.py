@@ -11,8 +11,7 @@ from django.utils import timezone
 
 from src.apps.stripe.notifier import notify_transfer_created
 
-stripe.api_key = STRIPE_SECRET_KEY
-
+stripe.api_key = "sk_test_51LC794Js59MkLRK8jKm97MecFP4dwcOrxfetIXefvByCaodNGQ1qNdKqaxVBZGD1aW9VTBh69W73T1Ox7LtByRpy00nRXonBff"
 
 """ STRIPE CONNECT ------------------------------------------------------------------------------------------------- """
 """ CONNECT API CALLS """
@@ -23,18 +22,17 @@ def stripe_connect_account_create(user):
     error = ""
     account = None
 
-    if not user.country:
+    if not user.get_address().country:
         return "User doesn't have any country selected", None
 
     try:
-
         account = stripe.Account.create(
-            type='express', country=user.country.short_name, email=user.email,
+            type='express', country=user.get_address().country.code2, email=user.email,
         )
         wallet = user.get_user_wallet()
         wallet.stripe_account_id = account.id
         wallet.stripe_description = account
-        wallet.stripe_account_country = user.country.short_name
+        wallet.stripe_account_country = user.get_address().country.code2
         wallet.stripe_account_email = user.email
         wallet.stripe_account_type = "express"
         wallet.save()
@@ -314,7 +312,6 @@ def update_product_list():
 
 # TESTED - REQUIRED - DATA
 def update_price_list():
-
     # FIRST UPDATE PRODUCTS
     success_product, obj_product = update_product_list()
     if not success_product:

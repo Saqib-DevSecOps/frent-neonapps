@@ -99,12 +99,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     # YOUR MIDDLEWARES
-    "allauth.account.middleware.AccountMiddleware",
+    # "allauth.account.middleware.AccountMiddleware",
 ]
 
 # settings.py
 CITIES_LIGHT_TRANSLATION_LANGUAGES = ['en']  # Load English translations only
-CITIES_LIGHT_INCLUDE_COUNTRIES = ['PK', ]  # Load data only for Pakistan and Turkey
+CITIES_LIGHT_INCLUDE_COUNTRIES = ['FR' ]  # Load data only for Pakistan and Turkey
 CITIES_LIGHT_INCLUDE_CITY_TYPES = ['PPL', 'PPLA', 'PPLC']  # Include populated places and capitals
 
 
