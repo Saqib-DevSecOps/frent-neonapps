@@ -1,7 +1,7 @@
 import stripe
 from django.http import HttpResponse
 
-from root.settings import STRIPE_WEBHOOK_SECRET
+STRIPE_WEBHOOK_SECRET = "whsec_65188ad0b7b144435d7fe4cba36309d86d8a715765def9a33607d965c8bf0beb"
 from src.apps.stripe.webhooks_bll import (
     webhook_account_updated, webhook_transfer_updated, webhook_subscription_created,
     webhook_subscription_deleted, webhook_subscription_updated, webhook_payout_created, webhook_payout_status_change,
@@ -9,12 +9,11 @@ from src.apps.stripe.webhooks_bll import (
     webhook_external_account_created
 )
 
-
 """ HOOKS LOGIC ---------------------------------------------------------------------------------------------------- """
 
 
 class WebhookControl:
-    
+
     def __init__(self, event, event_type, data):
         self.event = event
         self.event_type = event_type
@@ -101,7 +100,7 @@ class WebhookControl:
         elif self.event_type == 'payout.updated':
             print(f"HOOK -> {self.event_type}")
             webhook_payout_updated(self.event, self.data)
-    
+
     def hooks_top_up(self):
         if self.event_type == 'topup.canceled':
             print(f"HOOK -> {self.event_type}")
@@ -177,7 +176,7 @@ class WebhookControl:
 
         elif self.event_type == 'subscription_schedule.updated':
             print(f"HOOK -> {self.event_type}")
-        
+
     def hooks_checkout(self):
         if self.event_type == 'checkout.session.async_payment_failed':
             print(f"HOOK -> {self.event_type}")
@@ -203,7 +202,6 @@ class WebhookControl:
 
 
 def hooks_view(request):
-
     webhook_secret = STRIPE_WEBHOOK_SECRET
     signature = request.META['HTTP_STRIPE_SIGNATURE']
     payload = request.body
@@ -212,7 +210,6 @@ def hooks_view(request):
 
         event = stripe.Webhook.construct_event(payload=payload, sig_header=signature, secret=webhook_secret)
         webhook_control = WebhookControl(event, event['type'], event['data'])
-        print(f"WEBHOOK -> {webhook_control}")
         webhook_control.command_control()
         return HttpResponse(status=200)
 
@@ -225,5 +222,3 @@ def hooks_view(request):
 
     print(error)
     return HttpResponse(status=400)
-
-
