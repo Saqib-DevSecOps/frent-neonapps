@@ -29,6 +29,9 @@ urlpatterns += [
     path('', include('src.services.wallet.urls', namespace='wallet')),
     path('', include('src.services.dashboard.urls', namespace='dashboard')),
     path('', include('src.services.order.urls', namespace='order')),
+
+    path('', include('src.apps.stripe.urls', namespace='stripe')),
+
 ]
 
 """ EXTERNAL REQUIRED APPS ----------------------------------------------------------------------------------------- """

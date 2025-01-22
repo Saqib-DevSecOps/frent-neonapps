@@ -11,7 +11,7 @@ from src.services.users.api.serializers import UserSerializer, UserImageSerializ
     CertificationSerializer, UserUpdateSerializer, ServiceProviderLanguageSerializer, FavoriteServiceSerializer, \
     FavoriteServiceCreateSerializer, UserContactSerializer
 from src.services.users.models import UserImage, User, ServiceProvider, SocialMedia, Interest, Certification, \
-    ServiceProviderLanguage, UserContact
+    ServiceProviderLanguage, UserContact, Address
 
 """ ---------------------SERVICE SEEKER APIS------------------------ """
 
@@ -65,12 +65,12 @@ class UserAddressRetrieveUpdateAPIView(RetrieveUpdateAPIView):
     """
     Retrieve and update user address
     """
-    queryset = User.objects.all()
+    queryset = Address.objects.all()
     serializer_class = UserAddressSerializer
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        return self.request.user
+        return get_object_or_404(self.queryset, id=self.request.user.id)
 
     def perform_update(self, serializer):
         serializer.save()

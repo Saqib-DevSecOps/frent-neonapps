@@ -47,8 +47,8 @@ class User(AbstractUser):
         return None
 
     def get_user_wallet(self):
-        if hasattr(self, 'user_wallet'):
-            return self.user_wallet
+        if hasattr(self, 'wallet'):
+            return self.wallet
         return None
 
     def get_provider_location(self):
@@ -56,6 +56,16 @@ class User(AbstractUser):
         if hasattr(self, 'address') and self.address.address:
             return f"{self.address.city.name}, {self.address.region.name}, {self.address.country.name}"
         return None
+
+    def get_address(self):
+        if hasattr(self, 'address'):
+            return self.address
+        return None
+
+    def is_stripe_connected(self):
+        if hasattr(self, 'user_wallet'):
+            return self.user_wallet.is_stripe_connected()
+        return False
 
 
 class Address(models.Model):
@@ -77,7 +87,7 @@ class Address(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.user.username}'s Address"
+        return str(self.address)
 
 
 class UserImage(models.Model):
