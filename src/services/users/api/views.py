@@ -1,7 +1,7 @@
 from django.views.generic import DeleteView
 from rest_framework import status
 from rest_framework.generics import UpdateAPIView, CreateAPIView, RetrieveUpdateAPIView, DestroyAPIView, \
-    get_object_or_404, ListCreateAPIView, RetrieveUpdateDestroyAPIView
+    get_object_or_404, ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -33,6 +33,18 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
 
     def perform_update(self, serializer):
         serializer.save()
+
+
+class UserRetrieveAPIView(RetrieveAPIView):
+    """
+    Retrieve user profile
+    """
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return get_object_or_404(self.queryset, id=self.kwargs.get('pk'))
 
 
 class UserImageCreateAPIView(CreateAPIView):
@@ -94,6 +106,18 @@ class ServiceProviderRetrieveUpdateAPIView(RetrieveUpdateAPIView):
 
     def get_object(self):
         return get_object_or_404(self.queryset, id=self.request.user.get_service_provider_profile().id)
+
+
+class ServiceProviderRetrieveAPIView(RetrieveAPIView):
+    """
+    Retrieve and update service provider profile
+    """
+    queryset = ServiceProvider.objects.all()
+    serializer_class = ServiceProviderDetailSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return get_object_or_404(self.queryset, id=self.kwargs.get('pk'))
 
 
 class ServiceProviderLanguageCreateAPIView(CreateAPIView):

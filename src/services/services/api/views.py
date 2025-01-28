@@ -59,9 +59,6 @@ class ProviderServiceRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     serializer_class = ServiceCreateUpdateSerializer
     permission_classes = [IsAuthenticated]
 
-    def perform_update(self, serializer):
-        serializer.save(provider=self.request.user)
-
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return ServiceDetailSerializer

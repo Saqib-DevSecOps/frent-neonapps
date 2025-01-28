@@ -5,13 +5,15 @@ from src.services.users.api.views import UserRetrieveUpdateAPIView, UserImageCre
     ServiceProviderSocialMediaUpdateAPIView, ServiceProviderCertificateDestroyAPIView, \
     ServiceProviderCertificationCreateAPIView, ServiceProviderLanguageCreateAPIView, \
     ServiceProviderLanguageDestroyAPIView, FavoriteServiceDestroyAPIView, FavoriteServiceListCreateAPIView, \
-    UserContactListCreateAPIView, UserContactUpdateDestroyAPIView, ServiceProviderInterestDestroyAPIView
+    UserContactListCreateAPIView, UserContactUpdateDestroyAPIView, ServiceProviderInterestDestroyAPIView, \
+    ServiceProviderRetrieveAPIView, UserRetrieveAPIView
 
 app_name = "users-api"
 
 """SERVICE SEEKER URLS"""
 urlpatterns = [
     path('v1/profile/', UserRetrieveUpdateAPIView.as_view(), name='user-update'),
+    path('v1/profile/<str:pk>/', UserRetrieveAPIView.as_view(), name='user-detail'),
     path('v1/image/', UserImageCreateAPIView.as_view(), name='image-update'),
     path('v1/image/<str:pk>/', UserImageDestroyAPIView.as_view(), name='image-delete'),
     path('v1/address/', UserAddressRetrieveUpdateAPIView.as_view(), name='address-update'),
@@ -26,6 +28,7 @@ urlpatterns = [
 """SERVICE PROVIDER URLS"""
 urlpatterns += [
     path('v1/service-provider/', ServiceProviderRetrieveUpdateAPIView.as_view(), name='service-provider-update'),
+    path('v1/service-provider/<str:pk>/', ServiceProviderRetrieveAPIView.as_view(), name='service-provider-detail'),
     path('v1/service-provider/interest/', ServiceProviderInterestCreateAPIView.as_view(),
          name='service-provider-interest'),
     path('v1/service-provider/interest/<str:pk>/', ServiceProviderInterestDestroyAPIView.as_view(),
