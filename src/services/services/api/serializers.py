@@ -10,15 +10,19 @@ from src.services.users.models import User
 
 class UserProfileSerializer(serializers.ModelSerializer):
     location = serializers.SerializerMethodField()
+    provider_id = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'profile_image', 'location']
+        fields = ['id', 'provider_id', 'username', 'profile_image', 'location']
 
     def get_location(self, obj):
         if obj.get_provider_location():
             return obj.get_provider_location()
         return None
+
+    def get_provider_id(self, obj):
+        return obj.get_service_provider_profile().id if obj.get_service_provider_profile() else None
 
 
 """ ---------------------Service Serializers--------------------- """
