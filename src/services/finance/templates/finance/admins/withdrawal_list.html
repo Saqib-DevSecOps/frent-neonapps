@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load custom_tags %}
+{% load static %}
+
+{% block subtitle %}
+    Withdrawal Requests
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-12">
+            <form method="get">
+                <div class="input-group mb-3">
+                    {{ filter_form }}
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fa fa-search"></i> Search
+                        </button>
+                        <button class="btn btn-danger">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="row">
+        {% if object_list %}
+            {% for object in object_list %}
+
+                <div class="col-xl-4 col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    {% if object.withdrawal_type == "bank" %}
+                                        <img src="{% static 'vendor/assets/images/core/bank.png' %}"
+                                             alt="logo" class="rounded-circle" height="64" width="64">
+                                    {% elif object.withdrawal_type == "paypal" %}
+                                        <img src="{% static 'vendor/assets/images/core/paypal.png' %}"
+                                             alt="logo" class="rounded-circle" height="64" width="64">
+                                    {% elif object.withdrawal_type == "connect" %}
+                                        <img src="{% static 'vendor/assets/images/core/stripe.png' %}"
+                                             alt="logo" class="rounded-circle" height="64" width="64">
+                                    {% else %}
+                                        <img src="https://placehold.co/64/"
+                                             alt="logo" class="rounded-circle" height="64" width="64">
+                                    {% endif %}
+                                </div>&nbsp;&nbsp;
+                                <div class="flex-grow-1 ms-3">
+                                    <h4 class="mb-0">
+                                        <b>
+                                            <a href="{% url 'finance:withdrawal-update' object.id %}">{{ object.amount }}</a>
+                                        </b>
+                                    </h4>
+                                    <p class="mb-0 text-muted">
+                                        <i class="fa fa-map-pin"></i>
+                                        {{ object.user }} - {{ object.user.get_vendor|check_null }}
+                                    </p>
+                                    <p class="mb-0">{{ object.description|check_null }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="px-4 py-3 border-top">
+                            <ul class="list-inline mb-0">
+                                <li class="list-inline-item me-3">
+                                    {{ object.status|status_html|safe }}
+                                </li>
+                                <li class="list-inline-item me-3">
+                                    <i class="bx bx-calendar me-1"></i> {{ object.created_on|date:"d M, Y" }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+        {% else %}
+
+            <div class=" col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="alert alert-danger">
+                            <i class="fa fa-exclamation-circle"></i> &nbsp;
+                            No withdrawal requests found
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="mt-4">
+                <ul class="pagination">
+                    {% if object_list.has_previous %}
+                        <li>
+                            <span>
+                                <a href="{% relative_url object_list.previous_page_number 'page' request.GET.urlencode %}">
+                                    Previous
+                                </a>
+                            </span>
+                        </li>
+                    {% endif %}
+                    <li class="">
+                        <span>Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.</span>
+                    </li>
+                    {% if object_list.has_next %}
+                        <li>
+                            <span>
+                                <a href="{% relative_url object_list.next_page_number 'page' request.GET.urlencode %}">
+                                    Next
+                                </a>
+                            </span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(function () {
+            $('select').addClass("form-control form-select");
+            $('label').hide();
+
+            $("#id_status option:first").text("-- Status --");
+            $("#id_withdrawal_type option:first").text("-- Withdrawal --");
+
+        })
+    </script>
+{% endblock %}
+
+

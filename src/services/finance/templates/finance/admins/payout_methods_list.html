@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load custom_tags %}
+{% load static %}
+
+{% block subtitle %}
+    Payout Accounts
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-12">
+            <form method="get">
+                <div class="input-group mb-3">
+                    {{ filter_form }}
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fa fa-search"></i> Search
+                        </button>
+                        <button class="btn btn-danger">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="row">
+        {% if object_list %}
+            {% for object in object_list %}
+
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header text-center">
+
+                            {% if  object.is_bank %}
+                                <img src="{% static 'vendor/assets/images/core/bank.png' %}" alt="bank"><br>
+                            {% else %}
+                                <img src="{% static 'vendor/assets/images/core/paypal.png' %}" alt="bank"><br>
+                            {% endif %}
+
+                            {{ object.obj.status|status_html|safe }}
+                            <h3 class="card-title mb-0">{{ object.obj.bank_name }}</h3>
+
+                            {% if object.is_bank %}
+                                <p class="mb-0">
+                                    {{ object.obj.account_holder_name }}
+                                </p>
+
+                                <p class="mb-0">
+                                    {{ object.obj.last_4_digits }}
+                                </p>
+                            {% else %}
+                                <p class="mb-0">
+                                    {{ object.obj.email }}
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+        {% else %}
+
+            <div class=" col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="alert alert-danger">
+                            <i class="fa fa-exclamation-circle"></i> &nbsp;
+                            No withdrawal requests found
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="mt-4">
+                <ul class="pagination">
+                    {% if object_list.has_previous %}
+                        <li>
+                            <span>
+                                <a href="{% relative_url object_list.previous_page_number 'page' request.GET.urlencode %}">
+                                    Previous
+                                </a>
+                            </span>
+                        </li>
+                    {% endif %}
+                    <li class="">
+                        <span>Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.</span>
+                    </li>
+                    {% if object_list.has_next %}
+                        <li>
+                            <span>
+                                <a href="{% relative_url object_list.next_page_number 'page' request.GET.urlencode %}">
+                                    Next
+                                </a>
+                            </span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(function () {
+            $('select').addClass("form-control form-select");
+            $('label').hide();
+
+            $("#id_status option:first").text("-- Status --");
+            $("#id_withdrawal_type option:first").text("-- Withdrawal --");
+
+        })
+    </script>
+{% endblock %}
+
+

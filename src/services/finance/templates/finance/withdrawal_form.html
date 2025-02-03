@@ -1,0 +1,63 @@
+{% extends 'vendor/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block sub_title %}
+    Withdrawal Form
+{% endblock %}
+
+{% block content %}
+    <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Withdrawal Form</h2>
+            </div>
+            <a href="{% url 'finance:withdrawal-list' %}" class="btn btn-primary">
+                <i class="text-muted material-icons md-arrow_back"></i>
+                back to withdrawals
+            </a>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            {{ form|crispy }}
+                            <button type="submit" class="btn btn-success text-white">
+                                Submit
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+            <div class="card">
+                <div class="card-body border-bottom">
+                    <div class="icontext mr-5">
+                            <span class="icon icon-sm rounded-circle bg-primary-light">
+                                <i class="text-primary material-icons md-monetization_on"></i>
+                            </span>
+                        <div class="text">
+                            <h6 class="mb-1 card-title">Available Balance</h6>
+                            <span>€ {{ request.user.get_available_balance }}</span>
+                        </div>
+                    </div>
+                    <div class="icontext ml-5">
+                            <span class="icon icon-sm rounded-circle bg-warning-light">
+                                <i class="text-warning material-icons md-monetization_on"></i>
+                            </span>
+                        <div class="text">
+                            <h6 class="mb-1 card-title">Pending Balance</h6>
+                            <span>€ {{ request.user.get_pending_balance }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </div>
+
+    </section>
+{% endblock %}
