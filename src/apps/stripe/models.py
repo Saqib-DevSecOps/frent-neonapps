@@ -1,8 +1,7 @@
+from django.apps import apps
 from django.contrib.auth import get_user_model
 from payments.models import BasePayment
 from django.db import models
-
-from src.services.wallet.models import Wallet
 
 """ HELPERS """
 
@@ -15,7 +14,9 @@ def get_connect_account_id(external_account_id):
 
 
 def get_user(connect_account_id):
-    wallets = Wallet.objects.filter(stripe_account_id=connect_account_id)
+    wallet = apps.get_model('wallet', 'Wallet')
+
+    wallets = wallet.objects.filter(stripe_account_id=connect_account_id)
     if wallets.exists():
         return wallets.first().user
     return None

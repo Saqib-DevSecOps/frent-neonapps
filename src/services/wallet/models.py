@@ -5,7 +5,29 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.db import models
+
+from src.apps.stripe.bll import stripe_transfer_to_connect_account
 from src.services.users.models import User
+
+BANK_ACCOUNT_TYPES = (
+    ('personal', 'Personal'),
+    ('business', 'Business')
+)
+FINANCE_ACCOUNT_STATUS = (
+    ('pending', 'Pending'),
+    ('verified', 'Verified'),
+    ('cancelled', 'Cancelled')
+)
+WITHDRAWAL_TYPES = (
+    ('bank', 'Bank'),
+    ('paypal', 'PayPal'),
+    ('connect', 'Connect')
+)
+WITHDRAWAL_STATUS = (
+    ('pending', 'Pending'),
+    ('accepted', 'Accepted'),
+    ('cancelled', 'Cancelled')
+)
 
 
 class Wallet(models.Model):
@@ -104,6 +126,87 @@ class BankAccount(models.Model):
 
     def __str__(self):
         return f"{self.account_holder_name} - {self.bank.name} ({self.account_number})"
+
+
+class Withdrawal(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='withdrawals', blank=True
+    )
+    amount = models.DecimalField(max_digits=12, decimal_places=2, blank=False, null=False)
+    withdrawal_type = models.CharField(max_length=20, choices=WITHDRAWAL_TYPES, default=WITHDRAWAL_TYPES[0][0])
+
+    description = models.TextField(
+        blank=True, null=True, help_text='You have applied for account please wait for verification process'
+    )
+    status = models.CharField(
+        max_length=20, choices=WITHDRAWAL_STATUS, default=WITHDRAWAL_STATUS[0][0], help_text='Status of withdrawal'
+    )
+
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name_plural = 'Withdrawals'
+        ordering = ['-created_on']
+
+    def __str__(self):
+        return f'{self.user} - {self.amount} - {self.status}'
+
+    def handle_connect_withdrawal(self, obj):
+        success = False
+
+        try:
+            amount = int(self.amount)
+        except ValueError:
+            return success, "Please enter a valid integer amount"
+
+        success, obj = stripe_transfer_to_connect_account(user=self.user, amount=self.amount)
+        return success, obj
+
+    def clean(self):
+
+        # user is required here.
+        try:
+            user = self.user
+        except Exception as e:
+            raise ValidationError('User is required for withdrawal')
+
+        # get vendor and wallet
+        wallet = self.user.get_user_wallet()
+
+        # balance check
+        if self.amount > wallet.balance_available:
+            raise ValidationError({'amount': 'Insufficient balance in wallet'})
+
+        # withdrawal type check and validation
+        if self.withdrawal_type == 'bank':
+            if not user.bank_account_active():
+                raise ValidationError({'withdrawal_type': 'User does not have an active bank account'})
+        elif self.withdrawal_type == 'connect':
+            if not self.user.is_stripe_account_active():
+                raise ValidationError({'withdrawal_type': 'user connect account is not active'})
+        else:
+            raise ValidationError({'withdrawal_type': 'Invalid withdrawal type'})
+
+        # First time status must be pending
+        if not self.pk:
+
+            previous_withdrawals = Withdrawal.objects.filter(user=self.user, status__in=['pending'])
+            if previous_withdrawals.exists():
+                raise ValidationError(f'Your previous withdrawal request is still pending.')
+
+            if self.status != 'pending':
+                raise ValidationError({'status': 'Status must be pending at start'})
+
+        else:
+            previous_status = Withdrawal.objects.get(pk=self.pk).status
+            if previous_status in ['accepted', 'cancelled']:
+                raise ValidationError({'status': 'Cancelled or accepted requests cannot be updated'})
+
+        if self.withdrawal_type == 'connect' and self.status == 'accepted':
+            success, obj = self.handle_connect_withdrawal(self)
+            if not success:
+                raise ValidationError(obj)
 
 
 class Transaction(models.Model):

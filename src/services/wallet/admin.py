@@ -1,4 +1,4 @@
-from .models import Wallet, Transaction, Bank, BankAccount
+from .models import Wallet, Withdrawal, Bank, BankAccount
 from django.contrib import admin
 
 
@@ -50,24 +50,10 @@ class WalletAdmin(admin.ModelAdmin):
     ordering = ('-created_at',)
 
 
-@admin.register(Transaction)
-class TransactionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'transaction_type', 'amount', 'status', 'payment_type', 'created_at', 'updated_at')
-    list_filter = ('transaction_type', 'status', 'payment_type', 'created_at')
-    search_fields = ('user__username', 'description', 'transaction_type')
-    readonly_fields = ('created_at', 'updated_at')
-
-    fieldsets = (
-        (None, {
-            'fields': ('user', 'wallet', 'transaction_type', 'amount', 'fee', 'description')
-        }),
-        ('Payment Details', {
-            'fields': ('payment_type', 'status')
-        }),
-        ('Timestamps', {
-            'fields': ('created_at', 'updated_at')
-        }),
-    )
+@admin.register(Withdrawal)
+class WithdrawalAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'amount', 'status')
+   
 
     def has_change_permission(self, request, obj=None):
         if obj and obj.status == 'completed':
