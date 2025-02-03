@@ -113,7 +113,7 @@ class SocialMediaSerializer(serializers.ModelSerializer):
 class ServiceProviderSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceProvider
-        fields = ['id', 'company_name', 'phone_number', 'website']
+        fields = ['id', 'company_name', 'phone_number', 'website','verified']
 
 
 class ServiceProviderDetailSerializer(serializers.ModelSerializer):
