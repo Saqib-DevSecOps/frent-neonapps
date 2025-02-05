@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 
 from .views import (
     FinanceDashboard, PayoutMethodView,
@@ -30,11 +30,13 @@ urlpatterns = [
 
 ]
 
-# urlpatterns += [
+urlpatterns += [
 #     path('paypal-account/<int:pk>/change/', PaypalAccountUpdateView.as_view(), name='paypal-account-update'),
 #     path('bank-account/<int:pk>/change/', BankAccountUpdateView.as_view(), name='bank-account-update'),
 #     path('withdrawal/<int:pk>/change/', WithdrawalUpdateView.as_view(), name='withdrawal-update'),
 #
 #     path('bank-account/', BankAccountListView.as_view(), name='bank-account-list'),
 #     path('paypal-account/', PaypalAccountListView.as_view(), name='paypal-account-list')
-# ]
+
+    path('finance/api/', include('src.services.finance.api.urls', namespace='finance-api')),
+]

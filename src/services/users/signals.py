@@ -35,7 +35,7 @@ def create_user_wallet(sender, instance, created, **kwargs):
     if the user does not already have one.
     """
     wallet_exists = hasattr(instance, 'user_wallet')
-    wallet = apps.get_model('wallet', 'Wallet')
+    wallet = apps.get_model('finance', 'Wallet')
     if not wallet_exists:
         wallet.objects.get_or_create(user=instance)
 

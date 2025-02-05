@@ -16,7 +16,6 @@ FINANCE_ACCOUNT_STATUS = (
 )
 WITHDRAWAL_TYPES = (
     ('bank', 'Bank'),
-    ('paypal', 'PayPal'),
     ('connect', 'Connect')
 )
 WITHDRAWAL_STATUS = (
@@ -101,12 +100,12 @@ class FinanceAccount(models.Model):
         default=True, help_text='Is this bank active? only active accounts will be available for withdrawal.'
     )
 
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         abstract = True
-        ordering = ('-created_on',)
+        ordering = ('-created_at',)
 
     def __str__(self):
         return f'{self.account_holder_name}'
@@ -159,11 +158,11 @@ class BankAccount(FinanceAccount):
     account_type = models.CharField(max_length=20, choices=BANK_ACCOUNT_TYPES, default=BANK_ACCOUNT_TYPES[0][0])
     bank_name = models.CharField(max_length=100)
     iban = models.CharField(max_length=50, unique=True)
-    currency = models.ForeignKey('admins.Currency', on_delete=models.CASCADE)
+    currency = models.CharField(max_length=3, default='USD', null=True, blank=True)
 
     class Meta:
         verbose_name_plural = 'Bank Accounts'
-        ordering = ('-created_on',)
+        ordering = ('-created_at',)
 
     def last_4_digits(self):
         return " * * * * " + self.iban[-4:]
@@ -175,7 +174,7 @@ class PayPalAccount(FinanceAccount):
 
     class Meta:
         verbose_name_plural = 'Paypal Accounts'
-        ordering = ('-created_on',)
+        ordering = ('-created_at',)
 
 
 class Withdrawal(models.Model):
@@ -192,12 +191,12 @@ class Withdrawal(models.Model):
         max_length=20, choices=WITHDRAWAL_STATUS, default=WITHDRAWAL_STATUS[0][0], help_text='Status of withdrawal'
     )
 
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name_plural = 'Withdrawals'
-        ordering = ['-created_on']
+        ordering = ['-created_at']
 
     def __str__(self):
         return f'{self.user} - {self.amount} - {self.status}'
@@ -292,11 +291,11 @@ class Transaction(models.Model):
     description = models.TextField(null=True, blank=True)
     status = models.CharField(max_length=50, choices=STATUS_TYPE, default="completed")
 
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['-created_on']
+        ordering = ['-created_at']
         verbose_name_plural = "Transactions"
 
     def __str__(self):
@@ -359,13 +358,13 @@ class Charge(models.Model):
     status = models.CharField(max_length=30, choices=STATUS_TYPE, default=STATUS_TYPE[0][0])
 
     is_active = models.BooleanField(default=False)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = 'Charge'
         verbose_name_plural = 'Charges'
-        ordering = ['-created_on']
+        ordering = ['-created_at']
 
     def __str__(self):
         return self.fee_type

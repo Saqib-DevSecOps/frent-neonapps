@@ -1,4 +1,4 @@
-from src.administration.admins.models import Transaction
+from src.services.finance.models import Transaction
 
 
 def withdrawal_balance_calculation(withdrawal):

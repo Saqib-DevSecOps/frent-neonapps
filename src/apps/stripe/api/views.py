@@ -1,9 +1,11 @@
 from rest_framework import status
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.response import Response
 from stripe import AuthenticationError
 
+from src.apps.stripe.api.serializers import TransferSerializer, PayoutSerializer
 from src.apps.stripe.bll import stripe_connect_account_create, stripe_connect_account_link
+from src.apps.stripe.models import Transfer, Payout
 
 
 class ConnectWalletCreateAPIView(GenericAPIView):
@@ -48,3 +50,25 @@ class ConnectWalletActivateAPIView(GenericAPIView):
             return Response({'detail': f'Authentication error: {str(e)}'},
                             status=status.HTTP_400_BAD_REQUEST)
         return Response({'url': url}, status=status.HTTP_200_OK)
+
+
+class TransferListAPIView(ListAPIView):
+    """
+    List all Transfers of user
+    """
+    model = Transfer
+    serializer_class = TransferSerializer
+
+    def get_queryset(self):
+        return Transfer.objects.filter(user=self.request.user)
+
+
+class PayoutListAPIView(ListAPIView):
+    """
+    List all Payouts of user
+    """
+    model = Payout
+    serializer_class = PayoutSerializer
+
+    def get_queryset(self):
+        return Payout.objects.filter(user=self.request.user)
