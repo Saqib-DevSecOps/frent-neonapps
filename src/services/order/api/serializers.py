@@ -74,7 +74,8 @@ class SpecialOfferUpdateSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ['id', 'user', 'service_booking_request', 'service_advertisement_request', 'payment_type',
+        fields = ['id', 'user', 'service_booking_request', 'service_advertisement_request', 'special_offer',
+                  'payment_type',
                   'total_price', 'paid_price', 'tip',
                   'order_status', 'payment_status', 'created_at', 'updated_at']
         read_only_fields = ['id', 'user', 'created_at', 'updated_at']
@@ -88,7 +89,8 @@ class OrderDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['id', 'user', 'service', 'service_booking_request', 'service_advertisement_request', 'payment_type',
+        fields = ['id', 'user', 'service', 'service_booking_request', 'service_advertisement_request', 'special_offer',
+                  'payment_type',
                   'total_price', 'paid_price', 'tip',
                   'order_status', 'payment_status', 'created_at', 'updated_at']
 
