@@ -9,7 +9,9 @@ class WalletSerializer(serializers.ModelSerializer):
     class Meta:
         model = Wallet
         fields = ["id", "user", "total_amounts", "total_deposits", "total_earnings", "total_withdrawals",
-                  "balance_available", "balance_pending", "outstanding_charges"]
+                  "balance_available", "balance_pending", "outstanding_charges", "connect_pending_balance",
+                  "connect_available_balance", "connect_available_balance_currency", "connect_pending_balance_currency"
+                  ]
 
 
 class BankAccountSerializer(serializers.ModelSerializer):
@@ -92,7 +94,6 @@ class WithdrawalSerializer(serializers.ModelSerializer):
             success, obj = self.handle_connect_withdrawal(user, amount)
             if not success:
                 raise serializers.ValidationError({'status': obj})
-
         return data
 
     def handle_connect_withdrawal(self, user, amount):
@@ -115,12 +116,13 @@ class TransactionSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'created_at', 'updated_at']
 
     def validate(self, data):
+        user = self.context['request'].user
         # AMOUNT CHECK
         if data['amount'] <= 0:
             raise ValidationError('Amount must be greater than 0')
 
         # USER MUST HAVE WALLET
-        wallet = Wallet.objects.filter(user=data['user'])
+        wallet = Wallet.objects.filter(user=user)
         if not wallet.exists():
             raise ValidationError('User must have wallet to perform transaction')
         wallet = wallet.first()

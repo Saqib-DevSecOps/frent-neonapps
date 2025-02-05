@@ -1,7 +1,7 @@
 from django.urls import path
 
 from src.services.finance.api.views import WalletRetrieveAPIVIew, BankAccountListCreateView, BankAccountDeleteAPIView, \
-    WithdrawalListCreateAPIView, TransactionListAPIView, ChargeListAPIView
+    WithdrawalListCreateAPIView, TransactionListAPIView
 
 app_name = "finance-api"
 
