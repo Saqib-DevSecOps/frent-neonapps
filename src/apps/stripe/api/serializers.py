@@ -1,6 +1,13 @@
 from rest_framework import serializers
 
 from src.apps.stripe.models import Transfer, Payout
+from src.services.finance.models import Wallet
+
+
+class ConnectWalletSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Wallet
+        fields = ["id", "stripe_account_id"]
 
 
 class TransferSerializer(serializers.ModelSerializer):

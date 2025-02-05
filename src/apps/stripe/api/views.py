@@ -1,18 +1,18 @@
 from rest_framework import status
 from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from stripe import AuthenticationError
 
-from src.apps.stripe.api.serializers import TransferSerializer, PayoutSerializer
-from src.apps.stripe.bll import stripe_connect_account_create, stripe_connect_account_link
+from src.apps.stripe.api.serializers import TransferSerializer, PayoutSerializer, ConnectWalletSerializer
+from src.apps.stripe.bll import stripe_connect_account_create, stripe_connect_account_link, get_connect_wallet_balance
 from src.apps.stripe.models import Transfer, Payout
 
 
-class ConnectWalletCreateAPIView(GenericAPIView):
+class ConnectWalletCreateAPIView(APIView):
     """
     Create a new Wallet for the User
     """
-    serializer_class = None
 
     def get(self, request, *args, **kwargs):
         user = request.user
@@ -31,13 +31,11 @@ class ConnectWalletCreateAPIView(GenericAPIView):
                         status=status.HTTP_200_OK)
 
 
-class ConnectWalletActivateAPIView(GenericAPIView):
+class ConnectWalletActivateAPIView(APIView):
     """
     Visit the Wallet Dashboard
     """
 
-    def get_serializer_class(self):
-        return None
 
     def get(self, request, *args, **kwargs):
         user = request.user
@@ -50,6 +48,15 @@ class ConnectWalletActivateAPIView(GenericAPIView):
             return Response({'detail': f'Authentication error: {str(e)}'},
                             status=status.HTTP_400_BAD_REQUEST)
         return Response({'url': url}, status=status.HTTP_200_OK)
+
+
+class ConnectWalletRefreshView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        if request.user.get_user_wallet().is_stripe_account_active():
+            get_connect_wallet_balance(request.user)
+            return Response({'detail': 'Wallet refreshed successfully'}, status=status.HTTP_200_OK)
+        return Response({'detail': 'Connect Wallet is not active'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class TransferListAPIView(ListAPIView):

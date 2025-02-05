@@ -2,8 +2,8 @@ from django.contrib import admin
 
 from .models import (
     BankAccount,
-    PayPalAccount,
-    Withdrawal
+    PayPalAccount, Transaction,
+    Withdrawal, Wallet, Charge,
 )
 
 
@@ -25,4 +25,27 @@ class PayPalAccountAdmin(admin.ModelAdmin):
 class WithdrawalAdmin(admin.ModelAdmin):
     list_display = [
         'id', 'user', 'amount', 'status', 'created_at'
+    ]
+
+
+@admin.register(Transaction)
+class Transaction(admin.ModelAdmin):
+    list_display = [
+        'id', 'user', 'amount', 'status', 'created_at'
+    ]
+
+
+@admin.register(Charge)
+class ChargeAdmin(admin.ModelAdmin):
+    list_display = [
+        'id', 'user', 'fee_amount', 'fee_type', 'currency', 'status', 'created_at'
+    ]
+
+
+@admin.register(Wallet)
+class WalletAdmin(admin.ModelAdmin):
+    list_display = [
+        'id', 'user', 'total_amounts', 'total_deposits', 'total_earnings', 'total_withdrawals',
+        'balance_available', 'balance_pending', 'outstanding_charges', 'connect_pending_balance',
+        'connect_available_balance', 'connect_available_balance_currency', 'connect_pending_balance_currency'
     ]
