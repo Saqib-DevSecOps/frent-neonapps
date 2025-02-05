@@ -1,6 +1,6 @@
 import uuid
 from django.db import models
-from src.services.services.models import Service
+from src.services.services.models import Service, ServiceCurrency
 from src.services.users.models import ServiceProvider, User
 
 
@@ -92,6 +92,31 @@ class ServiceBookingRequest(models.Model):
         return f"{self.user.username}'s request for {self.service.title}"
 
 
+class SpecialOffer(models.Model):
+    STATUS = [
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('rejected', 'Rejected'),
+    ]
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    service = models.ForeignKey('services.Service', on_delete=models.CASCADE)
+    service_day = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    service_fee = models.DecimalField(max_digits=10, decimal_places=2)
+    currency = models.ForeignKey(ServiceCurrency, on_delete=models.SET_NULL, null=True, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS, default='pending')
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s special offer for {self.service.title}"
+
+    class Meta:
+        ordering = ['-created_at']
+
+
 class Order(models.Model):
     """Tracks Orders made for services"""
     PAYMENT_TYPE_CHOICES = [
@@ -119,6 +144,8 @@ class Order(models.Model):
                                                 related_name='service_booking_request')
     service_advertisement_request = models.ForeignKey(AdvertisementRequest, on_delete=models.SET_NULL, null=True,
                                                       blank=True, related_name='service_advertisement_request')
+    special_offer = models.ForeignKey(SpecialOffer, on_delete=models.SET_NULL, null=True, blank=True,
+                                      related_name='special_offer')
 
     payment_type = models.CharField(max_length=50, choices=PAYMENT_TYPE_CHOICES, default='full',
                                     help_text="Payment type for the service payment.")
@@ -147,6 +174,8 @@ class Order(models.Model):
             return self.service_booking_request.service
         elif self.service_advertisement_request:
             return self.service_advertisement_request.service
+        elif self.special_offer:
+            return self.special_offer.service
         else:
             return None
 

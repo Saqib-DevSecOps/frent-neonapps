@@ -4,7 +4,8 @@ from src.services.order.api.views import AdvertisementListCreateAPIView, Adverti
     ProviderAdvertisementRequestCreateAPIView, AdvertisementRequestUpdateAPIView, OrderListCreateAPIView, \
     OrderRetrieveUpdateAPIView, ServiceBookingRequestListCreateAPIView, ServiceBookingRequestUpdateAPIView, \
     AdvertisementDeleteAPIView, ProviderAdvertisementRequestListAPIView, ProviderAdvertisementRequestDeleteAPIView, \
-    ServiceBookingRequestDeleteAPIView
+    ServiceBookingRequestDeleteAPIView, ServiceSpecialOfferListAPIView, ProviderSpecialOfferCreateAPIView, \
+    ServiceSpecialOfferUpdateAPIView
 
 app_name = "order-api"
 
@@ -44,6 +45,17 @@ urlpatterns += [
     path('v1/provider/service/service-booking-requests/<str:pk>/delete/', ServiceBookingRequestDeleteAPIView.as_view(),
          name='service-booking-request-delete'),
 ]
+
+urlpatterns += [
+    path('v1/provider/special-offer/<user_id>/', ProviderSpecialOfferCreateAPIView.as_view(),
+         name='special-offers-create'),
+
+    path('v1/special-offers/<provider_user_id>/<user_id>/', ServiceSpecialOfferListAPIView.as_view(),
+         name='special-offers-list-create'),
+    path('v1/special-offers/<str:pk>/', ServiceSpecialOfferUpdateAPIView.as_view(),
+         name='special-offers-update'),
+]
+
 urlpatterns += [
 
     path('v1/orders/', OrderListCreateAPIView.as_view(), name='service-order-list-create'),

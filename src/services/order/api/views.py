@@ -7,8 +7,10 @@ from rest_framework.response import Response
 
 from src.services.order.api.serializers import AdvertisementSerializer, AdvertisementRequestSerializer, \
     AdvertisementRequestCreateSerializer, AdvertisementRequestUpdateSerializer, ServiceBookingRequestSerializer, \
-    ServiceBookingRequestUpdateSerializer, OrderSerializer, OrderDetailSerializer, OrderUpdateSerializer
-from src.services.order.models import Advertisement, AdvertisementRequest, ServiceBookingRequest, Order
+    ServiceBookingRequestUpdateSerializer, OrderSerializer, OrderDetailSerializer, OrderUpdateSerializer, \
+    SpecialOfferSerializer, SpecialOfferUpdateSerializer
+from src.services.order.models import Advertisement, AdvertisementRequest, ServiceBookingRequest, Order, SpecialOffer
+from src.services.users.models import User
 
 
 class AdvertisementListCreateAPIView(ListCreateAPIView):
@@ -154,6 +156,49 @@ class ServiceBookingRequestDeleteAPIView(DestroyAPIView):
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_200_OK, data={'message': 'Service Booking Request deleted successfully'})
+
+
+class ProviderSpecialOfferCreateAPIView(CreateAPIView):
+    queryset = SpecialOffer.objects.all()
+    serializer_class = SpecialOfferSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        user_id = self.kwargs.get('user_id')
+        user = get_object_or_404(User, pk=user_id)
+        serializer.save(user=user)
+
+
+class ServiceSpecialOfferListAPIView(ListAPIView):
+    queryset = SpecialOffer.objects.all()
+    serializer_class = SpecialOfferSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user_id = self.kwargs.get('user_id')
+        provider_id = self.kwargs.get('provider_user_id')
+        return SpecialOffer.objects.filter(user_id=user_id, service__provider_id=provider_id)
+
+
+class ServiceSpecialOfferUpdateAPIView(UpdateAPIView):
+    """
+    Update the status of the booking request.
+      REQUEST_STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('rejected', 'Rejected'),
+    ]
+
+    """
+    queryset = SpecialOffer.objects.all()
+    serializer_class = SpecialOfferUpdateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return get_object_or_404(SpecialOffer, user=self.request.user, pk=self.kwargs.get('pk'))
 
 
 class OrderListCreateAPIView(ListCreateAPIView):
