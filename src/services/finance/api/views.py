@@ -2,8 +2,9 @@ from django.shortcuts import get_object_or_404
 from rest_framework.generics import RetrieveAPIView, ListCreateAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
 
-from src.services.finance.api.serializers import WalletSerializer, BankAccountSerializer, WithdrawalSerializer
-from src.services.finance.models import Wallet, BankAccount, Withdrawal
+from src.services.finance.api.serializers import WalletSerializer, BankAccountSerializer, WithdrawalSerializer, \
+    TransactionSerializer, ChargeSerializer
+from src.services.finance.models import Wallet, BankAccount, Withdrawal, Transaction, Charge
 
 
 class WalletRetrieveAPIVIew(RetrieveAPIView):
@@ -49,12 +50,12 @@ class WithdrawalListCreateAPIView(ListCreateAPIView):
 
 
 class TransactionListAPIView(ListAPIView):
-    queryset = Wallet.objects.all()
-    serializer_class = WalletSerializer
+    queryset = Transaction.objects.all()
+    serializer_class = TransactionSerializer
     permission_classes = [IsAuthenticated]
 
 
 class ChargeListAPIView(ListAPIView):
-    queryset = Wallet.objects.all()
-    serializer_class = WalletSerializer
+    queryset = Charge.objects.all()
+    serializer_class = ChargeSerializer
     permission_classes = [IsAuthenticated]
