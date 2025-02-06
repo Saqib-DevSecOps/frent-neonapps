@@ -206,7 +206,9 @@ class OrderListCreateAPIView(ListCreateAPIView):
     Tracks Orders made for services
 
     If You user buy service using booking request then you can use service_booking_request field , if user buy service
-    through advertisement then you can use service_advertisement_request field.
+    through advertisement then you can use service_advertisement_request field and if the user want to buy it from
+    special offer then you can use special_offer field.
+    .
         PAYMENT_TYPE_CHOICES = [
         ('full', 'Full Payment'),
         ('partial', 'Partial Payment'),

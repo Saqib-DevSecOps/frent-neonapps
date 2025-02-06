@@ -1,5 +1,6 @@
 from rest_framework import status
 from rest_framework.generics import GenericAPIView, ListAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from stripe import AuthenticationError
@@ -13,6 +14,7 @@ class ConnectWalletCreateAPIView(APIView):
     """
     Create a new Wallet for the User
     """
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         user = request.user
@@ -35,7 +37,7 @@ class ConnectWalletActivateAPIView(APIView):
     """
     Visit the Wallet Dashboard
     """
-
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         user = request.user
@@ -51,6 +53,7 @@ class ConnectWalletActivateAPIView(APIView):
 
 
 class ConnectWalletRefreshView(APIView):
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         if request.user.get_user_wallet().is_stripe_account_active():
@@ -65,6 +68,7 @@ class TransferListAPIView(ListAPIView):
     """
     model = Transfer
     serializer_class = TransferSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Transfer.objects.filter(user=self.request.user)
@@ -76,6 +80,7 @@ class PayoutListAPIView(ListAPIView):
     """
     model = Payout
     serializer_class = PayoutSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Payout.objects.filter(user=self.request.user)
