@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from src.services.order.models import AdvertisementRequest, Advertisement, Payment, ServiceBookingRequest, Order
+from src.services.order.models import AdvertisementRequest, Advertisement, Payment, ServiceBookingRequest, SpecialOffer, \
+    Order
 
 
 class ServiceAdvertisementAdmin(admin.ModelAdmin):
@@ -44,8 +45,20 @@ class ServicePaymentAdmin(admin.ModelAdmin):
     ordering = ('-created_at',)
     readonly_fields = ('created_at', 'updated_at')
 
+
+class SpecialOfferAdmin(admin.ModelAdmin):
+    """Admin panel for managing special offers."""
+    list_display = (
+        'user', 'service', 'service_day', 'start_time', 'end_time', 'service_fee', 'currency', 'status')
+    list_filter = ('status', 'service_day', 'currency')
+    search_fields = ('user__username', 'service__title')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at', 'updated_at')
+
+
 admin.site.register(Order, ServiceOrderAdmin)
 admin.site.register(Payment, ServicePaymentAdmin)
 admin.site.register(Advertisement, ServiceAdvertisementAdmin)
 admin.site.register(AdvertisementRequest, ServiceAdvertisementRequestAdmin)
 admin.site.register(ServiceBookingRequest, ServiceBookingRequestAdmin)
+admin.site.register(SpecialOffer, SpecialOfferAdmin)

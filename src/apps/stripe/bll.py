@@ -52,8 +52,8 @@ def stripe_connect_account_link(connect_account_id):
 
     try:
 
-        refresh_url = get_full_url('stripe:connect-wallet')
-        return_url = get_full_url('stripe:connect-wallet')
+        refresh_url = get_full_url('website:home')
+        return_url = get_full_url('website:home')
 
         account_link = stripe.AccountLink.create(
             account=connect_account_id,

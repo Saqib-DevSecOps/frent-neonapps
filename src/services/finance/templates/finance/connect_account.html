@@ -1,0 +1,158 @@
+{% extends 'vendor/base.html' %}
+{% load static %}
+
+{% block sub_title %}
+    Connect Account Center
+{% endblock %}
+
+{% block content %}
+    <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Connect Account Center</h2>
+
+                {% if not request.user.is_stripe_connected %}
+                    <p class="mb-0 text-danger">
+                        your connect wallet is missing
+                    </p>
+                {% else %}
+
+                    {% if not request.user.is_stripe_account_active %}
+                        <p class="mb-0 text-danger">
+                            your connect wallet is created but inactive
+                        </p>
+                    {% else %}
+                        You have an active connect wallet.
+                    {% endif %}
+                {% endif %}
+
+            </div>
+            <div>
+                <a href="{% url 'vendor:transfer_list' %}" class="btn btn-outline-success">
+                    <i class="material-icons md-refresh"></i> Transactions
+                </a>
+                <a href="{% url 'stripe:connect-wallet' %}" class="btn btn-primary">
+                    <i class="text-muted material-icons md-post_add"></i>
+                    visit connect account.
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card card-body mb-4">
+                    <article class="icontext">
+                        <span class="icon icon-sm rounded-circle bg-success-light"><i
+                                class="text-warning material-icons md-money"></i></span>
+                        <div class="text">
+                            <h6 class="mb-1 card-title">Available</h6>
+                            <span>
+                                € {{ request.user.get_user_wallet.connect_available_balance }}
+                            </span>
+                            <span class="text-sm"> available to withdraw</span>
+                        </div>
+                    </article>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card card-body mb-4">
+                    <article class="icontext">
+                        <span class="icon icon-sm rounded-circle bg-warning-light"><i
+                                class="text-warning material-icons md-money_off"></i></span>
+                        <div class="text">
+                            <h6 class="mb-1 card-title">Pending</h6>
+                            <span>
+                                € {{ request.user.get_user_wallet.connect_pending_balance }}
+                            </span>
+                            <span class="text-sm"> available to withdraw</span>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Your Bank/Card</h2>
+                <p class="mb-0">
+                    Please ensure that your connected bank account or card is fully verified and operational,
+                    as it will be used for funds withdrawals.
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            {% if external_accounts %}
+
+                <div class="col-sm-6">
+
+                    {% for external_account in external_accounts %}
+                        {% if external_account.is_card %}
+                            <div class="card mb-4">
+                                <div class="card-body border-bottom">
+                                    <div class="text-center">
+                                        <img alt="card" height="150" src="{% static 'core/images/base/card.png' %}">
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="top" style="text-align: center;">
+                                        <p class="mb-0" style="font-weight: bolder;font-size: larger;">
+                                            {{ external_account.card_brand }}
+                                        </p>
+                                        <p class="mb-0">
+                                            ending with -
+                                            <b style="font-weight: bolder;">{{ external_account.last4 }}</b>
+                                        </p>
+                                        <p>
+                                            {% if external_account.is_active %}
+                                                <b class="text-success">
+                                                    (Active)
+                                                </b>
+                                            {% else %}
+                                                <b class="text-danger">
+                                                    (In Active)
+                                                </b>
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="card mb-4">
+                                <div class="card-body border-bottom">
+                                    <div class="text-center">
+                                        <img alt="bank" height="150" src="{% static 'core/images/base/bank.png' %}">
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="top" style="text-align: center;">
+                                        <p class="mb-0" style="font-weight: bolder;font-size: larger;">
+                                            {{ external_account.bank_bank_name }}
+                                        </p>
+                                        <p>
+                                            ending with -
+                                            <b style="font-weight: bolder;">{{ external_account.last4 }}</b>
+                                        </p>
+                                        <p>{{ external_account.country }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+                <div class="cols">
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="text-danger">
+                                <b style="font-weight: bolder;">No external account found</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+{% endblock content %}

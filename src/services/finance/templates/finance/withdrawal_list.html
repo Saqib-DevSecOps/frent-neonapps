@@ -1,0 +1,120 @@
+{% extends 'vendor/base.html' %}
+{% load crispy_forms_tags %}
+{% load custom_tags %}
+
+{% block sub_title %}
+    Withdrawal Requests
+{% endblock %}
+
+{% block content %}
+    <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Withdrawal Requests</h2>
+                <p class="mb-2">
+                    Payouts using <span class="badge badge-soft-primary">BANK</span> and
+                    <span class="badge badge-soft-primary">PAYPAL</span> are processed directly by seeds wild,
+                    whereas <span class="badge badge-soft-danger">CONNECT</span> payouts are processed by stripe<br>
+                    Once your connect request is approved, then you can track your connect requests in another section - <a target="_blank"
+                        href="https://support.seedswild.com/docs/seller-docs/payments/withdrawl/" >
+                    Click here for more details.
+                </a>
+                </p>
+
+            </div>
+            <div>
+                <a href="{% url 'vendor:transfer_list' %}" class="btn btn-outline-success">
+                    <i class="text-muted material-icons md-arrow_right"></i>
+                    connect
+                </a>
+                <a href="{% url 'finance:withdrawal-create' %}" class="btn btn-primary">
+                    <i class="text-muted material-icons md-money_off"></i>
+                    Request
+                </a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-4 p-0">
+                    <div class="card-header">
+                        <form method="get">
+                            <div class="input-group">
+
+                                {{ filter_form }}
+
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-success text-white">
+                                        <i class="fa fa-search"></i>&nbsp;Search
+                                    </button>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-body">
+                        {% if object_list %}
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>Amount</th>
+                                        <th>Method</th>
+                                        <th>Status</th>
+                                        <th>Created</th>
+                                        <th>Status</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for object in object_list %}
+                                        <tr>
+                                            <td>{{ object.amount }}</td>
+                                            <td>{{ object.withdrawal_type }}</td>
+                                            <td>
+                                                {{ object.status|status_html|safe }}
+                                                {% if object.description %}
+                                                    <button type="button" class="text-danger"
+                                                            style="background-color: transparent;border: 0px;"
+                                                            data-toggle="tooltip"
+                                                            data-placement="top" title="{{ object.description }}">
+                                                        <i class="fa fa-exclamation-circle"></i>
+                                                    </button>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ object.created_on }}</td>
+                                            <td>
+                                                <span class="badge rounded-pill alert-success">completed</span>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-danger">
+                                <i class="fa fa-exclamation-circle"></i> &nbsp;
+                                No withdrawal requests found
+                            </div>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(function () {
+            $('select').addClass("form-control form-select");
+            $('label').hide();
+
+            $("#id_status option:first").text("-- Status --");
+            $("#id_withdrawal_type option:first").text("-- Withdrawal --");
+
+        })
+    </script>
+{% endblock %}

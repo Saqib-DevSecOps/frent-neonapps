@@ -5,7 +5,7 @@ from src.apps.stripe.models import (
 from src.apps.stripe.notifier import (
     notify_payout_created, notify_payout_status_changed, notify_subscriptions_updated
 )
-from src.services.wallet.models import Wallet
+from src.services.finance.models import Wallet
 
 """ HELPERS """
 

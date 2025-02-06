@@ -1,3 +1,4 @@
+from django.apps import apps
 from rest_framework import serializers
 
 from src.api.v1.serializers import LanguageSerializer
@@ -9,18 +10,47 @@ from src.services.users.models import UserImage, Address, Interest, Certificatio
 
 
 # """ ---------------------User Serializers--------------------- """
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        service_review = apps.get_model('services', 'ServiceReview')
+        model = service_review
+        fields = ['id', 'service_title', 'rating', 'comment', 'created_at']
+        read_only_fields = ['id', 'service_title', 'rating', 'comment', 'created_at']
+
+
 class UserSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'profile_image', 'bio', 'images', 'date_joined',
-                  'last_login', ]
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'profile_image', 'bio', 'images',
+                  'date_joined', 'last_login', ]
         read_only_fields = ['username', 'email', 'date_joined', 'images', 'last_login']
 
     def get_images(self, obj):
         images = obj.images.all()
         return UserImageSerializer(images, many=True).data
+
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    images = serializers.SerializerMethodField()
+    given_reviews = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'profile_image', 'bio', 'images',
+                  'given_reviews',
+                  'date_joined', 'last_login', ]
+        read_only_fields = ['username', 'email', 'date_joined', 'images', 'last_login']
+
+    def get_images(self, obj):
+        images = obj.images.all()
+        return UserImageSerializer(images, many=True).data
+
+    def get_given_reviews(self, obj):
+        reviews = obj.given_reviews.all()
+        return ReviewSerializer(reviews, many=True).data
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
@@ -83,7 +113,7 @@ class SocialMediaSerializer(serializers.ModelSerializer):
 class ServiceProviderSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceProvider
-        fields = ['id', 'company_name', 'phone_number', 'website']
+        fields = ['id', 'company_name', 'phone_number', 'website','verified']
 
 
 class ServiceProviderDetailSerializer(serializers.ModelSerializer):
@@ -92,14 +122,19 @@ class ServiceProviderDetailSerializer(serializers.ModelSerializer):
     interests = InterestSerializer(many=True)
     certifications = CertificationSerializer(many=True)
     languages = ServiceProviderLanguageDetailSerializer(many=True)
+    reviews = serializers.SerializerMethodField()
     address = UserAddressSerializer(source="user.address")
 
     class Meta:
         model = ServiceProvider
         fields = ['id', 'user', 'address', 'company_name', 'phone_number', 'website', 'rating', 'total_reviews',
-                  'verified', 'status', 'social_media', 'interests', 'certifications', 'languages']
+                  'verified', 'status', 'social_media', 'interests', 'certifications', 'languages', 'reviews']
         read_only_fields = ['user', 'social_media', 'interests', 'certifications', 'address', 'rating', 'total_reviews',
                             'verified', 'status', ]
+
+    def get_reviews(self, obj):
+        reviews = obj.user.provider_reviews.all()
+        return ReviewSerializer(reviews, many=True).data
 
 
 # """ ---------------------Favorite Service Serializers--------------------- """

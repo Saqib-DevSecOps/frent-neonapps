@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from src.services.order.models import ServiceBookingRequest, Advertisement, AdvertisementRequest, Order
+from src.services.order.models import ServiceBookingRequest, Advertisement, AdvertisementRequest, Order, SpecialOffer
 from src.services.services.api.serializers import UserProfileSerializer, ServiceSerializer
 
 
@@ -56,10 +56,26 @@ class AdvertisementRequestUpdateSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
 
+class SpecialOfferSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SpecialOffer
+        fields = ['id', 'service', 'user', 'service_day', 'start_time', 'end_time', 'service_fee', 'currency', 'status',
+                  'created_at', 'updated_at']
+        read_only_fields = ['id', 'user', 'created_at', 'updated_at']
+
+
+class SpecialOfferUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SpecialOffer
+        fields = ['id', 'status']
+        read_only_fields = ['id']
+
+
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ['id', 'user', 'service_booking_request', 'service_advertisement_request', 'payment_type',
+        fields = ['id', 'user', 'service_booking_request', 'service_advertisement_request', 'special_offer',
+                  'payment_type',
                   'total_price', 'paid_price', 'tip',
                   'order_status', 'payment_status', 'created_at', 'updated_at']
         read_only_fields = ['id', 'user', 'created_at', 'updated_at']
@@ -73,7 +89,8 @@ class OrderDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['id', 'user', 'service','service_booking_request', 'service_advertisement_request', 'payment_type',
+        fields = ['id', 'user', 'service', 'service_booking_request', 'service_advertisement_request', 'special_offer',
+                  'payment_type',
                   'total_price', 'paid_price', 'tip',
                   'order_status', 'payment_status', 'created_at', 'updated_at']
 

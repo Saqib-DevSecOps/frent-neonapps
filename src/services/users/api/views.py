@@ -9,7 +9,7 @@ from src.services.services.models import FavoriteService
 from src.services.users.api.serializers import UserSerializer, UserImageSerializer, UserAddressSerializer, \
     ServiceProviderDetailSerializer, ServiceProviderSerializer, SocialMediaSerializer, InterestSerializer, \
     CertificationSerializer, UserUpdateSerializer, ServiceProviderLanguageSerializer, FavoriteServiceSerializer, \
-    FavoriteServiceCreateSerializer, UserContactSerializer
+    FavoriteServiceCreateSerializer, UserContactSerializer, UserDetailSerializer
 from src.services.users.models import UserImage, User, ServiceProvider, SocialMedia, Interest, Certification, \
     ServiceProviderLanguage, UserContact, Address
 
@@ -25,7 +25,7 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
-            return UserSerializer
+            return UserDetailSerializer
         return UserUpdateSerializer
 
     def get_object(self):
@@ -40,7 +40,7 @@ class UserRetrieveAPIView(RetrieveAPIView):
     Retrieve user profile
     """
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserDetailSerializer
     permission_classes = [IsAuthenticated]
 
     def get_object(self):

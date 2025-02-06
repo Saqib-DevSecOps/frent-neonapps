@@ -252,7 +252,10 @@ class ServiceRuleInstruction(models.Model):
 class ServiceReview(models.Model):
     """Stores reviews for services"""
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
-    service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='reviews')
+    provider = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True,
+                                 related_name='provider_reviews')
+    service = models.ForeignKey(Service, on_delete=models.SET_NULL, related_name='reviews', null=True, blank=True)
+    service_title = models.CharField(max_length=255, help_text="Service title at the time of review.",null=True, blank=True)
     reviewer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='given_reviews')
     rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], help_text="Rating (1-5).")
     comment = models.TextField(blank=True, null=True, help_text="Optional review comment.")
@@ -261,6 +264,14 @@ class ServiceReview(models.Model):
 
     def __str__(self):
         return f"Review for {self.service.title} by {self.reviewer.username}"
+
+    def save(
+            self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        if self.service:
+            self.service_title = self.service.title
+            self.provider = self.service.provider
+        super().save(force_insert, force_update, using, update_fields)
 
     class Meta:
         ordering = ['-created_at']

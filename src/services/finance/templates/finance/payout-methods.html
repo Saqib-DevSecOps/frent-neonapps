@@ -1,0 +1,122 @@
+{% extends 'vendor/base.html' %}
+{% load static %}
+{% load custom_tags %}
+
+{% block sub_title %}
+    Payout Methods
+{% endblock %}
+
+{% block content %}
+    <section class="content-main">
+        <div class="content-header">
+
+            <div>
+                <h2 class="content-title card-title">Payout Methods</h2>
+                <p>
+                    Supported external payment methods are available
+                    wrt your country <b style="font-weight: bolder;">{{ request.user.country }}</b> -  <a target="_blank"
+                        href="https://support.seedswild.com/docs/seller-docs/payments/setup-payout-method/" >
+                    Click here for more details.
+                </a>
+                </p>
+            </div>
+
+            <div>
+                {% if not wallet.is_stripe_connected %}
+                    <a href="{% url 'stripe:connect-wallet' %}" class="btn btn-primary">
+                        <i class="text-muted material-icons md-payments"></i>
+                        link stripe connect.
+                    </a>
+                {% endif %}
+                {% if not bank_account %}
+                    <a href="{% url 'finance:bank-account-create' %}" class="btn btn-outline-success">
+                        <i class="material-icons md-home"></i> link Bank
+                    </a>
+                {% endif %}
+                {% if not paypal_account %}
+                    <a href="{% url 'finance:paypal-account-create' %}" class="btn btn-outline-success">
+                        <i class="material-icons md-payment"></i> &nbsp;link Paypal
+                    </a>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            {% if bank_account %}
+                <div class="col-lg-4">
+                    <div class="card card-default">
+                        <div class="card-header text-center position-relative">
+
+                            <a href="{% url 'finance:bank-account-delete' bank_account.id %}"
+                               class="btn text-decoration-none btn-sm btn-link text-danger position-absolute"
+                               style="top: 10px; right: 10px;">
+                                <i class="fa fa-trash"></i>
+                            </a>
+
+                            <img src="{% static 'vendor/assets/images/core/bank.png' %}" alt="bank"><br>
+
+                            {{ bank_account.status|status_html|safe }}
+                            <h3 class="card-title mb-0">{{ bank_account.bank_name }}</h3>
+
+                            <p class="mb-0">
+                                {{ bank_account.account_holder_name }}
+                            </p>
+
+                            <p class="mb-0">
+                                {{ bank_account.last_4_digits }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+
+            {% if paypal_account %}
+                <div class="col-lg-4">
+                    <div class="card card-default">
+                        <div class="card-header text-center position-relative">
+
+                            <a href="{% url 'finance:paypal-account-delete' paypal_account.id %}"
+                               class="btn text-decoration-none btn-sm btn-link text-danger position-absolute"
+                               style="top: 10px; right: 10px;">
+                                <i class="fa fa-trash"></i>
+                            </a>
+
+                            <img src="{% static 'vendor/assets/images/core/paypal.png' %}" alt="paypal"><br>
+                            {{ bank_account.status|status_html|safe }}
+                            <h3 class="card-title mb-0">Paypal</h3>
+                            <p class="mb-0">
+                                {{ paypal_account.account_holder_name }}
+                            </p>
+                            <p class="mb-0">
+                                {{ paypal_account.email }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if wallet.is_stripe_connected %}
+                <div class="col-lg-4">
+                    <div class="card card-default">
+                        <div class="card-header text-center">
+                            <img src="{% static 'vendor/assets/images/core/stripe.png' %}" alt="connect"><br>
+                            {{ wallet.is_stripe_account_active|status_html|safe }}
+                            <h3 class="card-title mb-0">Connect</h3>
+                            <p class="mb-0">
+                                {{ request.user }}
+                            </p>
+                            <p class="mb-0">
+                                <b><a href="{% url 'finance:connect-account' %}"><i>visit connect</i></a></b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+    </section>
+{% endblock %}

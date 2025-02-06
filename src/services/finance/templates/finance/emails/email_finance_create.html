@@ -1,0 +1,24 @@
+{% extends 'finance/emails/base.html' %}
+
+{% block content %}
+
+    <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+        <td class="content-block"
+            style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 10px 10px;"
+            valign="top">
+            <h1 style="text-align: center;">Finance Account Alert!</h1>
+
+            Dear <b>{{ obj.user }}</b>,
+            <br>
+            <p>
+                {{ description }}
+            </p>
+            <p>
+                if you have any questions or need assistance, don't hesitate to reach out to
+                our customer support team.
+            </p>
+
+        </td>
+    </tr>
+
+{% endblock %}

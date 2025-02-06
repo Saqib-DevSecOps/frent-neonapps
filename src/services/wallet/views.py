@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import DetailView, ListView
 
+from src.services.finance.models import Wallet, Transaction
 from src.services.users.models import User
-from src.services.wallet.models import Wallet, Transaction
+# from src.services.wallet.models import Wallet, Transaction
 
 
 # Create your views here.

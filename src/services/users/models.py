@@ -1,4 +1,5 @@
 from cities_light.models import City, Region, Country, SubRegion
+from django.apps import apps
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django_otp.models import Device
@@ -63,9 +64,19 @@ class User(AbstractUser):
         return None
 
     def is_stripe_connected(self):
-        if hasattr(self, 'user_wallet'):
-            return self.user_wallet.is_stripe_connected()
-        return False
+        return self.get_user_wallet().is_stripe_connected()
+
+    def is_stripe_account_active(self):
+        return self.get_user_wallet().is_stripe_account_active()
+
+    def get_available_balance(self):
+        return self.get_user_wallet().get_available_balance()
+
+    def get_pending_balance(self):
+        return self.get_user_wallet().get_pending_balance()
+
+    def get_connect_balance(self):
+        return self.get_user_wallet().get_connect_balance()
 
 
 class Address(models.Model):
