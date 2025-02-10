@@ -124,6 +124,18 @@ class ServiceBookingRequestListCreateAPIView(ListCreateAPIView):
         return ServiceBookingRequest.objects.filter(service__provider=self.request.user)
 
 
+class ServiceBookingListView(ListAPIView):
+    """
+    List Of User Booking Requests
+    """
+    queryset = ServiceBookingRequest.objects.all()
+    serializer_class = ServiceBookingRequestSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return ServiceBookingRequest.objects.filter(user=self.request.user)
+
+
 class ServiceBookingRequestUpdateAPIView(UpdateAPIView):
     """
     Update the status of the booking request.
