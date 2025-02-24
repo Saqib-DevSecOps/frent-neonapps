@@ -33,6 +33,16 @@ class UserSerializer(serializers.ModelSerializer):
         return UserImageSerializer(images, many=True).data
 
 
+class UserReviewSerializer(serializers.ModelSerializer):
+    reviewer = UserSerializer()
+
+    class Meta:
+        service_review = apps.get_model('services', 'ServiceReview')
+        model = service_review
+        fields = ['id', 'reviewer', 'rating', 'comment', 'created_at']
+        read_only_fields = ['reviewer', 'created_at']
+
+
 class UserDetailSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
     given_reviews = serializers.SerializerMethodField()
@@ -49,8 +59,8 @@ class UserDetailSerializer(serializers.ModelSerializer):
         return UserImageSerializer(images, many=True).data
 
     def get_given_reviews(self, obj):
-        reviews = obj.given_reviews.all()
-        return ReviewSerializer(reviews, many=True).data
+        reviews = obj.received_reviews.all()
+        return UserReviewSerializer(reviews, many=True).data
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
@@ -113,7 +123,7 @@ class SocialMediaSerializer(serializers.ModelSerializer):
 class ServiceProviderSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceProvider
-        fields = ['id', 'company_name', 'phone_number', 'website','verified']
+        fields = ['id', 'company_name', 'phone_number', 'website', 'verified']
 
 
 class ServiceProviderDetailSerializer(serializers.ModelSerializer):

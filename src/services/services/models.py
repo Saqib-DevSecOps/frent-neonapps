@@ -280,6 +280,24 @@ class ServiceReview(models.Model):
         ]
 
 
+class UserReview(models.Model):
+    """Stores reviews for users (providers/customers)"""
+
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+    reviewed_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_reviews',help_text="The user who is reviewed.")
+    reviewer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='given_user_reviews',help_text="The user who wrote the review.")
+    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], help_text="Rating (1-5).")
+    comment = models.TextField(blank=True, null=True, help_text="Optional review comment.")
+    is_active = models.BooleanField(default=True, help_text="Is this UserReview active?")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Review for {self.reviewed_user.username} by {self.reviewer.username}"
+
+    class Meta:
+        ordering = ['-created_at']
+
+
 class FavoriteService(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='favorites',

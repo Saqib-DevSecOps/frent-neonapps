@@ -10,7 +10,7 @@ from src.services.services.api.filters import ServiceFilter
 from src.services.services.api.serializers import ServiceSerializer, ServiceDetailSerializer, \
     ServiceCreateUpdateSerializer, ServiceImageSerializer, ServiceAvailabilitySerializer, ServiceLocationSerializer, \
     ServiceReviewSerializer, ServiceCurrencySerializer, ServiceLanguageSerializer, \
-    ServiceRuleInstructionCreateSerializer, ServiceLanguageCreateSerializer
+    ServiceRuleInstructionCreateSerializer, ServiceLanguageCreateSerializer, UserServiceReviewSerializer
 from src.services.services.models import Service, ServiceImage, ServiceLocation, ServiceAvailability, ServiceReview, \
     ServiceCurrency, ServiceRuleInstruction, ServiceLanguage, ServiceRule
 
@@ -166,6 +166,15 @@ class ServiceReviewCreateAPIView(CreateAPIView):
     def perform_create(self, serializer):
         service = get_object_or_404(Service, pk=self.kwargs.get('service_pk'))
         serializer.save(service=service, reviewer=self.request.user)
+
+
+class UserServiceReviewCreateAPIView(CreateAPIView):
+    queryset = ServiceReview.objects.all()
+    serializer_class = UserServiceReviewSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(reviewer=self.request.user)
 
 
 class ServiceLanguageCreateAPIView(CreateAPIView):

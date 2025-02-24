@@ -1,0 +1,118 @@
+{% load static %}
+
+<html lang="en">
+<head>
+    <title>Notification Create/Receive</title>
+    <script src="{% static 'core/js/jquery-3.7.1.min.js' %}"></script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
+        import {getAnalytics} from "https://www.gstatic.com/firebasejs/10.12.1/firebase-analytics.js";
+        import {
+            getMessaging,
+            getToken,
+            onMessage
+        } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-messaging.js";
+
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDhroU-kOGwLW3MMY9vEPQFACijK_99_9g",
+            authDomain: "seedswild.firebaseapp.com",
+            projectId: "seedswild",
+            storageBucket: "seedswild.appspot.com",
+            messagingSenderId: "831708978986",
+            appId: "1:831708978986:web:a1db9613a0b3f902344853",
+            measurementId: "G-PYH0QN18GK"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const messaging = getMessaging(app);
+
+        // Request permission to receive notifications
+        /*
+        Notification.requestPermission().then((permission) => {
+            if (permission === 'granted') {
+                console.log('Notification permission granted.');
+                // Get the registration token
+                getToken(
+                    messaging, {
+                        vapidKey: 'BIbESxYbqWt0dUsWU-CSAkWC5c0lZdpowV6Mk6JaaGyM4xhEAmO80Dti6TWtzsFpy7T3NLzy1C0P1isQUbiCj8o'
+                    }).then((currentToken) => {
+                    if (currentToken) {
+                        console.log('FCM Token:', currentToken);
+                        // Send the token to your server
+                        sendTokenToServer(currentToken);
+                    } else {
+                        console.warn('No registration token available. Request permission to generate one.');
+                    }
+                }).catch((err) => {
+                    console.warn('An error occurred while retrieving token. ', err);
+                });
+            } else {
+                console.warn('Unable to get permission to notify.');
+            }
+        });
+
+        // Function to send the token to the server
+        function sendTokenToServer(token) {
+            const data = JSON.stringify({registration_id: token, type: 'web'});
+
+            $.ajax({
+                url: '{% url "fcm:api:device-register" %}',
+                type: 'POST',
+                contentType: 'application/json',
+                data: data,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
+                },
+                success: function (data) {
+                    console.log('Server response:', data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log('Error sending token to server:', textStatus, textStatus);
+                }
+            });
+        }
+
+        // Helper function to get CSRF token from cookies
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        * */
+
+        onMessage(messaging, (payload) => {
+            console.log('Message received. ', payload);
+            // Customize notification here
+            const notificationTitle = payload.notification.title;
+            const notificationOptions = {
+                body: payload.notification.body,
+            };
+
+            new Notification(notificationTitle, notificationOptions);
+        });
+    </script>
+</head>
+<body>
+<h1>Page isnt added yet....</h1>
+</body>
+</html>

@@ -32,6 +32,7 @@ urlpatterns += [
     path('', include('src.services.order.urls', namespace='order')),
 
     path('', include('src.apps.stripe.urls', namespace='stripe')),
+    path('fcm/', include('src.apps.whisper.fcm.urls', namespace='fcm')),
 
 ]
 
