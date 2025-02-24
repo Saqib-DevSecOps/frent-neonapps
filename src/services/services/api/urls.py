@@ -7,7 +7,7 @@ from .views import (
     ServiceAvailabilityCreateAPIView, ServiceAvailabilityUpdateDestroyAPIView,
     ServiceLocationCreateAPIView, ServiceLocationUpdateDestroyAPIView, ServiceReviewCreateAPIView,
     ServiceCurrencyView, ServiceLanguageCreateAPIView, ServiceLanguageDestroyAPIView,
-    ServiceRuleInstructionCreateAPIView
+    ServiceRuleInstructionCreateAPIView, UserServiceReviewCreateAPIView
 )
 
 app_name = "services-api"
@@ -47,6 +47,8 @@ urlpatterns += [
 urlpatterns += [
     path('v1/provider/services/<str:service_pk>/review/', ServiceReviewCreateAPIView.as_view(),
          name='provider-service-review-create'),
+    path('v1/service/review/', UserServiceReviewCreateAPIView.as_view(),
+         name='user-service-review-create'),
 ]
 
 urlpatterns += [

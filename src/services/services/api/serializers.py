@@ -2,7 +2,7 @@ from django.apps import apps
 from rest_framework import serializers
 
 from src.services.services.models import ServiceCategory, Service, ServiceImage, ServiceAvailability, ServiceReview, \
-    ServiceCurrency, ServiceLocation, FavoriteService, ServiceLanguage, ServiceRule, ServiceRuleInstruction
+    ServiceCurrency, ServiceLocation, FavoriteService, ServiceLanguage, ServiceRule, ServiceRuleInstruction, UserReview
 from src.services.users.models import User
 
 """ ---------------------Helper Serializers--------------------- """
@@ -80,6 +80,17 @@ class ServiceReviewSerializer(serializers.ModelSerializer):
         model = ServiceReview
         fields = ['id', 'service', 'reviewer', 'rating', 'comment', 'created_at']
         read_only_fields = ['service', 'reviewer', 'created_at']
+
+    def validate(self, data):
+        if data['rating'] < 1 or data['rating'] > 5:
+            raise serializers.ValidationError("Rating must be between 1 and 5.")
+        return data
+
+
+class UserServiceReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserReview
+        fields = ['id', 'reviewed_user', 'rating', 'comment', 'created_at']
 
     def validate(self, data):
         if data['rating'] < 1 or data['rating'] > 5:
