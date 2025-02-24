@@ -1,6 +1,8 @@
 import datetime
 from pathlib import Path
 import environ
+import firebase_admin
+from firebase_admin import credentials
 
 """ APPLICATION CONFIGURATIONS """
 
@@ -57,6 +59,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+
+    'fcm_django',
 
     # REST APPS
     'rest_framework',
@@ -172,6 +176,45 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+""" FIREBASE ------------------------------------------------------------------------------------------------------- """
+
+FIREBASE_PROJECT_NAME = "FrentApp"
+FIREBASE_PROJECT_ID = "frentapp"
+FIREBASE_PROJECT_NUMBER = "095678907"
+FIREBASE_APP_NICK_NAME = "frentapp-web"
+FIREBASE_APP_ID = "1:095678907:web:095678907"
+FIREBASE_PRIVATE_KEY = "0V97C5l9vt-AdCmK-56789a8sudasfd_-Wwvsr1hw"
+FIREBASE_WEB_API_KEY = "AIzaSyDhroU-alshdasdasldijK_99_9g"
+FIREBASE_SERVICE_ACCOUNT = "firebase-adminsdk-2b4fy@frentapp.iam.gserviceaccount.com"
+FIREBASE_FILE = "firebase.json"
+
+cred = credentials.Certificate(FIREBASE_FILE)
+app = firebase_admin.initialize_app(cred)
+
+# To learn more, visit the docs here:
+# https://cloud.google.com/docs/authentication/getting-started>
+GOOGLE_CLOUD_PROJECT = FIREBASE_PROJECT_ID
+GOOGLE_APPLICATION_CREDENTIALS = FIREBASE_FILE
+
+FCM_DJANGO_SETTINGS = {
+    # an instance of firebase_admin.App to be used as default for all fcm-django requests
+    # default: None (the default Firebase app)
+    "DEFAULT_FIREBASE_APP": None,
+    # default: _('FCM Django')
+    "APP_VERBOSE_NAME": "[FCM Django]",
+    # true if you want to have only one active device per registered user at a time
+    # default: False
+    "ONE_DEVICE_PER_USER": False,
+    # devices to which notifications cannot be sent,
+    # are deleted upon receiving error response from FCM
+    # default: False
+    "DELETE_INACTIVE_DEVICES": True,
+}
+
+""" FIREBASE ------------------------------------------------------------------------------------------------------- """
+
+
 
 """ INTERNATIONALIZATION --------------------------------------------------------------------------------"""
 LANGUAGE_CODE = 'en-us'
