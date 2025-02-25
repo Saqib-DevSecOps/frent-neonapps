@@ -26,22 +26,34 @@ urlpatterns = [
 ]
 
 """SERVICE PROVIDER URLS"""
+
 urlpatterns += [
-    path('v1/service-provider/', ServiceProviderRetrieveUpdateAPIView.as_view(), name='service-provider-update'),
-    path('v1/service-provider/<str:pk>/', ServiceProviderRetrieveAPIView.as_view(), name='service-provider-detail'),
     path('v1/service-provider/interest/', ServiceProviderInterestCreateAPIView.as_view(),
          name='service-provider-interest'),
     path('v1/service-provider/interest/<str:pk>/', ServiceProviderInterestDestroyAPIView.as_view(),
          name='service-provider-interest-destroy'),
+]
+urlpatterns += [
     path('v1/service-provider/language/<str:pk>/', ServiceProviderLanguageDestroyAPIView.as_view(),
          name='service-provider-language-destroy'),
     path('v1/service-provider/language/', ServiceProviderLanguageCreateAPIView.as_view(),
          name='service-provider-language'),
-    path('v1/service-provider/social-media/', ServiceProviderSocialMediaUpdateAPIView.as_view(),
-         name='service-provider-social-media'),
+]
+urlpatterns += [
     path('v1/service-provider/certificate/', ServiceProviderCertificationCreateAPIView.as_view(),
          name='service-provider-certificate'),
     path('v1/service-provider/certificate/<str:pk>/', ServiceProviderCertificateDestroyAPIView.as_view(),
          name='service-provider-certificate-delete'),
+]
+
+urlpatterns += [
+
+    path('v1/service-provider/social-media/', ServiceProviderSocialMediaUpdateAPIView.as_view(),
+         name='service-provider-social-media'),
+]
+
+urlpatterns += [
+    path('v1/service-provider/', ServiceProviderRetrieveUpdateAPIView.as_view(), name='service-provider-update'),
+    path('v1/service-provider/<str:pk>/', ServiceProviderRetrieveAPIView.as_view(), name='service-provider-detail'),
 
 ]
