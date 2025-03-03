@@ -18,7 +18,7 @@ requests
 crispy-bootstrap5
 django-browser-reload
 drf-yasg
-django-phonenumber-field[phonenumbers]]
+django-phonenumber-field[phonenumbers]
 PyJWT
 cryptography
 paramiko
@@ -27,8 +27,14 @@ django-notifications-hq
 fido2
 django-jazzmin
 autobahn
+django
 django_ckeditor_5
 django-cities-light
 django_otp
 django-payments
 django-storages[boto3]
+django-environ
+firebase-admin
+fcm-django
+stripe
+user-agents

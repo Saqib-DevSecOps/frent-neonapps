@@ -190,8 +190,10 @@ FIREBASE_WEB_API_KEY = "AIzaSyDEvz2wHTjDttNMMmvU9LatBjzxwy_kejE"
 FIREBASE_SERVICE_ACCOUNT = "firebase-adminsdk-fbsvc@frent-8368b.iam.gserviceaccount.com"
 FIREBASE_FILE = "firebase.json"
 
-cred = credentials.Certificate(FIREBASE_FILE)
-app = firebase_admin.initialize_app(cred)
+if not firebase_admin._apps:
+    cred = credentials.Certificate(FIREBASE_FILE)
+    app = firebase_admin.initialize_app(cred)
+
 
 # To learn more, visit the docs here:
 # https://cloud.google.com/docs/authentication/getting-started>
