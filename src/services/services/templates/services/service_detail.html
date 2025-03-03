@@ -100,7 +100,7 @@
                 </div>
             </div>
 
-        </div><!--end    col-->
+        </div>
         <div class="col-xl-9">
             <div class="card">
                 <div class="card-body border-bottom">
@@ -131,18 +131,20 @@
                     <p class="text-muted">{{ object.description }}</p>
                     <br>
 
-                    <h5 class="fw-semibold mb-3">Service Locations:</h5>
+                    <h5 class="fw-semibold mb-1 ps-5 card-title"> &nbsp; &nbsp; &nbsp; Service Locations:</h5>
+                    <p class="card-title-desc ">  &nbsp; &nbsp; &nbsp; See all Locations for this service below.</p>
+
                     <ul class="vstack gap-3">
                         {% for location in service.location.all %}
                             <i class="bx bx-map"></i> {{ location.address }} {{ location.city }},
                             {{ location.reigon }}{{ location.country }}
                             <br>
                         {% empty %}
-                            <p class="text-danger">No Locations for this service have been added.</p>
+                            <p class="text-danger ms-0 ps-0">No Locations for this service have been added.</p>
                         {% endfor %}
                     </ul>
 
-
+                    <hr>
                     <div class="card-body">
                         <h4 class="card-title">Availability for {{ object.title }}</h4>
                         <p class="card-title-desc">See all availability slots for this service below.</p>
@@ -170,7 +172,7 @@
                                 {% empty %}
                                     <tr>
                                         <td colspan="5" class="">
-                                            <p class="text-danger">No Time Slots for this service have been added.</p>
+                                            <p class="text-danger mt-3"> &nbsp;  &nbsp; No Time Slots for this service have been added.</p>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -179,6 +181,7 @@
                         </div>
                     </div>
                     <br>
+                    <hr>
 
                     <div class="col-xl-12">
                         <div class="card">
@@ -195,7 +198,7 @@
                                              class="d-block img-fluid m-2"
                                              style="border-radius: 10px; object-fit: cover; width: 200px; height: 200px;">
                                     {% empty %}
-                                        <p class="text-danger">No Images for this service have been added.</p>
+                                        <p class="text-danger"> &nbsp; &nbsp; No Images for this service have been added.</p>
                                     {% endfor %}
                                 </div>
 
@@ -254,7 +257,6 @@
                     </div>
                 </div>
             </div>
-
 
         </div>
     </div>
