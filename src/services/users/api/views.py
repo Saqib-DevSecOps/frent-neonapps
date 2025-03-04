@@ -9,9 +9,9 @@ from src.services.services.models import FavoriteService
 from src.services.users.api.serializers import UserSerializer, UserImageSerializer, UserAddressSerializer, \
     ServiceProviderDetailSerializer, ServiceProviderSerializer, SocialMediaSerializer, InterestSerializer, \
     CertificationSerializer, UserUpdateSerializer, ServiceProviderLanguageSerializer, FavoriteServiceSerializer, \
-    FavoriteServiceCreateSerializer, UserContactSerializer, UserDetailSerializer
+    FavoriteServiceCreateSerializer, UserContactSerializer, UserDetailSerializer, UserBlockSerializer
 from src.services.users.models import UserImage, User, ServiceProvider, SocialMedia, Interest, Certification, \
-    ServiceProviderLanguage, UserContact, Address
+    ServiceProviderLanguage, UserContact, Address, BlockedUser
 
 """ ---------------------SERVICE SEEKER APIS------------------------ """
 
@@ -281,3 +281,29 @@ class UserContactUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_200_OK, data={'message': 'Contact deleted successfully'})
+
+
+class BlockedUserListCreateAPIView(ListCreateAPIView):
+    queryset = BlockedUser.objects.all()
+    serializer_class = UserBlockSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.request.user.blocked_users.all()
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class BlockedUserDestroyAPIView(DestroyAPIView):
+    queryset = BlockedUser.objects.all()
+    serializer_class = UserBlockSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return get_object_or_404(self.queryset, user=self.request.user, id=self.kwargs.get('pk'))
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_200_OK, data={'message': 'User unblocked successfully'})
