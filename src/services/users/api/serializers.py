@@ -201,3 +201,13 @@ class UserBlockSerializer(serializers.ModelSerializer):
         if BlockedUser.objects.filter(user=user, blocked_user=blocked_user).exists():
             raise serializers.ValidationError("You have already blocked this user.")
         return blocked_user
+
+
+
+class ReportingSerializer(serializers.ModelSerializer):
+    class Meta:
+        report = apps.get_model('reporting', 'Report')
+        model = report
+        fields = ['id', 'report_type', 'reported_user', 'reported_service', 'reason', 'additional_info', 'is_resolved',
+                  'resolved_at']
+        read_only_fields = ['id', 'is_resolved', 'resolved_at']

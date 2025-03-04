@@ -1,3 +1,4 @@
+from django.apps import apps
 from django.views.generic import DeleteView
 from rest_framework import status
 from rest_framework.generics import UpdateAPIView, CreateAPIView, RetrieveUpdateAPIView, DestroyAPIView, \
@@ -9,7 +10,8 @@ from src.services.services.models import FavoriteService
 from src.services.users.api.serializers import UserSerializer, UserImageSerializer, UserAddressSerializer, \
     ServiceProviderDetailSerializer, ServiceProviderSerializer, SocialMediaSerializer, InterestSerializer, \
     CertificationSerializer, UserUpdateSerializer, ServiceProviderLanguageSerializer, FavoriteServiceSerializer, \
-    FavoriteServiceCreateSerializer, UserContactSerializer, UserDetailSerializer, UserBlockSerializer
+    FavoriteServiceCreateSerializer, UserContactSerializer, UserDetailSerializer, UserBlockSerializer, \
+    ReportingSerializer
 from src.services.users.models import UserImage, User, ServiceProvider, SocialMedia, Interest, Certification, \
     ServiceProviderLanguage, UserContact, Address, BlockedUser
 
@@ -307,3 +309,16 @@ class BlockedUserDestroyAPIView(DestroyAPIView):
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_200_OK, data={'message': 'User unblocked successfully'})
+
+
+class ReportListCreateApiView(ListCreateAPIView):
+    report = apps.get_model('reporting', 'Report')
+    serializer_class = ReportingSerializer
+    queryset = report.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.queryset.filter(reported_by=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(reported_by=self.request.user)
