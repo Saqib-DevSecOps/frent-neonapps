@@ -11,6 +11,7 @@ from .views import (
 
     ConnectAccountView
 )
+from .views import _WithdrawalListView
 
 app_name = 'finance'
 urlpatterns = [
@@ -39,4 +40,9 @@ urlpatterns += [
 #     path('paypal-account/', PaypalAccountListView.as_view(), name='paypal-account-list')
 
     path('finance/api/', include('src.services.finance.api.urls', namespace='finance-api')),
+]
+
+
+urlpatterns += [
+    path('withdrawal-list/', _WithdrawalListView.as_view(), name='_withdrawal-list'),
 ]

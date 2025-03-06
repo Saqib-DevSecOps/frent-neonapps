@@ -209,3 +209,21 @@ class PaypalAccountListView(ListView):
 
         context['object_list'] = user_page_object
         return context
+
+
+""" HESHAM """
+class _WithdrawalListView(ListView):
+    model = Withdrawal
+
+    def get_template_names(self):
+        return 'finance/_withdrawal_list.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(_WithdrawalListView, self).get_context_data(**kwargs)
+        withdrawal_filter = WithdrawalFilter(self.request.GET, queryset=self.get_queryset())
+        paginator = Paginator(withdrawal_filter.qs, 30)
+        page_number = self.request.GET.get('page')
+        withdrawal_page_object = paginator.get_page(page_number)
+        context['filter_form'] = withdrawal_filter.form
+        context['object_list'] = withdrawal_page_object
+        return context

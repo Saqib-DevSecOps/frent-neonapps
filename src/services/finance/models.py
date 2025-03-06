@@ -24,7 +24,7 @@ WITHDRAWAL_STATUS = (
     ('cancelled', 'Cancelled')
 )
 
-# UDT
+# UDT ( USER DETAIL )
 class Wallet(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='wallet')
     description = models.TextField(null=True, blank=True)
