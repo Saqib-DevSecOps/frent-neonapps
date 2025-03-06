@@ -254,3 +254,30 @@ class ChargeListView(ListView):
         context['object_list'] = charge_page_object
         return context
 
+class _BankAccountListView(ListView):
+    model = BankAccount
+    template_name = 'finance/_bank_account_list.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(_BankAccountListView, self).get_context_data(**kwargs)
+        bank_account_filter = BankAccountFilter(self.request.GET, queryset=self.get_queryset())
+        paginator = Paginator(bank_account_filter.qs, 30)
+        page_number = self.request.GET.get('page')
+        bank_account_page_object = paginator.get_page(page_number)
+        context['filter_form'] = bank_account_filter.form
+        context['object_list'] = bank_account_page_object
+        return context
+
+class _PaypalAccountListView(ListView):
+    model = PayPalAccount
+    template_name = 'finance/_paypal_account_list.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(_PaypalAccountListView, self).get_context_data(**kwargs)
+        paypal_account_filter = PaypalAccountFilter(self.request.GET, queryset=self.get_queryset())
+        paginator = Paginator(paypal_account_filter.qs, 30)
+        page_number = self.request.GET.get('page')
+        paypal_account_page_object = paginator.get_page(page_number)
+        context['filter_form'] = paypal_account_filter.form
+        context['object_list'] = paypal_account_page_object
+        return context

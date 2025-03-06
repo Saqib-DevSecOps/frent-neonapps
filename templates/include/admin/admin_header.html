@@ -58,9 +58,8 @@
                             <i class="bx bx-wallet mr-2"></i>Bank Management
                         </a>
                         <div class="dropdown-menu" aria-labelledby="walletsDropdown">
-                            <a class="dropdown-item" href="#"><i class="bx bx-credit-card mr-2"></i>Bank Accounts</a>
-                            <a class="dropdown-item" href="#"><i class="bx bx-transfer mr-2"></i>Finance Accounts</a>
-                            <a class="dropdown-item" href="#"><i class="bx bx-transfer mr-2"></i>Paypal Accounts</a>
+                            <a class="dropdown-item" href="{% url 'finance:_bank-account-list' %}"><i class="bx bx-credit-card mr-2"></i>Bank Accounts</a>
+                            <a class="dropdown-item" href="{% url 'finance:_paypal-account-list' %}"><i class="bx bx-transfer mr-2"></i>Paypal Accounts</a>
                         </div>
                     </li>
 

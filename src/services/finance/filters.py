@@ -20,7 +20,7 @@ class BankAccountFilter(django_filters.FilterSet):
     class Meta:
         model = BankAccount
         fields = {
-            'status', 'account_type', 'currency'
+            'status', 'account_type',
         }
 
 
