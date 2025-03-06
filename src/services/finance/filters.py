@@ -1,7 +1,7 @@
 import django_filters
 from django.forms import TextInput
 
-from src.services.finance.models import Withdrawal, BankAccount, PayPalAccount
+from src.services.finance.models import Withdrawal, BankAccount, PayPalAccount, Transaction, Charge
 
 
 class WithdrawalFilter(django_filters.FilterSet):
@@ -38,3 +38,16 @@ class PaypalAccountFilter(django_filters.FilterSet):
             'status', 'email'
         }
 
+class TransactionFilter(django_filters.FilterSet):
+    class Meta:
+        model = Transaction
+        fields = {
+            'status'
+        }
+
+class ChargeFilter(django_filters.FilterSet):
+    class Meta:
+        model = Charge
+        fields = {
+            'status'
+        }

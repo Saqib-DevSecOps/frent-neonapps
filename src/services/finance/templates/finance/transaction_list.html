@@ -4,10 +4,10 @@
 {% load core_tags %}
 
 {% block subtitle %}
-    Advertisement Request List
+    Transaction List
 {% endblock %}
 
-{% block page_heading %}Advertisement Request List {% endblock %}
+{% block page_heading %} Transactions {% endblock %}
 
 {% block content %}
     <div class="row">
@@ -37,11 +37,11 @@
                                 <thead class="border-bottom">
                                 <tr>
                                     <th>ID</th>
-                                    <th>Service Provider</th>
-                                    <th>Service</th>
-                                    <th>Message</th>
+                                    <th>User</th>
+                                    <th>Amount</th>
+                                    <th>Transaction Type</th>
+                                    <th>Description</th>
                                     <th>Status</th>
-                                    <th>Created At</th>
                                 </tr>
                                 </thead>
 
@@ -51,35 +51,26 @@
                                     <tr>
                                         <td>{{ forloop.counter }}</td>
                                         <td>
-                                            <a href="{% url 'users:user-detail' object.service_provider.user.id %}">{{ object.service_provider.user }}</a>
+                                            <a href="{% url 'users:user-detail' object.user.id %}">{{ object.user }}</a>
                                         </td>
                                         <td>
-                                            <a href="{% url 'services:services-detail' object.service.id %}">{{ object.service.title }}</a>
-                                        </td>
-                                        <td><a href="javascript:void(0)"
-                                               data-object-value="{{ object.message }}"
-                                               onclick="showMessage(this)">Check Message
-                                        </a>
+                                            {{ object.amount }}
                                         </td>
                                         <td>
-                                            {% if object.status == "pending" %}
-                                                <span class="badge bg-primary text-white">{{ object.status }}</span>
-                                            {% elif object.status == "completed" %}
-                                                <span class="badge bg-success text-white">{{ object.status }}</span>
-                                            {% else %}
-                                                <span class="badge bg-danger text-white">{{ object.status }}</span>
-                                            {% endif %}
+                                            {{ object.transaction_type }}
                                         </td>
                                         <td>
-                                            {{ object.created_at }}
+                                            {{ object.description }}
                                         </td>
-
+                                        <td>
+                                            {{ object.status }}
+                                        </td>
                                     </tr>
                                 {% endfor %}
 
                                 </tbody>
                             {% else %}
-                                <th class="text-danger">No such Request data available.</th>
+                                <th class="text-danger">No such data available.</th>
                             {% endif %}
                         </table>
                     </div>
@@ -148,20 +139,9 @@
             });
         });
 
-        $("#id_service_provider_name").attr("placeholder", "Enter Service Provider Name");
-        $("#id_service_provider_email").attr("placeholder", "Enter Service Provider Email");
-        $("#id_service_name").attr("placeholder", "Enter Service name");
-    </script>
+        $("#id_user__username").attr("placeholder", "Enter Service Name");
+        $("#id_status option:first").text("-- Select Status Type --");
+        $("#id_withdrawal_type option:first").text("-- Select Withdrawal Status --");
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <script>
-        function showMessage(element) {
-            const Message = $(element).data('object-value');
-            Swal.fire({
-                title: 'Provider Message',
-                text: Message
-            });
-        }
     </script>
 {% endblock %}

@@ -2,12 +2,12 @@ from django.core.paginator import Paginator
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, CreateView, DeleteView, UpdateView
 
-from .filters import WithdrawalFilter, BankAccountFilter, PaypalAccountFilter
+from .filters import WithdrawalFilter, BankAccountFilter, PaypalAccountFilter, TransactionFilter, ChargeFilter
 from .forms import (
     WithdrawalForm, BankAccountForm, PaypalAccountForm
 )
 from .models import (
-    PayPalAccount, BankAccount, Withdrawal
+    PayPalAccount, BankAccount, Withdrawal, Transaction, Charge
 )
 from ...apps.stripe.models import ExternalAccount
 
@@ -227,3 +227,30 @@ class _WithdrawalListView(ListView):
         context['filter_form'] = withdrawal_filter.form
         context['object_list'] = withdrawal_page_object
         return context
+
+class TransactionListView(ListView):
+    model = Transaction
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(TransactionListView, self).get_context_data(**kwargs)
+        transaction_filter = TransactionFilter(self.request.GET, queryset=self.get_queryset())
+        paginator = Paginator(transaction_filter.qs, 30)
+        page_number = self.request.GET.get('page')
+        transaction_page_object = paginator.get_page(page_number)
+        context['filter_form'] = transaction_filter.form
+        context['object_list'] = transaction_page_object
+        return context
+
+class ChargeListView(ListView):
+    model = Charge
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(ChargeListView, self).get_context_data(**kwargs)
+        charge_filter = ChargeFilter(self.request.GET, queryset=self.get_queryset())
+        paginator = Paginator(charge_filter.qs, 30)
+        page_number = self.request.GET.get('page')
+        charge_page_object = paginator.get_page(page_number)
+        context['filter_form'] = charge_filter.form
+        context['object_list'] = charge_page_object
+        return context
+
