@@ -25,7 +25,7 @@
                         <div class="dropdown-menu" aria-labelledby="orderDropdown">
                             <a class="dropdown-item" href="{% url 'services:services-list' %}"><i class="bx bx-sitemap mr-2"></i>Services</a>
                             <a class="dropdown-item" href="{% url 'order:services-request' %}"><i class="bx bx-sitemap mr-2"></i>Booking Requests</a>
-                            <a class="dropdown-item" href="#"><i class="bx bx-sitemap mr-2"></i>Special Offers</a>
+                            <a class="dropdown-item" href="{% url 'order:special-offers' %}"><i class="bx bx-sitemap mr-2"></i>Special Offers</a>
                         </div>
                     </li>
 
@@ -37,7 +37,7 @@
                         <div class="dropdown-menu" aria-labelledby="orderDropdown">
                             <a class="dropdown-item" href="{% url 'order:order-list' %}"><i class="bx bx-list-ul mr-2"></i>Orders</a>
                             <a class="dropdown-item" href="{% url 'order:advertisement-list' %}"><i class="bx bx-credit-card mr-2"></i>Advertisements</a>
-                            <a class="dropdown-item" href="{% url 'order:advertisement-list' %}"><i class="bx bx-credit-card mr-2"></i>Payments</a>
+                            <a class="dropdown-item" href="{% url 'order:payment-list' %}"><i class="bx bx-credit-card mr-2"></i>Payments</a>
                         </div>
                     </li>
 

@@ -1,13 +1,14 @@
+
 {% extends 'base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
 {% load core_tags %}
 
 {% block subtitle %}
-    Service Booking Request List
+    Payments
 {% endblock %}
 
-{% block page_heading %} Service Booking Requests List {% endblock %}
+{% block page_heading %} Payments List {% endblock %}
 
 {% block content %}
     <div class="row">
@@ -38,10 +39,11 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>User</th>
-                                    <th>Service</th>
-                                    <th>Message</th>
-                                    <th>StartTime</th>
-                                    <th>EndTime</th>
+                                    <th>Order</th>
+                                    <th>Amount</th>
+                                    <th>Service Charges</th>
+                                    <th>Tax</th>
+                                    <th>Payment Method</th>
                                 </tr>
                                 </thead>
 
@@ -54,18 +56,20 @@
                                             <a href="{% url 'users:user-detail' object.user.id %}">{{ object.user }}</a>
                                         </td>
                                         <td>
-                                            {{ object.service }}
-                                            <a href="{% url 'services:services-detail' object.service.id %}">Detail</a>
+                                            {{ object.order }}
                                         </td>
                                         <td>
-                                            {{ object.message }}
+                                            {{ object.amount }}
+                                        </td>
+                                        <td>
+                                            {{ object.service_charges }}
+                                        </td>
+                                        <td>
+                                            {{ object.tax }}
                                         </td>
 
                                         <td>
-                                            {{ object.start_datetime }}
-                                        </td>
-                                        <td>
-                                            {{ object.end_datetime }}
+                                            {{ object.get_payment_method_display }}
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -141,11 +145,8 @@
             });
         });
 
-        $("#id_service_name").attr("placeholder", "Enter Service Name");
-        $("#id_user_name").attr("placeholder", "Enter User's Name");
-        $("#id_user_email").attr("placeholder", "Enter User's Email");
-        $("#id_service_type option:first").text("-- Select Service Type --");
-
+        $("#id_user__username").attr("placeholder", "Enter Service Name");
+        $("#id_payment_method option:first").text("-- Select Payment Type --");
 
     </script>
 {% endblock %}

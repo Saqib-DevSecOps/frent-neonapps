@@ -19,7 +19,7 @@ def handle_order_payment(sender, instance, created, **kwargs):
 def transfer_pending_to_balance(sender, instance, created, **kwargs):
     """Transfers the pending balance to available balance once the order is completed."""
     if instance.order_status == 'completed' and instance.payment_status == 'completed':
-        wallet = apps.get_model('wallet', 'Wallet')
+        wallet = apps.get_model('finance', 'Wallet')
         provider_wallet = wallet.objects.get(user=instance.service_request.service.provider)
         if provider_wallet.balance_pending > 0:
             provider_wallet.balance_available += provider_wallet.balance_pending

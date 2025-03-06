@@ -4,10 +4,10 @@
 {% load core_tags %}
 
 {% block subtitle %}
-    Service Booking Request List
+    Special Offers
 {% endblock %}
 
-{% block page_heading %} Service Booking Requests List {% endblock %}
+{% block page_heading %} Special Offers {% endblock %}
 
 {% block content %}
     <div class="row">
@@ -39,9 +39,11 @@
                                     <th>ID</th>
                                     <th>User</th>
                                     <th>Service</th>
-                                    <th>Message</th>
+                                    <th>Service Day</th>
+                                    <th>Service Fee</th>
                                     <th>StartTime</th>
                                     <th>EndTime</th>
+                                    <th>Status</th>
                                 </tr>
                                 </thead>
 
@@ -58,14 +60,20 @@
                                             <a href="{% url 'services:services-detail' object.service.id %}">Detail</a>
                                         </td>
                                         <td>
-                                            {{ object.message }}
+                                            {{ object.service_day }}
+                                        </td>
+                                        <td>
+                                            {{ object.service_fee }}
                                         </td>
 
                                         <td>
-                                            {{ object.start_datetime }}
+                                            {{ object.start_time }}
                                         </td>
                                         <td>
-                                            {{ object.end_datetime }}
+                                            {{ object.end_time }}
+                                        </td>
+                                        <td>
+                                            {{ object.status }}
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -141,11 +149,8 @@
             });
         });
 
-        $("#id_service_name").attr("placeholder", "Enter Service Name");
-        $("#id_user_name").attr("placeholder", "Enter User's Name");
-        $("#id_user_email").attr("placeholder", "Enter User's Email");
-        $("#id_service_type option:first").text("-- Select Service Type --");
-
+        $("#id_user__username").attr("placeholder", "Enter Service Name");
+        $("#id_status option:first").text("-- Select Status Type --");
 
     </script>
 {% endblock %}

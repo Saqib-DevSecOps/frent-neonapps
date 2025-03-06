@@ -1,6 +1,7 @@
 import django_filters
 
-from src.services.order.models import Advertisement, Order, AdvertisementRequest, ServiceBookingRequest
+from src.services.order.models import Advertisement, Order, AdvertisementRequest, ServiceBookingRequest, SpecialOffer, \
+    Payment
 
 
 class AdvertisementFilter(django_filters.FilterSet):
@@ -39,3 +40,13 @@ class ServiceBookingRequestFilter(django_filters.FilterSet):
         model = ServiceBookingRequest
         fields = ['service_name', 'user_name', 'user_email']
 
+
+class SpecialOfferFilter(django_filters.FilterSet):
+    class Meta:
+        model = SpecialOffer
+        fields = ['user__username', 'service__title', 'status']
+
+class PaymentFilter(django_filters.FilterSet):
+    class Meta:
+        model = Payment
+        fields = ['user__username', 'payment_method']

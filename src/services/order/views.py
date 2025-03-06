@@ -3,8 +3,9 @@ from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView
 from rest_framework.generics import get_object_or_404
 from src.services.order.filters import AdvertisementFilter, OrderFilter, AdvertisementRequestFilter, \
-    ServiceBookingRequestFilter
-from src.services.order.models import Advertisement, Order, AdvertisementRequest, ServiceBookingRequest
+    ServiceBookingRequestFilter, SpecialOfferFilter, PaymentFilter
+from src.services.order.models import Advertisement, Order, AdvertisementRequest, ServiceBookingRequest, SpecialOffer, \
+    Payment
 from src.web.accounts.decorators import staff_required_decorator
 
 
@@ -75,4 +76,32 @@ class ServiceBookingRequestListView(ListView):
         service_booking_request_page_object = paginator.get_page(page_number)
         context['filter_form'] = service_booking_request_filter.form
         context['object_list'] = service_booking_request_page_object
+        return context
+
+@method_decorator(staff_required_decorator, name='dispatch')
+class SpecialOfferListView(ListView):
+    model = SpecialOffer
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(SpecialOfferListView, self).get_context_data(**kwargs)
+        special_offer_filter = SpecialOfferFilter(self.request.GET, queryset=self.get_queryset())
+        paginator = Paginator(special_offer_filter.qs, 30)
+        page_number = self.request.GET.get('page')
+        special_offer_page_object = paginator.get_page(page_number)
+        context['filter_form'] = special_offer_filter.form
+        context['object_list'] = special_offer_page_object
+        return context
+
+@method_decorator(staff_required_decorator, name='dispatch')
+class PaymentsListView(ListView):
+    model = Payment
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(PaymentsListView, self).get_context_data(**kwargs)
+        payment_filter = PaymentFilter(self.request.GET, queryset=self.get_queryset())
+        paginator = Paginator(payment_filter.qs, 30)
+        page_number = self.request.GET.get('page')
+        payment_page_object = paginator.get_page(page_number)
+        context['filter_form'] = payment_filter.form
+        context['object_list'] = payment_page_object
         return context

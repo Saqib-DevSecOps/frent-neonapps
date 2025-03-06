@@ -1,7 +1,8 @@
 from django.urls import path, include
 
 from src.services.order.views import (
-    AdvertisementListView, AdvertisementRequestsListView, OrderListView, OrderDetailView, ServiceBookingRequestListView
+    AdvertisementListView, AdvertisementRequestsListView, OrderListView, OrderDetailView, ServiceBookingRequestListView,
+    SpecialOfferListView, PaymentsListView
 )
 
 app_name = "order"
@@ -21,5 +22,7 @@ urlpatterns += [
 
 urlpatterns += [
     path('service-requests/', ServiceBookingRequestListView.as_view(), name='services-request'),
+    path('special-offers/', SpecialOfferListView.as_view(), name='special-offers'),
+    path('payment/', PaymentsListView.as_view(), name='payment-list'),
 
 ]
