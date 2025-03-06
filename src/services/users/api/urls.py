@@ -6,7 +6,8 @@ from src.services.users.api.views import UserRetrieveUpdateAPIView, UserImageCre
     ServiceProviderCertificationCreateAPIView, ServiceProviderLanguageCreateAPIView, \
     ServiceProviderLanguageDestroyAPIView, FavoriteServiceDestroyAPIView, FavoriteServiceListCreateAPIView, \
     UserContactListCreateAPIView, UserContactUpdateDestroyAPIView, ServiceProviderInterestDestroyAPIView, \
-    ServiceProviderRetrieveAPIView, UserRetrieveAPIView
+    ServiceProviderRetrieveAPIView, UserRetrieveAPIView, BlockedUserListCreateAPIView, BlockedUserDestroyAPIView, \
+    ReportListCreateApiView
 
 app_name = "users-api"
 
@@ -56,4 +57,13 @@ urlpatterns += [
     path('v1/service-provider/', ServiceProviderRetrieveUpdateAPIView.as_view(), name='service-provider-update'),
     path('v1/service-provider/<str:pk>/', ServiceProviderRetrieveAPIView.as_view(), name='service-provider-detail'),
 
+]
+
+urlpatterns += [
+    path('v1/blocked-users/', BlockedUserListCreateAPIView.as_view(), name='blocked-user'),
+    path('v1/blocked-users/<str:pk>/', BlockedUserDestroyAPIView.as_view(), name='blocked-user-delete'),
+]
+
+urlpatterns += [
+    path('v1/report/', ReportListCreateApiView.as_view(), name='report'),
 ]

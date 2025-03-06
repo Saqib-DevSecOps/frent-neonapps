@@ -6,7 +6,7 @@ from src.core.models import Language
 from src.services.services.api.serializers import ServiceSerializer
 from src.services.services.models import FavoriteService
 from src.services.users.models import UserImage, Address, Interest, Certification, SocialMedia, User, ServiceProvider, \
-    ServiceProviderLanguage, UserContact
+    ServiceProviderLanguage, UserContact, BlockedUser
 
 
 # """ ---------------------User Serializers--------------------- """
@@ -17,6 +17,14 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = service_review
         fields = ['id', 'service_title', 'rating', 'comment', 'created_at']
         read_only_fields = ['id', 'service_title', 'rating', 'comment', 'created_at']
+
+
+class ServiceListSerializer(serializers.ModelSerializer):
+    class Meta:
+        service = apps.get_model('services', 'Service')
+        model = service
+        fields = ['id', 'title', 'provider', 'thumbnail', 'service_type', 'description',
+                  'price_type', 'price', 'discount', 'is_active']
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -132,19 +140,25 @@ class ServiceProviderDetailSerializer(serializers.ModelSerializer):
     interests = InterestSerializer(many=True)
     certifications = CertificationSerializer(many=True)
     languages = ServiceProviderLanguageDetailSerializer(many=True)
+    services = serializers.SerializerMethodField()
     reviews = serializers.SerializerMethodField()
     address = UserAddressSerializer(source="user.address")
 
     class Meta:
         model = ServiceProvider
         fields = ['id', 'user', 'address', 'company_name', 'phone_number', 'website', 'rating', 'total_reviews',
-                  'verified', 'status', 'social_media', 'interests', 'certifications', 'languages', 'reviews']
+                  'verified', 'status', 'social_media', 'interests', 'certifications', 'languages', 'reviews',
+                  'services']
         read_only_fields = ['user', 'social_media', 'interests', 'certifications', 'address', 'rating', 'total_reviews',
                             'verified', 'status', ]
 
     def get_reviews(self, obj):
         reviews = obj.user.provider_reviews.all()
         return ReviewSerializer(reviews, many=True).data
+
+    def get_services(self, obj):
+        services = obj.user.services.all()
+        return ServiceListSerializer(services, many=True).data
 
 
 # """ ---------------------Favorite Service Serializers--------------------- """
@@ -172,3 +186,28 @@ class UserContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserContact
         fields = ['id', 'name', 'phone_number']
+
+
+# """ ---------------------User Block and Report Serializers--------------------- """
+class UserBlockSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlockedUser
+        fields = ['id', 'blocked_user', 'reason', 'created_at']
+        read_only_fields = ['id', 'created_at']
+
+    def validate_blocked_user(self, blocked_user):
+        """Ensure the user is not blocking the same user again."""
+        user = self.context['request'].user
+        if BlockedUser.objects.filter(user=user, blocked_user=blocked_user).exists():
+            raise serializers.ValidationError("You have already blocked this user.")
+        return blocked_user
+
+
+
+class ReportingSerializer(serializers.ModelSerializer):
+    class Meta:
+        report = apps.get_model('reporting', 'Report')
+        model = report
+        fields = ['id', 'report_type', 'reported_user', 'reported_service', 'reason', 'additional_info', 'is_resolved',
+                  'resolved_at']
+        read_only_fields = ['id', 'is_resolved', 'resolved_at']
