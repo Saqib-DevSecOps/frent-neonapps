@@ -28,3 +28,5 @@ class ServiceDetailView(DetailView):
         availability_slots = ServiceAvailability.objects.filter(service=service, is_active=True).order_by('day_of_week', 'start_time')
         context['availability_slots'] = availability_slots
         return context
+
+

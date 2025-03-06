@@ -10,51 +10,69 @@
                         </a>
                     </li>
 
-
                     <li class="nav-item">
                         <a class="nav-link dropdown-toggle arrow-none" href="{% url 'users:user-list' %}">
-
-                            <i class="bx bx-user  mr-2"></i>Users
+                            <i class="bx bx-user mr-2"></i>Users
                         </a>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link dropdown-toggle arrow-none" href="{% url 'services:services-list' %}">
 
-                            <i class="bx bx-sitemap mr-2"></i>Services
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link dropdown-toggle arrow-none" href="{% url 'order:order-list' %}">
 
-                            <i class="bx bx-order mr-2"></i>Orders
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle arrow-none" href="#" id="orderDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="bx bx-sitemap mr-2"></i>Service Management
                         </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link dropdown-toggle arrow-none"
-                           href="{% url 'order:advertisement-list' %}">
-                            <i class="bx bx-adds mr-2"></i>Advertisements
-                        </a>
+                        <div class="dropdown-menu" aria-labelledby="orderDropdown">
+                            <a class="dropdown-item" href="{% url 'services:services-list' %}"><i class="bx bx-sitemap mr-2"></i>Services</a>
+                            <a class="dropdown-item" href="{% url 'order:services-request' %}"><i class="bx bx-sitemap mr-2"></i>Booking Requests</a>
+                            <a class="dropdown-item" href="#"><i class="bx bx-sitemap mr-2"></i>Special Offers</a>
+                        </div>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link dropdown-toggle arrow-none"
-                           href="{% url 'whisper:emailnotification-list' %}">
+                    <!-- Order Management Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle arrow-none" href="#" id="orderDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="bx bx-cart mr-2"></i>Order Management
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="orderDropdown">
+                            <a class="dropdown-item" href="{% url 'order:order-list' %}"><i class="bx bx-list-ul mr-2"></i>Orders</a>
+                            <a class="dropdown-item" href="{% url 'order:advertisement-list' %}"><i class="bx bx-credit-card mr-2"></i>Advertisements</a>
+                            <a class="dropdown-item" href="{% url 'order:advertisement-list' %}"><i class="bx bx-credit-card mr-2"></i>Payments</a>
+                        </div>
+                    </li>
 
+                    <!-- Wallets Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle arrow-none" href="#" id="walletsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="bx bx-wallet mr-2"></i>Finance Management
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="walletsDropdown">
+                            <a class="dropdown-item" href="#"><i class="bx bx-credit-card mr-2"></i>Withdrawal</a>
+                            <a class="dropdown-item" href="#"><i class="bx bx-transfer mr-2"></i>Transactions</a>
+                            <a class="dropdown-item" href="#"><i class="bx bx-transfer mr-2"></i>Charge</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle arrow-none" href="#" id="walletsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="bx bx-wallet mr-2"></i>Bank Management
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="walletsDropdown">
+                            <a class="dropdown-item" href="#"><i class="bx bx-credit-card mr-2"></i>Bank Accounts</a>
+                            <a class="dropdown-item" href="#"><i class="bx bx-transfer mr-2"></i>Finance Accounts</a>
+                            <a class="dropdown-item" href="#"><i class="bx bx-transfer mr-2"></i>Paypal Accounts</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link dropdown-toggle arrow-none" href="{% url 'whisper:emailnotification-list' %}">
                             <i class="bx bx-mail-send mr-2"></i>Email
                         </a>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link dropdown-toggle arrow-none" href="{% url 'wallet:wallet-list' %}">
-
-                            <i class="bx bx-wallet mr-2"></i>Transactions
-                        </a>
-                    </li>
                     {% if request.user.is_superuser %}
                         <li class="nav-item">
                             <a class="nav-link dropdown-toggle arrow-none text-danger" href="/admin/">
-
                                 <i class="bx bx-rocket mr-2"></i>Root Access
                             </a>
                         </li>

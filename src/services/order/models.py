@@ -3,7 +3,7 @@ from django.db import models
 from src.services.services.models import Service, ServiceCurrency
 from src.services.users.models import ServiceProvider, User
 
-
+# ORD
 class Advertisement(models.Model):
     """Stores advertisements for services"""
     SERVICE_TYPES = [
@@ -60,7 +60,7 @@ class AdvertisementRequest(models.Model):
     def get_service_name(self):
         return self.advertisement.service
 
-
+# SER
 class ServiceBookingRequest(models.Model):
     """Tracks requests made for services"""
     REQUEST_STATUS_CHOICES = [
@@ -91,7 +91,7 @@ class ServiceBookingRequest(models.Model):
     def __str__(self):
         return f"{self.user.username}'s request for {self.service.title}"
 
-
+# SER
 class SpecialOffer(models.Model):
     STATUS = [
         ('pending', 'Pending'),
@@ -116,7 +116,7 @@ class SpecialOffer(models.Model):
     class Meta:
         ordering = ['-created_at']
 
-
+# ORD
 class Order(models.Model):
     """Tracks Orders made for services"""
     PAYMENT_TYPE_CHOICES = [
@@ -179,7 +179,7 @@ class Order(models.Model):
         else:
             return None
 
-
+# ORD
 class Payment(models.Model):
     payment_methods = [
         ('credit_card', 'Credit Card'),

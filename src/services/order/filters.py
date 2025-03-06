@@ -1,6 +1,6 @@
 import django_filters
 
-from src.services.order.models import Advertisement, Order, AdvertisementRequest
+from src.services.order.models import Advertisement, Order, AdvertisementRequest, ServiceBookingRequest
 
 
 class AdvertisementFilter(django_filters.FilterSet):
@@ -28,3 +28,14 @@ class OrderFilter(django_filters.FilterSet):
     class Meta:
         model = Order
         fields = ['payment_type', 'order_status', 'payment_status']
+
+
+class ServiceBookingRequestFilter(django_filters.FilterSet):
+    service_name = django_filters.CharFilter(field_name='service__title', lookup_expr='icontains')
+    user_name = django_filters.CharFilter(field_name='user__username', lookup_expr='icontains')
+    user_email = django_filters.CharFilter(field_name='user__email', lookup_expr='icontains')
+
+    class Meta:
+        model = ServiceBookingRequest
+        fields = ['service_name', 'user_name', 'user_email']
+

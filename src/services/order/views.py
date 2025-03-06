@@ -2,8 +2,9 @@ from django.core.paginator import Paginator
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView
 from rest_framework.generics import get_object_or_404
-from src.services.order.filters import AdvertisementFilter, OrderFilter, AdvertisementRequestFilter
-from src.services.order.models import Advertisement, Order, AdvertisementRequest
+from src.services.order.filters import AdvertisementFilter, OrderFilter, AdvertisementRequestFilter, \
+    ServiceBookingRequestFilter
+from src.services.order.models import Advertisement, Order, AdvertisementRequest, ServiceBookingRequest
 from src.web.accounts.decorators import staff_required_decorator
 
 
@@ -23,14 +24,14 @@ class AdvertisementListView(ListView):
 
 
 @method_decorator(staff_required_decorator, name='dispatch')
-class AdvertisementRequesterListView(ListView):
+class AdvertisementRequestsListView(ListView):
     model = AdvertisementRequest
 
     def get_queryset(self):
         return AdvertisementRequest.objects.filter(advertisement_id=self.kwargs['advertisement_id'])
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(AdvertisementRequesterListView, self).get_context_data(**kwargs)
+        context = super(AdvertisementRequestsListView, self).get_context_data(**kwargs)
         advertisement_request_filter = AdvertisementRequestFilter(self.request.GET, queryset=self.get_queryset())
         paginator = Paginator(advertisement_request_filter.qs, 30)
         page_number = self.request.GET.get('page')
@@ -61,3 +62,17 @@ class OrderDetailView(DetailView):
 
     def get_object(self, queryset=None):
         return get_object_or_404(Order, pk=self.kwargs['pk'])
+
+@method_decorator(staff_required_decorator, name='dispatch')
+class ServiceBookingRequestListView(ListView):
+    model = ServiceBookingRequest
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(ServiceBookingRequestListView, self).get_context_data(**kwargs)
+        service_booking_request_filter = ServiceBookingRequestFilter(self.request.GET, queryset=self.get_queryset())
+        paginator = Paginator(service_booking_request_filter.qs, 30)
+        page_number = self.request.GET.get('page')
+        service_booking_request_page_object = paginator.get_page(page_number)
+        context['filter_form'] = service_booking_request_filter.form
+        context['object_list'] = service_booking_request_page_object
+        return context

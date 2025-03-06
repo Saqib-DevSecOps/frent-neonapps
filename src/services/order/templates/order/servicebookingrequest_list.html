@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load core_tags %}
+
+{% block subtitle %}
+    Service Booking Request List
+{% endblock %}
+
+{% block page_heading %} Service Booking Requests List {% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            <form method="get" id="search-form">
+                <div class="input-group mb-3">
+                    {{ filter_form }}
+                    <button style="margin-left: 3px" class="btn btn-primary ms-3S" type="submit">
+                        <i class="fa fa-search"></i> Search
+                    </button>
+                    <a style="margin-left: 2px" class="btn btn-danger" href="{% url 'order:advertisement-list' %}">
+                        <i class="fa fa-brush"></i>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card border-0">
+                <div class="card-body px-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-borderless">
+                            {% if object_list %}
+                                <thead class="border-bottom">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>User</th>
+                                    <th>Service</th>
+                                    <th>Message</th>
+                                    <th>StartTime</th>
+                                    <th>EndTime</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+                                {% for object in object_list %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>
+                                            <a href="{% url 'users:user-detail' object.user.id %}">{{ object.user }}</a>
+                                        </td>
+                                        <td>
+                                            {{ object.service }}
+                                            <a href="{% url 'services:services-detail' object.service.id %}">Detail</a>
+                                        </td>
+                                        <td>
+                                            {{ object.message }}
+                                        </td>
+
+                                        <td>
+                                            {{ object.start_datetime }}
+                                        </td>
+                                        <td>
+                                            {{ object.end_datetime }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+
+                                </tbody>
+                            {% else %}
+                                <th class="text-danger">No Advertisement data available.</th>
+                            {% endif %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="mt-4">
+                <ul class="pagination">
+                    {% if object_list.has_previous %}
+                        <li>
+                            <span>
+                                <a href="{% relative_url object_list.previous_page_number 'page' request.GET.urlencode %}">
+                                    Previous
+                                </a>
+                            </span>
+                        </li>
+                    {% endif %}
+                    <li class="">
+                        <span>Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.</span>
+                    </li>
+                    {% if object_list.has_next %}
+                        <li>
+                            <span>
+                                <a href="{% relative_url object_list.next_page_number 'page' request.GET.urlencode %}">
+                                    Next
+                                </a>
+                            </span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        // TO FORMAT THE FORMS
+        $(document).ready(function () {
+
+            $('label').hide();
+            $('input').addClass('form-control');
+            $('select').addClass('form-control');
+
+        });
+
+        $(document).ready(function () {
+            const inputs = $(".input-group > div");
+
+            inputs.css({
+                display: "flex",
+                flex: "1",
+                marginRight: "10px",
+            });
+
+            inputs.last().css("marginRight", "0");
+
+            $(".input-group").css({
+                display: "flex",
+                justifyContent: "space-between",
+            });
+        });
+
+        $("#id_service_name").attr("placeholder", "Enter Service Name or Category");
+        $("#id_user_name").attr("placeholder", "Enter User's Name");
+        $("#id_user_email").attr("placeholder", "Enter User's Email");
+        $("#id_service_type option:first").text("-- Select Service Type --");
+
+
+    </script>
+{% endblock %}

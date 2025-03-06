@@ -53,8 +53,14 @@
                             Provider Details
                         </a>
                     </div>
+                        <a class="btn btn-outline-primary w-100 mt-3"
+                           href="{% url 'users:user-detail' object.provider.pk %}">
+                            Service Booking Requests
+                        </a>
                 </div>
+
             </div>
+
 
             <div class="card">
 
@@ -207,7 +213,13 @@
                         </div>
                     </div>
                 </div>
-            </div> <!-- end col -->
+            </div>
+            <!-- SERV REQ -->
+        </div>
+    </div>
+
+
+{% endblock %}
             <div class="card">
                 <div class="container mt-4">
                     <h5 class="fw-semibold m-3 ms-5">Service Requests</h5>
@@ -257,12 +269,6 @@
                     </div>
                 </div>
             </div>
-
-        </div>
-    </div>
-
-
-{% endblock %}
 
 
 

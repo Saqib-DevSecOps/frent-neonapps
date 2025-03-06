@@ -53,7 +53,7 @@ class ServiceCurrency(models.Model):
             models.UniqueConstraint(fields=['name'], name="unique_service_currency_name")
         ]
 
-
+# SER M
 class Service(models.Model):
     PRICE_TYPE_CHOICES = [
         ('fixed', 'Fixed'),
