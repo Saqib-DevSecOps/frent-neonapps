@@ -1,10 +1,10 @@
-from cities_light.models import City, Region, Country, SubRegion
-from django.apps import apps
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django_otp.models import Device
 from django_resized import ResizedImageField
 from phonenumber_field.modelfields import PhoneNumberField
+
+from src.core.models import Country
 
 
 class User(AbstractUser):
@@ -82,11 +82,15 @@ class User(AbstractUser):
 class Address(models.Model):
     """Consolidated Address Model for both ServiceProvider and Users"""
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='address')
-    address = models.CharField(max_length=255, blank=True, null=True)
-    city = models.ForeignKey(City, on_delete=models.SET_NULL, blank=True, null=True, related_name="user_addresses")
-    region = models.ForeignKey(Region, on_delete=models.SET_NULL, blank=True, null=True, related_name="user_addresses")
-    country = models.ForeignKey(Country, on_delete=models.SET_NULL, blank=True, null=True,
+    address = models.CharField(max_length=255, help_text="Service location address.")
+    city = models.CharField(null=True, blank=True, max_length=100, help_text="City of the service location.")
+    region = models.CharField(null=True, blank=True, max_length=100, help_text="Region of the service location.")
+    country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True,
                                 related_name="user_addresses")
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True,
+                                   help_text="Latitude of the service location.")
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True,
+                                    help_text="Longitude of the service location.")
     zip_code = models.CharField(max_length=20, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)

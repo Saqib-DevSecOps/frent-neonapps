@@ -1,11 +1,10 @@
 import uuid
-
-from cities_light.models import City, Region, Country
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.template.defaultfilters import slugify
 from django_ckeditor_5.fields import CKEditor5Field
 
+from src.core.models import Country
 from src.services.users.models import User, ServiceProvider
 
 
@@ -178,9 +177,8 @@ class ServiceLocation(models.Model):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='location')
     address = models.CharField(max_length=255, help_text="Service location address.")
-    city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True, related_name="service_locations")
-    region = models.ForeignKey(Region, on_delete=models.SET_NULL, null=True, blank=True,
-                               related_name="service_locations")
+    city = models.CharField(null=True, blank=True, max_length=100, help_text="City of the service location.")
+    region = models.CharField(null=True, blank=True, max_length=100, help_text="Region of the service location.")
     country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True,
                                 related_name="service_locations")
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True,
