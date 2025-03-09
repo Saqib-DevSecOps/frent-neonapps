@@ -174,7 +174,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row mb-2">
-                        <div class="col-md-9">
+                        <div class="col-md-8">
                             <p class="mb-0  h5">User Biology: </p>
                             {% if user.bio %}
                                 <p class="mb-0 mt-2">{{ user.bio }}</p>
@@ -183,13 +183,18 @@
                             {% endif %}
                         </div>
 
-                        <div class="col-md-3 p-0">
-                            <a href="{% url 'wallet:user-wallet' user.wallet.pk %}" class="btn btn-primary float-right">
-                                <i class="fa fa-money-bill"></i> User Wallet
+                        <div class="col-md-3 p-0 justify-content-between">
+                            <a href="{% url 'wallet:user-wallet' user.wallet.pk %}" class="btn btn-primary float-right ">
+                                <i class="fa fa-money-bill"></i> Wallet
                             </a>
-    {#                            <a href="#" class="btn btn-primary float-right" style="margin-right:5px;">#}
-    {#                                Baddies#}
-    {#                            </a>#}
+                            <div style="width:3px;"></div>
+                            <a href="{% url 'services:user-reviews' user.pk %}" class="btn btn-warning ">
+                                <i class="fa fa-money-bill"></i> Reviews
+                            </a>
+                            <a href="{% url 'services:user-services' user.wallet.pk %}" class="btn btn-success ">
+                                <i class="fa fa-money-bill"></i> Services
+                            </a>
+
                         </div>
                         <br>
                     </div>

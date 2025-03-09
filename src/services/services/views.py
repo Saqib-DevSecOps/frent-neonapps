@@ -5,6 +5,7 @@ from .models import ServiceReview
 
 from src.services.services.filters import ServiceFilter
 from src.services.services.models import Service, ServiceAvailability
+from ..users.models import User
 
 
 class ServicesListView(ListView):
@@ -20,6 +21,13 @@ class ServicesListView(ListView):
         context['object_list'] = user_page_object
         return context
 
+class UserServicesListView(ListView):
+    model = Service
+
+    def get_queryset(self):
+        pk = self.kwargs.get("pk")
+        return Service.objects.filter(provider=pk)
+
 
 class ServiceDetailView(DetailView):
     model = Service
@@ -30,7 +38,6 @@ class ServiceDetailView(DetailView):
         availability_slots = ServiceAvailability.objects.filter(service=service, is_active=True).order_by('day_of_week', 'start_time')
         context['availability_slots'] = availability_slots
         return context
-
 
 
 class ServiceReviewListView(ListView):
@@ -52,3 +59,11 @@ class ServiceReviewListView(ListView):
         if pk:
             context["object"] = get_object_or_404(Service, pk=pk)
         return context
+
+class UserServiceReviewListView(ListView):
+    model = ServiceReview
+    context_object_name = "reviews"
+
+    def get_queryset(self):
+        pk = self.kwargs.get("pk")
+        return ServiceReview.objects.filter(reviewer=pk)
