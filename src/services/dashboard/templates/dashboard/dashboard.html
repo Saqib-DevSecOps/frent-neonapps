@@ -3,466 +3,440 @@
 {% load crispy_forms_tags %}
 {% load humanize %}
 
-{% block subtitle %} {{ request.user }} {% endblock %}
+{% block subtitle %} {{ request.user }}'s Dashboard {% endblock %}
 
 {% block content %}
-
-    <div class="row">
-        <div class="col-sm-3">
-            <div class="card mini-stats-wid">
-                <div class="card-body">
-                    <div class="media">
-                        <div class="mr-3 align-self-center">
-                            <i class="bx bx-user-check h2 text-primary mb-0"></i>
-                        </div>
-                        <div class="media-body">
-                            <p class="text-muted mb-2">Registartions</p>
-                            <h5 class="mb-0">
-                                00
-                            </h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="card mini-stats-wid">
-                <div class="card-body">
-                    <div class="media">
-                        <div class="mr-3 align-self-center">
-                            <i class="bx bx-import h2 text-success mb-0"></i>
-                        </div>
-                        <div class="media-body">
-                            <p class="text-muted mb-2">YEAR</p>
-                            <h5 class="mb-0">
-                                $ 00 <span
-                                    class="font-size-14 text-muted">(00)</span>
-                            </h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="card mini-stats-wid">
-                <div class="card-body">
-                    <div class="media">
-                        <div class="mr-3 align-self-center">
-                            <i class="bx bx-export h2 text-danger mb-0"></i>
-                        </div>
-                        <div class="media-body">
-                            <p class="text-muted mb-2">Month</p>
-                            <h5 class="mb-0">
-                                $ 00 <span
-                                    class="font-size-14 text-muted">(00)</span>
-                            </h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="card mini-stats-wid">
-                <div class="card-body">
-                    <div class="media">
-                        <div class="mr-3 align-self-center">
-                            <i class="bx bxl-telegram h2 text-primary mb-0"></i>
-                        </div>
-                        <div class="media-body">
-                            <p class="text-muted mb-2">Day</p>
-                            <h5 class="mb-0">
-                                $ 00 <span
-                                    class="font-size-14 text-muted">(00)</span>
-                            </h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+    <!-- Header Section -->
+    <div class="row mb-4">
         <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title mb-3">2022 Statistics</h4>
-                    <div id="chart_year_months">
-                    </div>
+            <div class="d-flex align-items-center flex-lg-row flex-column">
+                <div class="flex-grow-1">
+                    <h4 class="fs-16 mb-1">Good Morning, {{ request.user }}!</h4>
+                    <p class="text-muted mb-0">Here’s what’s happening with your platform today, {{ current_date|date:"d M, Y" }}.</p>
                 </div>
-            </div>
-        </div>
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title mb-3">2022 Registrations</h4>
-                    <div id="chart_year_months_registrations">
-                    </div>
+                <div class="mt-3 mt-lg-0">
+                    <form action="javascript:void(0);">
+                        <div class="row g-3 align-items-center">
+                            <div class="col-sm-auto">
+                                <div class="input-group" style="max-width: 300px;">
+                                    <input type="text" class="form-control border-0 shadow-lg" data-provider="flatpickr" data-range-date="true" data-date-format="d M, Y" value="01 Mar 2025 to 08 Mar 2025" readonly style="border-radius: 5px 0 0 5px; padding-right: 0; z-index: 2;">
+                                    <span class="input-group-text" style="background-color: #ff385c; color: white; border: 0; border-radius: 0 5px 5px 0; margin-left: -1px; padding: 0 10px; z-index: 1;">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <button type="button" style="background-color: #ff385c; color:white" class="btn shadow-lg"><i class="ri-add-circle-line me-1"></i>All Services</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-    <hr>
-    <div class="row">
-        <div class="col-xl-4">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title mb-4">Today's Record</h4>
 
-                    <div class="text-center">
-                        <div class="mb-4">
-                            <i class="bx bx-chart text-primary display-4"></i>
+    <!-- Key Metrics Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card card-animate shadow-lg">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1 overflow-hidden">
+                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Total Earnings</p>
                         </div>
-                        <h3>1,456</h3>
-                        <p>Registrations</p>
-                    </div>
-
-                    <div class="table-responsive mt-4">
-                        <table class="table table-centered table-nowrap">
-                            <tbody>
-                            <tr>
-                                <td style="width: 30%">
-                                    <p class="mb-0">A</p>
-                                </td>
-                                <td style="width: 25%">
-                                    <h5 class="mb-0">1,456</h5></td>
-                                <td>
-                                    <div class="progress bg-transparent progress-sm">
-                                        <div class="progress-bar bg-primary rounded" role="progressbar"
-                                             style="width: 94%" aria-valuenow="94" aria-valuemin="0"
-                                             aria-valuemax="100"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="mb-0">B</p>
-                                </td>
-                                <td>
-                                    <h5 class="mb-0">1,123</h5>
-                                </td>
-                                <td>
-                                    <div class="progress bg-transparent progress-sm">
-                                        <div class="progress-bar bg-success rounded" role="progressbar"
-                                             style="width: 82%" aria-valuenow="82" aria-valuemin="0"
-                                             aria-valuemax="100"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="mb-0">C</p>
-                                </td>
-                                <td>
-                                    <h5 class="mb-0">1,026</h5>
-                                </td>
-                                <td>
-                                    <div class="progress bg-transparent progress-sm">
-                                        <div class="progress-bar bg-warning rounded" role="progressbar"
-                                             style="width: 70%" aria-valuenow="70" aria-valuemin="0"
-                                             aria-valuemax="100"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-4">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title mb-4">Yesterday's Record</h4>
-
-                    <div class="text-center">
-                        <div class="mb-4">
-                            <i class="bx bx-chart text-primary display-4"></i>
+                        <div class="flex-shrink-0">
+                            <h5 class="text-success fs-14 mb-0">
+                                <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +12.5%
+                            </h5>
                         </div>
-                        <h3>1,456</h3>
-                        <p>Registrations</p>
                     </div>
-
-                    <div class="table-responsive mt-4">
-                        <table class="table table-centered table-nowrap">
-                            <tbody>
-                            <tr>
-                                <td style="width: 30%">
-                                    <p class="mb-0">A</p>
-                                </td>
-                                <td style="width: 25%">
-                                    <h5 class="mb-0">1,456</h5></td>
-                                <td>
-                                    <div class="progress bg-transparent progress-sm">
-                                        <div class="progress-bar bg-primary rounded" role="progressbar"
-                                             style="width: 94%" aria-valuenow="94" aria-valuemin="0"
-                                             aria-valuemax="100"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="mb-0">B</p>
-                                </td>
-                                <td>
-                                    <h5 class="mb-0">1,123</h5>
-                                </td>
-                                <td>
-                                    <div class="progress bg-transparent progress-sm">
-                                        <div class="progress-bar bg-success rounded" role="progressbar"
-                                             style="width: 82%" aria-valuenow="82" aria-valuemin="0"
-                                             aria-valuemax="100"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="mb-0">C</p>
-                                </td>
-                                <td>
-                                    <h5 class="mb-0">1,026</h5>
-                                </td>
-                                <td>
-                                    <div class="progress bg-transparent progress-sm">
-                                        <div class="progress-bar bg-warning rounded" role="progressbar"
-                                             style="width: 70%" aria-valuenow="70" aria-valuemin="0"
-                                             aria-valuemax="100"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-4">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title mb-4">Month Record</h4>
-
-                    <div class="text-center">
-                        <div class="mb-4">
-                            <i class="bx bx-chart text-primary display-4"></i>
+                    <div class="d-flex align-items-end justify-content-between mt-4">
+                        <div>
+                            <h4 class="fs-22 fw-semibold mb-4">$<span class="counter-value" data-target="5230">5,230</span></h4>
+                            <a style="color:#ff385c " href="#" class="text-decoration-underline">View Payments</a>
                         </div>
-                        <h3>1,456</h3>
-                        <p>Registrations</p>
-                    </div>
-
-                    <div class="table-responsive mt-4">
-                        <table class="table table-centered table-nowrap">
-                            <tbody>
-                            <tr>
-                                <td style="width: 30%">
-                                    <p class="mb-0">A</p>
-                                </td>
-                                <td style="width: 25%">
-                                    <h5 class="mb-0">1,456</h5></td>
-                                <td>
-                                    <div class="progress bg-transparent progress-sm">
-                                        <div class="progress-bar bg-primary rounded" role="progressbar"
-                                             style="width: 94%" aria-valuenow="94" aria-valuemin="0"
-                                             aria-valuemax="100"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="mb-0">B</p>
-                                </td>
-                                <td>
-                                    <h5 class="mb-0">1,123</h5>
-                                </td>
-                                <td>
-                                    <div class="progress bg-transparent progress-sm">
-                                        <div class="progress-bar bg-success rounded" role="progressbar"
-                                             style="width: 82%" aria-valuenow="82" aria-valuemin="0"
-                                             aria-valuemax="100"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="mb-0">C</p>
-                                </td>
-                                <td>
-                                    <h5 class="mb-0">1,026</h5>
-                                </td>
-                                <td>
-                                    <div class="progress bg-transparent progress-sm">
-                                        <div class="progress-bar bg-warning rounded" role="progressbar"
-                                             style="width: 70%" aria-valuenow="70" aria-valuemin="0"
-                                             aria-valuemax="100"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <div class="avatar-sm flex-shrink-0">
+                            <span style="background-color: #ff385c !important;" class="avatar-title bg-success-subtle rounded fs-3">
+                                <i class="fa fa-dollar-sign fa-lg text-light"></i>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-12">
-            <div class="card">
+        <div class="col-md-3">
+            <div class="card card-animate shadow-lg">
                 <div class="card-body">
-                    <h4 class="card-title mb-3">Month Statistics</h4>
-                    <div id="chart_month_dates">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1 overflow-hidden">
+                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Service Bookings</p>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <h5 class="text-danger fs-14 mb-0">
+                                <i class="ri-arrow-right-down-line fs-13 align-middle"></i> -2.1%
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-end justify-content-between mt-4">
+                        <div>
+                            <h4 class="fs-22 fw-semibold mb-4"><span class="counter-value" data-target="450">450</span></h4>
+                            <a style="color:#ff385c" href="#" class="text-decoration-underline">View Requests</a>
+                        </div>
+                        <div class="avatar-sm flex-shrink-0">
+                            <span style="background-color: #ff385c" class="avatar-title bg-info-subtle rounded fs-3">
+                                <i class="fa fa-shopping-bag fa-lg text-white"></i>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-12">
-            <div class="card">
+
+        <div class="col-md-3">
+            <div class="card card-animate shadow-lg">
                 <div class="card-body">
-                    <h4 class="card-title mb-3">Month Registrations</h4>
-                    <div id="chart_month_days_registrations">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1 overflow-hidden">
+                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Active Providers</p>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <h5 class="text-success fs-14 mb-0">
+                                <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +8.3%
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-end justify-content-between mt-4">
+                        <div>
+                            <h4 class="fs-22 fw-semibold mb-4"><span class="counter-value" data-target="142">142</span></h4>
+                            <a style="color:#ff385c" href="#" class="text-decoration-underline">See Details</a>
+                        </div>
+                        <div class="avatar-sm flex-shrink-0">
+                            <span style="background-color: #ff385c" class="avatar-title bg-warning-subtle rounded fs-3">
+                                <i class="fa fa-user-circle fa-lg text-white"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card card-animate shadow-lg">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1 overflow-hidden">
+                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Pending Withdrawals</p>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <h5 class="text-muted fs-14 mb-0">+0.0%</h5>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-end justify-content-between mt-4">
+                        <div>
+                            <h4 class="fs-22 fw-semibold mb-4">$<span class="counter-value" data-target="1200">1,200</span></h4>
+                            <a style="color:#ff385c" href="#" class="text-decoration-underline">Process Now</a>
+                        </div>
+                        <div class="avatar-sm flex-shrink-0">
+                            <span style="background-color: #ff385c" class="avatar-title bg-primary-subtle rounded fs-3">
+                                <i class="fa fa-money-bill fa-lg text-white"></i>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Revenue & Activity Section -->
+    <div class="row g-4">
+        <div class="col-xl-8">
+            <div class="card shadow-lg">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h4 class="card-title mb-0">Revenue Analytics</h4>
+                    <div class="d-flex gap-1">
+                        <button type="button" class="btn btn-sm time-filter active" data-period="all" style="background-color: rgba(255, 56, 92, 0.1); color: #ff385c;">All</button>
+                        <button type="button" class="btn btn-sm time-filter btn-soft-secondary" data-period="1m">1M</button>
+                        <button type="button" class="btn btn-sm time-filter btn-soft-secondary" data-period="6m">6M</button>
+                        <button type="button" class="btn btn-sm time-filter btn-soft-secondary" data-period="1y">1Y</button>
+                    </div>
+                </div>
+
+                <div class="card-header bg-light-subtle p-0">
+                    <div class="row g-0 text-center">
+                        <div class="col-6 col-sm-3">
+                            <div class="p-3 border border-dashed border-start-0">
+                                <h5 class="mb-1"><span class="counter-value" data-target="{{ total_bookings|default:'450' }}">{{ total_bookings|default:'450' }}</span></h5>
+                                <p class="text-muted mb-0">Total Bookings</p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-sm-3">
+                            <div class="p-3 border border-dashed border-start-0">
+                                <h5 class="mb-1">$<span class="counter-value" data-target="{{ total_earnings|default:'5230' }}">{{ total_earnings|default:'5,230' }}</span></h5>
+                                <p class="text-muted mb-0">Total Earnings</p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-sm-3">
+                            <div class="p-3 border border-dashed border-start-0">
+                                <h5 class="mb-1"><span class="counter-value" data-target="{{ total_refunds|default:'12' }}">{{ total_refunds|default:'12' }}</span></h5>
+                                <p class="text-muted mb-0">Total Refunds</p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-sm-3">
+                            <div class="p-3 border border-dashed border-start-0 border-end-0">
+                                <h5 class="mb-1" style="color: #ff385c;"><span class="counter-value" data-target="{{ conversion_rate|default:'15.8' }}">{{ conversion_rate|default:'15.8' }}</span>%</h5>
+                                <p class="text-muted mb-0">Conversion Rate</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div id="revenue-chart" class="apex-charts" dir="ltr" style="min-height: 300px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4">
+            <div class="card shadow-lg rounded-2">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title mt-2">Top Vendors:</h4>
+                        </div><!--end col-->
+                    </div>  <!--end row-->
+                </div><!--end card-header-->
+
+                <div class="card-body pt-0 mt-3 ">
+                    <canvas id="radarChart"></canvas>
+                </div><!--end card-body-->
+
+                <div class="row g-0 text-center mt-3 mb-4">
+                        <div class="col-6 ">
+                            <div class="p-3 border border-dashed border-start-0">
+                                <h5 class="mb-1"><span class="counter-value" data-target="450">450</span></h5>
+                                <p class="text-muted mb-0">Total Bookings</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 border border-dashed border-start-0">
+                                <h5 class="mb-1">$<span class="counter-value" data-target="5230">5,230</span></h5>
+                                <p class="text-muted mb-0">Total Earnings</p>
+                            </div>
+                        </div>
+
+                    </div>
+            </div><!--end card-->
+        </div>
+    </div>
 {% endblock %}
 
-{% block js %}
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-{% endblock %}
 
 {% block js_code %}
+
+    <!-- Add this to your js block -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.35.0/dist/apexcharts.min.js"></script>
     <script>
-        var options_year_months = {
-            series: [{
-                name: 'A',
-                data: [31, 40, 28, 51, 42, 109, 100, 51, 42, 109, 100, 101]
-            }, {
-                name: 'B',
-                data: [11, 32, 45, 32, 34, 52, 32, 45, 32, 34, 52, 41]
-            }, {
-                name: 'C',
-                data: [12, 40, 100, 62, 74, 82, 91, 100, 40, 55, 62, 74]
-            }],
-            chart: {
-                height: 225,
-                type: 'area'
+        // Add this to your js_code block
+        document.addEventListener('DOMContentLoaded', function() {
+    // Options for the Apex Chart
+    const options = {
+        series: [
+            {
+                name: 'Revenue',
+                data: {{ revenue_data|default:'[1200, 1900, 3000, 2800, 4200, 5500, 4100, 3800, 5200, 5500, 6100, 7000]'|safe }}
             },
-            dataLabels: {
-                enabled: false
-            },
-            stroke: {
-                curve: 'smooth'
-            },
-            xaxis: {
-                type: 'number',
-                categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            {
+                name: 'Bookings',
+                data: {{ booking_data|default:'[90, 120, 180, 170, 250, 300, 280, 260, 310, 330, 370, 410]'|safe }}
             }
-        };
-        var options_month_dates = {
-            series: [{
-                name: 'A',
-                data: [31, 40, 28, 51, 42, 109, 100, 51, 42, 109, 31, 40, 28, 51, 42, 109, 100, 51, 42, 109, 31, 40, 28, 51, 42, 109, 100, 51]
-            }, {
-                name: 'B',
-                data: [11, 32, 45, 32, 34, 52, 32, 45, 32, 34, 11, 32, 45, 32, 34, 52, 32, 45, 32, 34, 11, 32, 45, 32, 34, 52, 32, 45]
-            }, {
-                name: 'C',
-                data: [12, 40, 100, 62, 74, 82, 91, 100, 40, 55, 62, 74, 12, 40, 100, 62, 74, 82, 91, 100, 40, 55, 62, 74, 12, 40, 100, 62]
-            }],
-            chart: {
-                height: 225,
-                type: 'area'
-            },
-            dataLabels: {
-                enabled: false
-            },
-            stroke: {
-                curve: 'smooth'
-            },
-            xaxis: {
-                type: 'number',
-                categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28]
+        ],
+        chart: {
+            type: 'area',
+            height: 350,
+            toolbar: {
+                show: false
             }
-        };
-
-        var options_year_months_registrations = {
-            series: [{
-                name: 'A',
-                data: [100, 40, 28, 51, 42, 109, 100, 40, 28, 42, 109, 100]
-            }],
-            chart: {
-                type: 'area',
-                stacked: false,
-                height: 200,
-                zoom: {
-                    type: 'x',
-                    enabled: true,
-                    autoScaleYaxis: true
-                },
-                toolbar: {
-                    autoSelected: 'zoom'
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            curve: 'smooth',
+            width: 2
+        },
+        colors: ['#ff385c', '#405189'],
+        xaxis: {
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            axisBorder: {
+                show: false
+            }
+        },
+        yaxis: {
+            labels: {
+                formatter: function(value) {
+                    return "$" + value;
                 }
-            },
-            dataLabels: {
-                enabled: false
-            },
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    shadeIntensity: 1,
-                    inverseColors: false,
-                    opacityFrom: 0.5,
-                    opacityTo: 0,
-                    stops: [0, 90, 100]
-                },
-            },
-            xaxis: {
-                type: 'number',
-                categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
             }
-        };
-        var options_month_days_registrations = {
-            series: [{
-                name: 'B',
-                data: [1, 22, 23, 24, 25, 36, 17, 23, 29, 31, 11, 33, 13, 24, 25, 36, 34, 18, 19, 18, 9, 22, 21, 42, 2, 3, 10, 2]
-            }],
-            chart: {
-                type: 'area',
-                stacked: false,
-                height: 200,
-                zoom: {
-                    type: 'x',
-                    enabled: true,
-                    autoScaleYaxis: true
-                },
-                toolbar: {
-                    autoSelected: 'zoom'
+        },
+        grid: {
+            borderColor: '#f1f1f1',
+            padding: {
+                left: 10,
+                right: 10
+            }
+        },
+        tooltip: {
+            theme: 'dark',
+            y: {
+                formatter: function(value) {
+                    return "$" + value;
                 }
-            },
-            dataLabels: {
-                enabled: false
-            },
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    shadeIntensity: 1,
-                    inverseColors: false,
-                    opacityFrom: 0.5,
-                    opacityTo: 0,
-                    stops: [0, 90, 100]
-                },
-            },
-            xaxis: {
-                type: 'number',
-                categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28]
             }
-        };
+        },
+        fill: {
+            type: 'gradient',
+            gradient: {
+                shadeIntensity: 1,
+                opacityFrom: 0.4,
+                opacityTo: 0.1,
+                stops: [0, 90, 100]
+            }
+        },
+        legend: {
+            position: 'top',
+            horizontalAlign: 'right'
+        }
+    };
 
-        var chart_year_months = new ApexCharts(document.querySelector("#chart_year_months"), options_year_months);
-        var chart_month_dates = new ApexCharts(document.querySelector("#chart_month_dates"), options_month_dates);
-        var chart_year_months_registrations = new ApexCharts(document.querySelector("#chart_year_months_registrations"), options_year_months_registrations);
-        var chart_month_days_registrations = new ApexCharts(document.querySelector("#chart_month_days_registrations"), options_month_days_registrations);
+    // Initialize the chart
+    const chart = new ApexCharts(document.querySelector("#revenue-chart"), options);
+    chart.render();
 
-        chart_year_months.render();
-        chart_month_dates.render();
-        chart_year_months_registrations.render();
-        chart_month_days_registrations.render();
+    // Time filter functionality
+    document.querySelectorAll('.time-filter').forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            document.querySelectorAll('.time-filter').forEach(btn => {
+                btn.classList.remove('active');
+                btn.style.backgroundColor = '';
+                btn.style.color = '';
+                btn.classList.add('btn-soft-secondary');
+            });
 
+            // Add active class to clicked button
+            this.classList.add('active');
+            this.classList.remove('btn-soft-secondary');
+            this.style.backgroundColor = 'rgba(255, 56, 92, 0.1)';
+            this.style.color = '#ff385c';
+
+            // Here you would typically make an AJAX call to fetch new data based on the time period
+            // For demonstration, we'll just show a simulated data update
+            const period = this.getAttribute('data-period');
+            updateChartData(period);
+        });
+    });
+
+    function updateChartData(period) {
+        // This would typically be replaced with an actual AJAX call to your backend
+        // For demo purposes, we're just simulating different data for different time periods
+
+        let newData;
+        switch(period) {
+            case '1m':
+                newData = [
+                    { name: 'Revenue', data: [800, 1200, 900] },
+                    { name: 'Bookings', data: [50, 70, 60] }
+                ];
+                chart.updateOptions({
+                    xaxis: { categories: ['Week 1', 'Week 2', 'Week 3'] }
+                });
+                break;
+            case '6m':
+                newData = [
+                    { name: 'Revenue', data: [3000, 4500, 5200, 4800, 6000, 7200] },
+                    { name: 'Bookings', data: [180, 250, 290, 270, 320, 380] }
+                ];
+                chart.updateOptions({
+                    xaxis: { categories: ['Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5', 'Month 6'] }
+                });
+                break;
+            case '1y':
+                newData = [
+                    { name: 'Revenue', data: [1200, 1900, 3000, 2800, 4200, 5500, 4100, 3800, 5200, 5500, 6100, 7000] },
+                    { name: 'Bookings', data: [90, 120, 180, 170, 250, 300, 280, 260, 310, 330, 370, 410] }
+                ];
+                chart.updateOptions({
+                    xaxis: { categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] }
+                });
+                break;
+            default: // 'all'
+                newData = [
+                    { name: 'Revenue', data: [1200, 1900, 3000, 2800, 4200, 5500, 4100, 3800, 5200, 5500, 6100, 7000] },
+                    { name: 'Bookings', data: [90, 120, 180, 170, 250, 300, 280, 260, 310, 330, 370, 410] }
+                ];
+                chart.updateOptions({
+                    xaxis: { categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] }
+                });
+        }
+
+        chart.updateSeries(newData);
+    }
+});
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    <script>
+        var ctx = document.getElementById('radarChart').getContext('2d');
+
+        var radarChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['Speed', 'Strength', 'Agility', 'Endurance', 'Flexibility', 'Skill'],
+                datasets: [
+                    {
+                        label: 'Athlete Stats',
+                        data: [80, 90, 75, 85, 70, 95], // Example values
+                        backgroundColor: 'rgba(255, 56, 92, 0.2)',  // Light red-pink for transparency
+                        borderColor: '#FF385C',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#FF385C',
+                        pointBorderColor: '#FF385C',
+                        pointHoverBackgroundColor: '#FF385C',
+                        pointHoverBorderColor: '#FF385C'
+                    },
+                    {
+                        label: 'Services',
+                        data: [60, 75, 85, 70, 80, 65], // Example values for services
+                        backgroundColor: 'rgba(255, 56, 92, 0.4)',  // Slightly darker transparency
+                        borderColor: '#FF385C',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#FF385C',
+                        pointBorderColor: '#FF385C',
+                        pointHoverBackgroundColor: '#FF385C',
+                        pointHoverBorderColor: '#FF385C'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { display: true, color: '#FF385C' },
+                        grid: { color: 'rgba(255, 56, 92, 0.3)' }, // Light grid lines
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                },
+                plugins: {
+                    legend: { labels: { color: '#FF385C' } }
+                }
+            }
+        });
+    </script>
+
+
 {% endblock %}
