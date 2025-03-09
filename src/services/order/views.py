@@ -65,41 +65,34 @@ class OrderDetailView(DetailView):
     def get_object(self, queryset=None):
         return get_object_or_404(Order, pk=self.kwargs['pk'])
 
+
 @method_decorator(staff_required_decorator, name='dispatch')
 class ServiceBookingRequestListView(ListView):
     model = ServiceBookingRequest
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(ServiceBookingRequestListView, self).get_context_data(**kwargs)
-        service_booking_request_filter = ServiceBookingRequestFilter(self.request.GET, queryset=self.get_queryset())
-        paginator = Paginator(service_booking_request_filter.qs, 30)
-        page_number = self.request.GET.get('page')
-        service_booking_request_page_object = paginator.get_page(page_number)
-        context['filter_form'] = service_booking_request_filter.form
-        context['object_list'] = service_booking_request_page_object
-        return context
-
-
-from django.core.paginator import Paginator
-from django.utils.decorators import method_decorator
-
-
-@method_decorator(staff_required_decorator, name='dispatch')
-class ServiceBookingRequestView(ListView):
-    model = ServiceBookingRequest
-
     def get_queryset(self):
-        queryset = ServiceBookingRequest.objects.filter(service=self.kwargs['pk'])
-        return queryset
+        """If `pk` is provided, filter by service. Otherwise, apply filter."""
+        pk = self.kwargs.get("pk")
+        if pk:
+            return ServiceBookingRequest.objects.filter(service=pk)
+        else:
+            return ServiceBookingRequestFilter(self.request.GET, queryset=ServiceBookingRequest.objects.all()).qs
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        paginator = Paginator(self.get_queryset(), 30)
-        page_number = self.request.GET.get('page')
+        queryset = self.get_queryset()
+        paginator = Paginator(queryset, 30)
+        page_number = self.request.GET.get("page")
         service_booking_request_page_object = paginator.get_page(page_number)
-        context['object_list'] = service_booking_request_page_object
-        context['object'] = get_object_or_404(Service, pk=self.kwargs['pk'])
+
+        context["object_list"] = service_booking_request_page_object
+
+        if "pk" in self.kwargs:
+            context["object"] = get_object_or_404(Service, pk=self.kwargs["pk"])
+        else:
+            context["filter_form"] = ServiceBookingRequestFilter(self.request.GET, queryset=ServiceBookingRequest.objects.all()).form
+
         return context
 
 

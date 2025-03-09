@@ -65,8 +65,8 @@
             <div class="card">
 
                 <div class="card-body">
-                    <h5 class="card-title">Reviews <div class="btn btn-outline-primary btn-sm float-right mb-2">All Reviews</div></h5>
-                    {% for review in object.reviews.all %}
+                    <h5 class="card-title">Reviews <a href="{% url 'services:services-reviews' object.pk %}" class="btn btn-outline-primary btn-sm float-right mb-2">All Reviews</a></h5>
+                    {% for review in object.reviews.all|slice:':4' %}
                         <hr>
                         <div class="mt-3 d-flex align-items-center">
                             <div class="flex-grow-1">
@@ -194,7 +194,7 @@
                         <div class="card">
                             <div class="card-body">
 
-                                <h4 class="card-title">Service Images</h4>
+                                <h4 class="card-title mt-3">Service Images</h4>
                                 <p class="card-title-desc">These are the imags for a service that can be added for one or more services <code>.this service</code>
                                     </p>
 

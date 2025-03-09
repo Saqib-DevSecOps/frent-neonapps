@@ -1,6 +1,8 @@
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView
+from .models import ServiceReview
+
 from src.services.services.filters import ServiceFilter
 from src.services.services.models import Service, ServiceAvailability
 
@@ -30,3 +32,23 @@ class ServiceDetailView(DetailView):
         return context
 
 
+
+class ServiceReviewListView(ListView):
+    model = ServiceReview
+    context_object_name = "reviews"
+
+    def get_queryset(self):
+        """Return reviews for a specific service if `pk` is provided, otherwise return all reviews."""
+        pk = self.kwargs.get("pk")
+        if pk:
+            service = get_object_or_404(Service, pk=pk)
+            return service.reviews.all()
+        return ServiceReview.objects.all()
+
+    def get_context_data(self, **kwargs):
+        """Add the service object to context if `pk` is provided."""
+        context = super().get_context_data(**kwargs)
+        pk = self.kwargs.get("pk")
+        if pk:
+            context["object"] = get_object_or_404(Service, pk=pk)
+        return context
