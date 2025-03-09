@@ -9,4 +9,5 @@ urlpatterns = [
     path('service/', ServicesListView.as_view(), name='services-list'),
     path('service/<str:pk>/', ServiceDetailView.as_view(), name='services-detail'),
 
+
 ]

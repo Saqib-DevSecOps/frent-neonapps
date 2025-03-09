@@ -6,6 +6,7 @@ from src.services.order.filters import AdvertisementFilter, OrderFilter, Adverti
     ServiceBookingRequestFilter, SpecialOfferFilter, PaymentFilter
 from src.services.order.models import Advertisement, Order, AdvertisementRequest, ServiceBookingRequest, SpecialOffer, \
     Payment
+from src.services.services.models import Service
 from src.web.accounts.decorators import staff_required_decorator
 
 
@@ -77,6 +78,30 @@ class ServiceBookingRequestListView(ListView):
         context['filter_form'] = service_booking_request_filter.form
         context['object_list'] = service_booking_request_page_object
         return context
+
+
+from django.core.paginator import Paginator
+from django.utils.decorators import method_decorator
+
+
+@method_decorator(staff_required_decorator, name='dispatch')
+class ServiceBookingRequestView(ListView):
+    model = ServiceBookingRequest
+
+    def get_queryset(self):
+        queryset = ServiceBookingRequest.objects.filter(service=self.kwargs['pk'])
+        return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        paginator = Paginator(self.get_queryset(), 30)
+        page_number = self.request.GET.get('page')
+        service_booking_request_page_object = paginator.get_page(page_number)
+        context['object_list'] = service_booking_request_page_object
+        context['object'] = get_object_or_404(Service, pk=self.kwargs['pk'])
+        return context
+
 
 @method_decorator(staff_required_decorator, name='dispatch')
 class SpecialOfferListView(ListView):

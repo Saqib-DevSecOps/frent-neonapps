@@ -34,6 +34,30 @@
 
     <link rel="stylesheet" href="{% static 'core/css/icons.min.css' %}">
 
+    <style>
+        /* Override Bootstrap btn-primary */
+        .btn-primary {
+            background-color: #FF385C !important;
+            border-color: #FF385C !important;
+            color: #fff !important; /* White text */
+        }
+
+        /* Hover effect */
+        .btn-primary:hover {
+            background-color: #e03252 !important; /* Slightly darker pink */
+            border-color: #e03252 !important;
+        }
+
+        /* Active/Clicked effect */
+        .btn-primary:active,
+        .btn-primary:focus {
+            background-color: #c72c48 !important; /* Even darker pink */
+            border-color: #c72c48 !important;
+            box-shadow: 0 0 0 0.2rem rgba(255, 56, 92, 0.5) !important;
+        }
+
+    </style>
+
 
     {# BASE LINKS THAT ARE REQUIRED FOR CERTAIN PAGE #}
     {% block css %}
@@ -68,34 +92,34 @@
 
                         <!-- start page title -->
 
-{#                    <div class="row">#}
-{#                            <div class="col-12">#}
-{#                                <div class="page-title-box d-sm-flex align-items-center justify-content-between">#}
-{#                                    <h4 class="mb-sm-0 font-size-18">#}
-{#                                         {% block page_heading %} {% endblock %}#}
-{#                                    </h4>#}
-{##}
-{#                                    <div class="page-title-right">#}
-{#                                        <ol class="breadcrumb m-0">#}
-{#                                            <li class="breadcrumb-item">{% block head_page_heading %} {% endblock %}</li>#}
-{#                                            <li class="breadcrumb-item active">{% block sub_page_heading %} {% endblock %}</li>#}
-{#                                        </ol>#}
-{#                                    </div>#}
-{##}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                        <div class="row">#}
-{#                            <div class="col-12">#}
-{#                                <div class="page-title-box d-flex align-items-center justify-content-between">#}
-{#                                    <h4 class="mb-0 font-size-18">#}
-{##}
-{#                                       </h4>#}
-{##}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                        <!-- end page title -->#}
+                    <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                                    <h4 class="mb-sm-0 font-size-18">
+                                         {% block page_heading %} {% endblock %}
+                                    </h4>
+
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            <li class="breadcrumb-item">{% block head_page_heading %} {% endblock %}</li>
+                                            <li class="breadcrumb-item active">{% block sub_page_heading %} {% endblock %}</li>
+                                        </ol>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box d-flex align-items-center justify-content-between">
+                                    <h4 class="mb-0 font-size-18">
+
+                                       </h4>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end page title -->
 
                         <div class="row">
                             <div class="col-12">
