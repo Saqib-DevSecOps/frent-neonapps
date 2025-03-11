@@ -8,6 +8,7 @@ import mailchimp_transactional as MailchimpTransactional
 from mailchimp_transactional.api_client import ApiClientError
 
 from root.settings import EMAIL_HOST_USER, MAILCHIMP_FROM_EMAIL, MAILCHIMP_API_KEY
+from src.apps.whisper.fcm.utils import FireBaseMessage
 from src.apps.whisper.models import EmailNotification
 
 
@@ -91,12 +92,25 @@ class NotificationService:
             except ApiClientError as error:
                 self.update_notification_record(self.email_id, 'failed', error_message=error.text)
 
-    def send_app_notification(self):
+    def send_app_notification(self, actor):
         for user in self.recipient_list:
-            notify.send(self.obj, recipient=user, verb=self.heading, description=self.description, object=self.obj)
+            notify.send(actor, recipient=user, verb=self.heading, description=self.description, object=self.obj)
 
     def send_sms_notification(self):
         pass
 
-    def send_push_notification(self):
-        pass
+    def send_push_notification(self, user=None):
+
+        def sent_to_devices(user_devices):
+            push_notifications = FireBaseMessage(self.heading, self.description)
+            for _devices in user_devices:
+                push_notifications.sent_message_single(_devices)
+
+        if user:
+            devices = user.fcmdevice_set.filter(active=True)
+            sent_to_devices(devices)
+        else:
+            for user in self.recipient_list:
+                sent_to_devices(user.fcmdevice_set.filter(active=True))
+
+
