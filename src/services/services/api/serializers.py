@@ -54,23 +54,9 @@ class ServiceAvailabilitySerializer(serializers.ModelSerializer):
 
 
 class ServiceLocationSerializer(serializers.ModelSerializer):
-    # Use SerializerMethodField to access related model fields
-    city_name = serializers.SerializerMethodField()
-    region_name = serializers.SerializerMethodField()
-    country_name = serializers.SerializerMethodField()
-
     class Meta:
         model = ServiceLocation
-        fields = ['id', 'address', 'city_name', 'region_name', 'country_name', 'latitude', 'longitude']
-
-    def get_city_name(self, obj):
-        return obj.city.name if obj.city else None
-
-    def get_region_name(self, obj):
-        return obj.region.name if obj.region else None
-
-    def get_country_name(self, obj):
-        return obj.country.name if obj.country else None
+        fields = ['id', 'address', 'city', 'region', 'country', 'latitude', 'longitude']
 
 
 class ServiceReviewSerializer(serializers.ModelSerializer):

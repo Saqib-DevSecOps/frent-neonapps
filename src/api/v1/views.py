@@ -11,9 +11,9 @@ from rest_framework.views import APIView
 from src.services.services.models import Service, ServiceCategory
 from .serializers import (
     ServiceHomeListSerializer,
-    ServiceCategorySerializer, SubRegionSerializer, RegionSerializer, LanguageSerializer
+    ServiceCategorySerializer, SubRegionSerializer, RegionSerializer, LanguageSerializer, CountrySerializer
 )
-from ...core.models import Language
+from ...core.models import Language, Country
 
 
 class HomeAPIView(ListAPIView):
@@ -59,7 +59,9 @@ class CategorySubRegionProvinceLanguageApiView(APIView):
         sub_region = SubRegion.objects.all()
         province = Region.objects.all()
         language = Language.objects.all()
+        country = Country.objects.all()
         context = {
+            'country': CountrySerializer(country, many=True).data,
             'category': ServiceCategorySerializer(category, many=True).data,
             'sub_region': SubRegionSerializer(sub_region, many=True).data,
             'province': RegionSerializer(province, many=True).data,
