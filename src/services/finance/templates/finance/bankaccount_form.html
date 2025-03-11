@@ -1,37 +1,62 @@
-{% extends 'vendor/base.html' %}
+{% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
 {% block sub_title %}
-    Bank Account Form
+    Change Bank Account Status
 {% endblock %}
 
 {% block content %}
     <section class="content-main">
-        <div class="content-header">
-            <div>
-                <h2 class="content-title card-title">Paypal Form</h2>
-            </div>
-            <a href="{% url 'finance:payout-method' %}" class="btn btn-primary">
-                <i class="text-muted material-icons md-arrow_back"></i>
-                back
-            </a>
-        </div>
 
         <div class="row justify-content-center">
-            <div class="col-12">
+            <div class="col-md-8 col-12">
                 <div class="card">
-                    <div class="card-body">
-                        <form action="" method="POST">
-                            {% csrf_token %}
-                            {{ form|crispy }}
-                            <button type="submit" class="btn btn-success text-white">
-                                Save
-                            </button>
-                        </form>
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-12">
+                                <h5>Account Details</h5>
+                            </div>
+                        </div>
                     </div>
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>User:</strong></div>
+                            <div class="col-md-8">{{ object.user }}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>Bank Name:</strong></div>
+                            <div class="col-md-8">{{ object.bank_name }}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>IBAN:</strong></div>
+                            <div class="col-md-8">{{ object.iban }}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>Current Status:</strong></div>
+                            <div class="col-md-8">
+                                {{ form.status }}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'finance:_bank-account-list' %}" class="btn btn-primary">
+                                <i class="material-icons md-arrow_back"></i>
+                                Back to Accounts
+                            </a>
+                            <button type="submit" class="btn btn-success text-white" id="submitBtn">
+                                <i class="material-icons md-save"></i> Save Changes
+                            </button>
+                        </div>
+                    </div>
+                    </form>
+
                 </div>
             </div>
         </div>
-
     </section>
+{% endblock %}
+
+{% block js_code %}
 {% endblock %}

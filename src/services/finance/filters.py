@@ -8,7 +8,7 @@ class WithdrawalFilter(django_filters.FilterSet):
     class Meta:
         model = Withdrawal
         fields = {
-            'withdrawal_type', 'status'
+            'user__username', 'withdrawal_type', 'status'
         }
 
 
@@ -42,12 +42,12 @@ class TransactionFilter(django_filters.FilterSet):
     class Meta:
         model = Transaction
         fields = {
-            'status'
+            'user__username', 'status', 'transaction_type'
         }
 
 class ChargeFilter(django_filters.FilterSet):
     class Meta:
         model = Charge
         fields = {
-            'status'
+            'user__username', 'status', 'fee_type',
         }

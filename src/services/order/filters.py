@@ -8,6 +8,7 @@ class AdvertisementFilter(django_filters.FilterSet):
     class Meta:
         model = Advertisement
         fields = {
+            'user__username': ['icontains'],
             'service': ['icontains'],
             'service_type': ['exact'],
         }
@@ -28,7 +29,7 @@ class AdvertisementRequestFilter(django_filters.FilterSet):
 class OrderFilter(django_filters.FilterSet):
     class Meta:
         model = Order
-        fields = ['payment_type', 'order_status', 'payment_status']
+        fields = ['user__username', 'payment_type', 'order_status', 'payment_status']
 
 
 class ServiceBookingRequestFilter(django_filters.FilterSet):

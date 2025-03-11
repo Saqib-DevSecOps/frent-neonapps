@@ -9,7 +9,7 @@ from .views import (
     BankAccountUpdateView, PaypalAccountUpdateView, WithdrawalUpdateView,
     PaypalAccountListView, BankAccountListView,
 
-    ConnectAccountView, TransactionListView, ChargeListView, _BankAccountListView
+    ConnectAccountView, TransactionListView, ChargeListView, _BankAccountListView, ChangeBankStatusView
 )
 from .views import _WithdrawalListView
 
@@ -48,4 +48,5 @@ urlpatterns += [
     path('transaction-list/', TransactionListView.as_view(), name='_transaction-list'),
     path('charge-list/', ChargeListView.as_view(), name='_charge-list'),
     path('bank-account-list/', _BankAccountListView.as_view(), name='_bank-account-list'),
+    path('change-bank-status/<str:pk>/', ChangeBankStatusView.as_view(), name='_change-bank-status'),
 ]

@@ -268,3 +268,9 @@ class _BankAccountListView(ListView):
         context['object_list'] = bank_account_page_object
         return context
 
+class ChangeBankStatusView(UpdateView):
+    model = BankAccount
+    fields = ['status']
+    template_name = 'finance/bankaccount_form.html'
+    success_url = reverse_lazy('finance:_bank-account-list')
+

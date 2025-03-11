@@ -41,6 +41,8 @@
                                     <th>Account Type</th>
                                     <th>Bank Name</th>
                                     <th>IBAN</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                                 </thead>
 
@@ -60,6 +62,14 @@
                                         </td>
                                         <td>
                                             {{ object.iban }}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-warning-subtle text-warning fs-11 fw-medium px-2">
+                                                {{ object.status }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'finance:_change-bank-status' object.pk %}" class="ps-2 fa fa-edit"></a>
                                         </td>
 
                                     </tr>

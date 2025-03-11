@@ -133,7 +133,6 @@
                                         <th class="border-top-0">Date</th>
                                         <th class="border-top-0">Transaction Type</th>
                                         <th class="border-top-0">Amount</th>
-                                        <th class="border-top-0">Fee</th>
                                         <th class="border-top-0">Status</th>
                                         <th class="border-top-0">Payment Type</th>
                                     </tr>
@@ -142,16 +141,15 @@
                                     {% for object in object_list %}
                                         <tr>
                                             <td>{{ forloop.counter }}</td>
-                                            <td>{{ object.created_on|date:"d M Y" }}</td>
+                                            <td>{{ object.created_at|date:"d M Y" }}</td>
                                             <td><span
                                                     class="badge bg-warning-subtle text-success fs-11 fw-medium px-2">{{ object.transaction_type }}</span>
                                             </td>
                                             <td>{{ object.amount }}</td>
-                                            <td>{{ object.fee }}</td>
                                             <td>
                                                 <span class="badge bg-warning-subtle text-warning fs-11 fw-medium px-2">{{ object.status }}</span>
                                             </td>
-                                            <td class="text-end">{{ object.payment_type }}</td>
+                                            <td class="text-end">{{ object.transaction_type }}</td>
                                         </tr>
                                         {% empty %}
                                         <tr>
