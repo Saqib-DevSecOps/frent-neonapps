@@ -1,8 +1,8 @@
 # serializers.py
 from cities_light.models import SubRegion, Region, Country
 from rest_framework import serializers
-
-from src.core.models import Language
+from src.core.models import Language, Country
+from src.core.models import  Country as GlobalCountry
 from src.services.services.api.serializers import UserProfileSerializer
 from src.services.services.models import ServiceCategory, Service, \
     ServiceCurrency
@@ -12,12 +12,18 @@ from src.services.services.models import ServiceCategory, Service, \
 
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
+        model = GlobalCountry
+        fields = ['id', 'name']
+
+
+class CityLightCountrySerializer(serializers.ModelSerializer):
+    class Meta:
         model = Country
         fields = ['id', 'name']
 
 
 class RegionSerializer(serializers.ModelSerializer):
-    country = CountrySerializer()
+    country = CityLightCountrySerializer()
 
     class Meta:
         model = Region
@@ -70,7 +76,7 @@ class ServiceHomeSerializer(serializers.ModelSerializer):
         return obj.get_total_rating()
 
     def get_category(self, obj):
-        return obj.category.name
+        return obj.category.name if obj.category else None
 
     def get_schedule(self, obj):
         schedules = obj.get_service_schedule()

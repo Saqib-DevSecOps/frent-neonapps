@@ -179,14 +179,15 @@ AUTH_PASSWORD_VALIDATORS = [
 
 """ FIREBASE ------------------------------------------------------------------------------------------------------- """
 
-FIREBASE_PROJECT_NAME = "FrentApp"
-FIREBASE_PROJECT_ID = "frentapp"
-FIREBASE_PROJECT_NUMBER = "095678907"
-FIREBASE_APP_NICK_NAME = "frentapp-web"
-FIREBASE_APP_ID = "1:095678907:web:095678907"
-FIREBASE_PRIVATE_KEY = "0V97C5l9vt-AdCmK-56789a8sudasfd_-Wwvsr1hw"
-FIREBASE_WEB_API_KEY = "AIzaSyDhroU-alshdasdasldijK_99_9g"
-FIREBASE_SERVICE_ACCOUNT = "firebase-adminsdk-2b4fy@frentapp.iam.gserviceaccount.com"
+
+FIREBASE_PROJECT_NAME = "Frent"
+FIREBASE_PROJECT_ID = "frent-8368b"
+FIREBASE_PROJECT_NUMBER = "233111883476"
+FIREBASE_APP_NICK_NAME = "frent-web-app"
+FIREBASE_APP_ID = "1:233111883476:web:1f91a9f07081cd34e03541"
+FIREBASE_PRIVATE_KEY = "d1eb3d7d5907ca1cd7327d284625459a196d98e4"
+FIREBASE_WEB_API_KEY = "AIzaSyDEvz2wHTjDttNMMmvU9LatBjzxwy_kejE"
+FIREBASE_SERVICE_ACCOUNT = "firebase-adminsdk-fbsvc@frent-8368b.iam.gserviceaccount.com"
 FIREBASE_FILE = "firebase.json"
 
 cred = credentials.Certificate(FIREBASE_FILE)
