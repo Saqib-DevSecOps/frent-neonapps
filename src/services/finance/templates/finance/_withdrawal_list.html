@@ -42,6 +42,7 @@
                                     <th>Withdrawal Type</th>
                                     <th>Description</th>
                                     <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                                 </thead>
 
@@ -64,6 +65,9 @@
                                         </td>
                                         <td>
                                             {{ object.status }}
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'finance:_change-withdrawal-status' object.pk %}" class="fa fa-edit text-primary"></a>
                                         </td>
                                     </tr>
                                 {% endfor %}

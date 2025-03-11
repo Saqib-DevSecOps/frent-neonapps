@@ -274,3 +274,10 @@ class ChangeBankStatusView(UpdateView):
     template_name = 'finance/bankaccount_form.html'
     success_url = reverse_lazy('finance:_bank-account-list')
 
+class ChangeWithdrawalStatusView(UpdateView):
+    model = Withdrawal
+    fields = ['status']
+    template_name = 'finance/withdrawal_form.html'
+    success_url = reverse_lazy('finance:_withdrawal-list')
+
+

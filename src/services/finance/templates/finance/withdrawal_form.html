@@ -1,63 +1,68 @@
-{% extends 'vendor/base.html' %}
+{% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
 {% block sub_title %}
-    Withdrawal Form
+    Manage Withdrawal Request
 {% endblock %}
 
 {% block content %}
     <section class="content-main">
-        <div class="content-header">
-            <div>
-                <h2 class="content-title card-title">Withdrawal Form</h2>
-            </div>
-            <a href="{% url 'finance:withdrawal-list' %}" class="btn btn-primary">
-                <i class="text-muted material-icons md-arrow_back"></i>
-                back to withdrawals
-            </a>
-        </div>
-
         <div class="row justify-content-center">
-            <div class="col-6">
+            <div class="col-md-8 col-12">
                 <div class="card">
-                    <div class="card-body">
-                        <form action="" method="POST">
-                            {% csrf_token %}
-                            {{ form|crispy }}
-                            <button type="submit" class="btn btn-success text-white">
-                                Submit
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-6">
-            <div class="card">
-                <div class="card-body border-bottom">
-                    <div class="icontext mr-5">
-                            <span class="icon icon-sm rounded-circle bg-primary-light">
-                                <i class="text-primary material-icons md-monetization_on"></i>
-                            </span>
-                        <div class="text">
-                            <h6 class="mb-1 card-title">Available Balance</h6>
-                            <span>€ {{ request.user.get_available_balance }}</span>
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-12">
+                                <h5>Withdrawal Details</h5>
+                            </div>
                         </div>
                     </div>
-                    <div class="icontext ml-5">
-                            <span class="icon icon-sm rounded-circle bg-warning-light">
-                                <i class="text-warning material-icons md-monetization_on"></i>
-                            </span>
-                        <div class="text">
-                            <h6 class="mb-1 card-title">Pending Balance</h6>
-                            <span>€ {{ request.user.get_pending_balance }}</span>
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-4"><strong>User:</strong></div>
+                                <div class="col-md-8">{{ object.user }}</div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4"><strong>Amount:</strong></div>
+                                <div class="col-md-8">{{ object.amount }}</div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4"><strong>Withdrawal Type:</strong></div>
+                                <div class="col-md-8">{{ object.withdrawal_type }}</div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4"><strong>Description:</strong></div>
+                                <div class="col-md-8">{{ object.description|default:"No description provided" }}</div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4"><strong>Current Status:</strong></div>
+                                <div class="col-md-8">
+                                    {{ form.status }}
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4"><strong>Created At:</strong></div>
+                                <div class="col-md-8">{{ object.created_at }}</div>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between mt-4">
+                                <a href="{% url 'finance:_withdrawal-list' %}" class="btn btn-primary">
+                                    <i class="material-icons md-arrow_back"></i>
+                                    Back to Withdrawals
+                                </a>
+                                <button type="submit" class="btn btn-success text-white" id="submitBtn">
+                                    <i class="material-icons md-save"></i> Save Changes
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
-
-        </div>
-
     </section>
+{% endblock %}
+
+{% block js_code %}
 {% endblock %}
