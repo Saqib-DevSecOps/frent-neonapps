@@ -132,6 +132,14 @@ class FinanceAccount(models.Model):
             if previous_accounts.exists():
                 raise ValidationError(f'Seeds wild only allows 1 {self.__class__.__name__} per vendor')
 
+        # check if payouts are available vendor country
+        if self.__class__ == BankAccount:
+            if not vendor.shop_country.perm_banks:
+                raise ValidationError(f'Bank account payouts are not available in {vendor.shop_country} yet.')
+        elif self.__class__ == PayPalAccount:
+            if not vendor.shop_country.perm_paypal:
+                raise ValidationError(f'Paypal payouts are not available in {vendor.shop_country} yet.')
+
         return super().clean()
 
 # BAN
