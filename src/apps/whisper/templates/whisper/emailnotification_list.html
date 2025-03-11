@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
@@ -54,7 +55,7 @@
                                         <td>{{ object.subject }}</td>
                                         <td>{{ object.recipient }}</td>
                                         <td>
-                                            <span class="badge bg-{{ object.status|alert_type_class }}">
+                                            <span class="text-white badge bg-{{ object.status|alert_type_class }}">
                                                 <b>
                                                     {% if object.status == "sent" %}
                                                         <i class="fa fa-check-circle"></i>
@@ -67,7 +68,7 @@
                                             </span>
 
                                             {% if object.status == 'failed' %}
-                                                 | <i class="fa fa-eye text-danger"
+                                                 | <i class="fa fa-eye text-danger text-white"
                                                    data-object-value="{{ object.error_message }}"
                                                    onclick="showError(this)"></i>
                                             {% endif %}

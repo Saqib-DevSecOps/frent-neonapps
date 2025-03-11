@@ -24,7 +24,7 @@ WITHDRAWAL_STATUS = (
     ('cancelled', 'Cancelled')
 )
 
-# UDT ( USER DETAIL )
+
 class Wallet(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='wallet')
     description = models.TextField(null=True, blank=True)
@@ -82,7 +82,7 @@ class Wallet(models.Model):
     def get_connect_balance(self):
         return self.connect_available_balance
 
-# BAN
+
 class FinanceAccount(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='user_finance_account', blank=True
@@ -132,17 +132,9 @@ class FinanceAccount(models.Model):
             if previous_accounts.exists():
                 raise ValidationError(f'Seeds wild only allows 1 {self.__class__.__name__} per vendor')
 
-        # check if payouts are available vendor country
-        if self.__class__ == BankAccount:
-            if not vendor.shop_country.perm_banks:
-                raise ValidationError(f'Bank account payouts are not available in {vendor.shop_country} yet.')
-        elif self.__class__ == PayPalAccount:
-            if not vendor.shop_country.perm_paypal:
-                raise ValidationError(f'Paypal payouts are not available in {vendor.shop_country} yet.')
-
         return super().clean()
 
-# BAN
+
 class BankAccount(FinanceAccount):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='bank_accounts', blank=True
@@ -159,7 +151,7 @@ class BankAccount(FinanceAccount):
     def last_4_digits(self):
         return " * * * * " + self.iban[-4:]
 
-# BAN
+
 class PayPalAccount(FinanceAccount):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='paypal_accounts', blank=True)
     email = models.EmailField(unique=True)
@@ -168,7 +160,7 @@ class PayPalAccount(FinanceAccount):
         verbose_name_plural = 'Paypal Accounts'
         ordering = ('-created_at',)
 
-# FIN
+
 class Withdrawal(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='withdrawals', blank=True
@@ -258,7 +250,7 @@ class Withdrawal(models.Model):
             if not success:
                 raise ValidationError(obj)
 
-# FIN
+
 class Transaction(models.Model):
     TRANSACTION_TYPE = (
         ('deposit', 'Deposit'),
@@ -320,7 +312,7 @@ class Transaction(models.Model):
             if previous_status:
                 raise ValidationError("You aren't allowed to change status of transaction")
 
-# FIN
+
 class Charge(models.Model):
     CHARGE_TYPE_CHOICES = [
         ('product_listing_fee', 'Product Listing Fee'),
