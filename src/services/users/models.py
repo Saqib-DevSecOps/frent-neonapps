@@ -83,6 +83,10 @@ class User(AbstractUser):
     def get_connect_balance(self):
         return self.get_user_wallet().get_connect_balance()
 
+    def bank_account_active(self):
+        """Check if the user has an active bank account"""
+        return True if self.bank_accounts.filter(is_active=True).first() else False
+
 
 class Address(models.Model):
     """Consolidated Address Model for both ServiceProvider and Users"""

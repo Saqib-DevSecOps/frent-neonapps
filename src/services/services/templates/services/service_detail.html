@@ -200,10 +200,10 @@
 
                                 <div class="row d-flex">
                                     {% for object in service.images.all %}
-
-                                        <img src="{{ object.image.url }}" alt="..."
+                                        <a target="_blank" href="{{ object.image.url }}">
+                                        <img  src="{{ object.image.url }}" alt="..."
                                              class="d-block img-fluid m-2"
-                                             style="border-radius: 10px; object-fit: cover; width: 200px; height: 200px;">
+                                             style="border-radius: 10px; object-fit: cover; width: 200px; height: 200px;"></a>
                                     {% empty %}
                                         <p class="text-danger"> &nbsp; &nbsp; No Images for this service have been added.</p>
                                     {% endfor %}
@@ -214,6 +214,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
             <!-- SERV REQ -->
         </div>

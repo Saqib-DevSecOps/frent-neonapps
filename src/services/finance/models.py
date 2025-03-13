@@ -205,12 +205,10 @@ class Withdrawal(models.Model):
             raise ValidationError('User is required for withdrawal')
 
         # get vendor and wallet
-        vendor = self.user.get_vendor()
         wallet = self.user.get_user_wallet()
 
         # user must be vendor
-        if not vendor:
-            raise ValidationError({'user': 'Withdrawals are available for vendors only, this accounts is not a vendor'})
+
 
         # balance check
         if self.amount > wallet.balance_available:
@@ -218,11 +216,11 @@ class Withdrawal(models.Model):
 
         # withdrawal type check and validation
         if self.withdrawal_type == 'bank':
-            if not vendor.bank_account_active():
+            if not user.bank_account_active():
                 raise ValidationError({'withdrawal_type': 'User does not have an active bank account'})
-        elif self.withdrawal_type == 'paypal':
-            if not vendor.paypal_account_active():
-                raise ValidationError({'withdrawal_type': 'User does not have an active PayPal account'})
+        # elif self.withdrawal_type == 'paypal':
+        #     if not user.paypal_account_active():
+        #         raise ValidationError({'withdrawal_type': 'User does not have an active PayPal account'})
 
         elif self.withdrawal_type == 'connect':
             if not self.user.is_stripe_account_active():

@@ -19,7 +19,7 @@
                     {# IMAGE DIV #}
                     <div class="text-center">
                         {% if user.profile_image %}
-                            <img class="rounded-circle" src="{{ user.profile_image.url }}" height="150px"
+                            <img  src="{{ user.profile_image.url }}" style="border-radius: 10px;" height="170"
                                  alt="user-image">
                         {% else %}
 {#                            <img class="rounded-circle"#}
@@ -162,6 +162,19 @@
                                     {{ user.get_service_provider_profile.created_at }}{% else %}Not
                                     Provided{% endif %}</td>
                             </tr>
+                            <tr>
+                                <th scope="row">Languages</th>
+                                <td>{% for obj in user.get_service_provider_profile.languages.all %}
+                                    {{ obj.language }}{% if not forloop.last %},{% endif %}
+                                    {% endfor %}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Contact</th>
+                                <td>{% for obj in user.contacts.all %}
+                                    {{ obj.name }} - {{ object.phone_number }}{% endfor %}</td>
+
+
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -183,18 +196,16 @@
                             {% endif %}
                         </div>
 
-                        <div class="col-md-3 p-0 justify-content-between">
-                            <a href="{% url 'wallet:user-wallet' user.wallet.pk %}" class="btn btn-primary float-right ">
+                        <div class="col-md-4 d-flex justify-content-end gap-2">
+                            <a style="height: 40px;" href="{% url 'wallet:user-wallet' user.wallet.pk %}" class="btn btn-primary">
                                 <i class="fa fa-money-bill"></i> Wallet
                             </a>
-                            <div style="width:3px;"></div>
-                            <a href="{% url 'services:user-reviews' user.pk %}" class="btn btn-warning ">
+                            <a style="height: 40px;" href="{% url 'services:user-reviews' user.pk %}" class=" mx-2 btn btn-warning">
                                 <i class="fa fa-money-bill"></i> Reviews
                             </a>
-                            <a href="{% url 'services:user-services' user.wallet.pk %}" class="btn btn-success ">
+                            <a style="height: 40px;" href="{% url 'services:user-services' user.wallet.pk %}" class="btn btn-success">
                                 <i class="fa fa-money-bill"></i> Services
                             </a>
-
                         </div>
                         <br>
                     </div>
@@ -207,7 +218,8 @@
                         <div class="col-md-3">
                             <h5><strong>Social Media:</strong></h5>
                             <div class="">
-                                <div class="row">
+                                <div class="row" style="height: 2px;"></div>
+                                <div class="row mb-2 mt-1">
                                     <div class="col-md-6">{% if user.service_provider_profile.social_media.facebook %}
                                         <a href="{{ user.service_provider_profile.social_media.facebook }}"
                                            target="_blank"
@@ -227,6 +239,7 @@
                                         </a>
                                     {% endif %}</div>
                                 </div>
+                                <div class="row" style="height: 2px;"></div>
                                 <div class="row mt-2">
                                     <div class="col-md-6">
                                         {% if user.service_provider_profile.social_media.twitter %}
@@ -277,8 +290,8 @@
                                         {{ forloop.counter }}. {{ certification.name }}
                                         <a href="{{ certification.certificate_file.url }}"
                                            download="{{ certification.certificate_file.name }}"
-                                           class="text-muted">
-                                            <i class="fa fa-sm fa-download ms-2"></i>
+                                           class="text-muted"> &nbsp;
+                                            <i class="fa fa-sm fa-download ms-3"></i>
                                         </a>
                                     </li>
                                 {% empty %}
@@ -305,15 +318,34 @@
                         <!-- Certifications Section -->
                     </div>
 
-                    <!-- Status Section -->
-                    <div class="row">
-                        <div class="col-md-4">
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body mt-0 pt-0">
+                <!-- Description -->
+                <p class="text-muted">{{ object.description }}</p>
 
+                <!-- User Address Section -->
+                <h5 class="fw-semibold mb-1 card-title">User Address:</h5>
+                <ul class="vstack gap-3">
+                        <li><i class="bx bx-map"></i> {{ object.address.address }}, {{ object.address.city }}, {{ object.address.region }} {{ object.address.country }}.</li>
+                </ul>
+                <hr>
+
+                <!-- Service Images Section -->
+                <h4 class="card-title mt-3">User Images:</h4>
+                <div class="row g-3 p-1">
+                    {% for obj in object.images.all %}
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <a target="_blank" href="{{ obj.image.url }}"> <img src="{{ obj.image.url }}" alt="Service Image" class="img-fluid" style="border-radius: 10px; object-fit: cover; max-height: 200px;"></a>
                         </div>
-
-                    </div>
+                    {% empty %}
+                    {% endfor %}
                 </div>
             </div>
+        </div>
+    </div>
+</div>            </div>
         </div>
     </div>
 

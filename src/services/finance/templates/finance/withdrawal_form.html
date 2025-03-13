@@ -1,63 +1,191 @@
-{% extends 'vendor/base.html' %}
+{% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
 {% block sub_title %}
-    Withdrawal Form
+    Manage Withdrawal Request
 {% endblock %}
 
 {% block content %}
-    <section class="content-main">
-        <div class="content-header">
-            <div>
-                <h2 class="content-title card-title">Withdrawal Form</h2>
+<section class="content-main">
+    <div class="row justify-content-center">
+
+
+        <!-- Second Column: Total Amount (Unchanged) -->
+        <div class="col-md-4">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <div class="">
+                        <h4 class="mt-1 mb-3">Total Amount: <span class="text-dark">{{ object.user.wallet.total_amounts }}$</span></h4>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <p class="text-muted mb-1">Total Deposits: <b class="text-danger">{{ object.user.wallet.total_deposits }}$</b></p>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <p class="text-muted mb-1">Total Earnings: <b class="text-success">{{ object.user.wallet.total_deposits }}$</b></p>
+                            </div>
+                            <div class="col-sm-12">
+                                <p class="text-muted mb-1">Total Withdrawals: <b class="text-danger">{{ object.user.wallet.total_withdrawals }}$</b></p>
+                            </div>
+                        </div>
+                        <hr class="p-0 m-3">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <p class="text-muted mb-1">Balance Available: <b class="text-success">{{ object.user.wallet.balance_available }}$</b></p>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <p class="text-muted mb-1">Balance Pending: <b class="text-success">{{ object.user.wallet.balance_pending }}$</b></p>
+                            </div>
+                            <div class="col-md-12">
+                                <p class="text-muted mb-1">Outstanding Charges: <b class="text-danger">{{ object.user.wallet.outstanding_charges }}$</b></p>
+                            </div>
+                        </div>
+                        <hr class="p-0 m-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h6 class="mb-2">
+                                    <i class="bx bx-shape-triangle font-size-16 align-middle text-dark me-1"></i> Connect Account Details:
+                                </h6>
+                            </div>
+                            <div class="col-12">
+                                <table class="table table-bordered border-primary" style="border-color: black">
+                                    <thead>
+                                        <tr>
+                                            <th>Field</th>
+                                            <th>Amount</th>
+                                            <th>Currency</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Balance</td>
+                                            <td>{{ object.user.wallet.connect_available_balance }}</td>
+                                            <td>{{ object.user.wallet.connect_available_balance_currency }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Pending Balance</td>
+                                            <td>{{ object.user.wallet.connect_pending_balance }}</td>
+                                            <td>{{ object.user.wallet.connect_pending_balance_currency }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <p class="text-dark">
+                                    <i class="bx bx-unlink font-size-16 align-middle text-dark me-1"></i> Stripe
+                                </p>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        {% if object.user.wallet.is_stripe_connected %}
+                                            <i class="text-success fa fa-check-circle me-1"></i> Connected
+                                        {% else %}
+                                            <i class="text-danger fa fa-times-circle me-1"></i> Not Connected
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {% if object.user.wallet.is_stripe_account_active %}
+                                            <i class="text-success fa fa-check-circle me-1"></i> Active
+                                        {% else %}
+                                            <i class="text-danger fa fa-times-circle me-1"></i> Inactive
+                                        {% endif %}
+                                        <div class="row" style="height:20px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <a href="{% url 'finance:withdrawal-list' %}" class="btn btn-primary">
-                <i class="text-muted material-icons md-arrow_back"></i>
-                back to withdrawals
-            </a>
         </div>
 
-        <div class="row justify-content-center">
-            <div class="col-6">
-                <div class="card">
+
+        <!-- First Column: Withdrawal Details -->
+        <div class="col-md-4 ">
+            <div class="card shadow-lg">
+
+                <form action="" method="POST">
+                    {% csrf_token %}
                     <div class="card-body">
-                        <form action="" method="POST">
-                            {% csrf_token %}
-                            {{ form|crispy }}
-                            <button type="submit" class="btn btn-success text-white">
-                                Submit
+                        <h4 class="mt-1 mb-3">Total Amount: <span class="text-dark">{{ object.user.wallet.total_amounts }}$</span></h4>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <p class="text-muted mb-1">
+                                    User: <a href="{% url 'users:user-detail' object.user.pk %}">{{ object.user }}</a>
+                                </p>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <p class="text-muted mb-1">
+                                    <i class="far fa-dollar-sign font-size-16 align-middle text-dark me-1"></i> Amount:
+                                    <b class="text-success">{{ object.amount }}$</b>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <p class="text-muted mb-1">
+                                     Withdrawal Type:
+                                    {{ object.withdrawal_type }}
+                                </p>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <p class="text-muted mb-1">
+                                     Created:
+                                    {{ object.created_at|date:"F d, Y" }}
+                                </p>
+                            </div>
+                        </div>
+                        <hr class="p-0 m-3">
+
+
+                        <div class="row">
+                            <div class="col-12">
+                                <p class="text-muted mb-1">
+                                    <b> Description:</b><br>
+                                    <span class="text-dark">{{ object.description|default:"No description provided" }}</span>
+                                </p>
+                            </div>
+                        </div>
+                        <hr class="p-0 m-3">
+                        <!-- Table for Status -->
+                        <div class="row">
+                            <div class="col-12">
+                                <table class="table table-bordered border-primary" style="border-color: black">
+                                    <thead>
+                                        <tr>
+                                            <th>Field</th>
+                                            <th>Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Current Status</td>
+                                            <td>{{ form.status }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <hr class="p-0 m-3">
+                        <p>
+                            <b>Change Status:</b> <br>
+                            <span class="text-danger">Only change the status when the transaction/transfer has been completed </span>
+                        </p>
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'finance:_withdrawal-list' %}" class="btn btn-primary">
+                                <i class="fa fa-arrow-left font-size-16 align-middle me-1"></i> Back to Withdrawals
+                            </a>
+                            <button type="submit" class="btn btn-success text-white" id="submitBtn">
+                                <i class="far fa-save font-size-16 align-middle me-1"></i> Save Changes
                             </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-6">
-            <div class="card">
-                <div class="card-body border-bottom">
-                    <div class="icontext mr-5">
-                            <span class="icon icon-sm rounded-circle bg-primary-light">
-                                <i class="text-primary material-icons md-monetization_on"></i>
-                            </span>
-                        <div class="text">
-                            <h6 class="mb-1 card-title">Available Balance</h6>
-                            <span>€ {{ request.user.get_available_balance }}</span>
                         </div>
                     </div>
-                    <div class="icontext ml-5">
-                            <span class="icon icon-sm rounded-circle bg-warning-light">
-                                <i class="text-warning material-icons md-monetization_on"></i>
-                            </span>
-                        <div class="text">
-                            <h6 class="mb-1 card-title">Pending Balance</h6>
-                            <span>€ {{ request.user.get_pending_balance }}</span>
-                        </div>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
 
-        </div>
-
-    </section>
+    </div>
+</section>
+{% endblock %}
+{% block js_code %}
 {% endblock %}
