@@ -37,116 +37,126 @@
 
     <!-- Key Metrics Cards -->
     <div class="row g-4 mb-4">
-        <div class="col-md-3">
-            <div class="card card-animate shadow-lg">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-grow-1 overflow-hidden">
-                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Total Earnings</p>
-                        </div>
-                        <div class="flex-shrink-0">
-                            <h5 class="text-success fs-14 mb-0">
-                                <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +12.5%
-                            </h5>
-                        </div>
+    <!-- Total Earnings -->
+    <div class="col-md-3">
+        <div class="card card-animate shadow-lg">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 overflow-hidden">
+                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Total Earnings</p>
                     </div>
-                    <div class="d-flex align-items-end justify-content-between mt-4">
-                        <div>
-                            <h4 class="fs-22 fw-semibold mb-4">$<span class="counter-value" data-target="5230">5,230</span></h4>
-                            <a style="color:#ff385c " href="#" class="text-decoration-underline">View Payments</a>
-                        </div>
-                        <div class="avatar-sm flex-shrink-0">
-                            <span style="background-color: #ff385c !important;" class="avatar-title bg-success-subtle rounded fs-3">
-                                <i class="fa fa-dollar-sign fa-lg text-light"></i>
-                            </span>
-                        </div>
+                    <div class="flex-shrink-0">
+                        <h5 class="{% if earnings_change >= 0 %}text-success{% else %}text-danger{% endif %} fs-14 mb-0">
+                            <i class="ri-arrow-right-{% if earnings_change >= 0 %}up{% else %}down{% endif %}-line fs-13 align-middle"></i>
+                            {% if earnings_change >= 0 %}+{% endif %}{{ earnings_change }}%
+                        </h5>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card card-animate shadow-lg">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-grow-1 overflow-hidden">
-                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Service Bookings</p>
-                        </div>
-                        <div class="flex-shrink-0">
-                            <h5 class="text-danger fs-14 mb-0">
-                                <i class="ri-arrow-right-down-line fs-13 align-middle"></i> -2.1%
-                            </h5>
-                        </div>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div>
+                        <h4 class="fs-22 fw-semibold mb-4">$<span class="counter-value" data-target="{{ total_earnings }}">{{ total_earnings }}</span></h4>
+                        <a style="color:#ff385c" href="#" class="text-decoration-underline">View Payments</a>
                     </div>
-                    <div class="d-flex align-items-end justify-content-between mt-4">
-                        <div>
-                            <h4 class="fs-22 fw-semibold mb-4"><span class="counter-value" data-target="450">450</span></h4>
-                            <a style="color:#ff385c" href="#" class="text-decoration-underline">View Requests</a>
-                        </div>
-                        <div class="avatar-sm flex-shrink-0">
-                            <span style="background-color: #ff385c" class="avatar-title bg-info-subtle rounded fs-3">
-                                <i class="fa fa-shopping-bag fa-lg text-white"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card card-animate shadow-lg">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-grow-1 overflow-hidden">
-                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Active Providers</p>
-                        </div>
-                        <div class="flex-shrink-0">
-                            <h5 class="text-success fs-14 mb-0">
-                                <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +8.3%
-                            </h5>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-end justify-content-between mt-4">
-                        <div>
-                            <h4 class="fs-22 fw-semibold mb-4"><span class="counter-value" data-target="142">142</span></h4>
-                            <a style="color:#ff385c" href="#" class="text-decoration-underline">See Details</a>
-                        </div>
-                        <div class="avatar-sm flex-shrink-0">
-                            <span style="background-color: #ff385c" class="avatar-title bg-warning-subtle rounded fs-3">
-                                <i class="fa fa-user-circle fa-lg text-white"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card card-animate shadow-lg">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-grow-1 overflow-hidden">
-                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Pending Withdrawals</p>
-                        </div>
-                        <div class="flex-shrink-0">
-                            <h5 class="text-muted fs-14 mb-0">+0.0%</h5>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-end justify-content-between mt-4">
-                        <div>
-                            <h4 class="fs-22 fw-semibold mb-4">$<span class="counter-value" data-target="1200">1,200</span></h4>
-                            <a style="color:#ff385c" href="#" class="text-decoration-underline">Process Now</a>
-                        </div>
-                        <div class="avatar-sm flex-shrink-0">
-                            <span style="background-color: #ff385c" class="avatar-title bg-primary-subtle rounded fs-3">
-                                <i class="fa fa-money-bill fa-lg text-white"></i>
-                            </span>
-                        </div>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span style="background-color: #ff385c !important;" class="avatar-title bg-success-subtle rounded fs-3">
+                            <i class="fa fa-dollar-sign fa-lg text-light"></i>
+                        </span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Service Bookings -->
+    <div class="col-md-3">
+        <div class="card card-animate shadow-lg">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 overflow-hidden">
+                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Service Bookings</p>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <h5 class="{% if bookings_change >= 0 %}text-success{% else %}text-danger{% endif %} fs-14 mb-0">
+                            <i class="ri-arrow-right-{% if bookings_change >= 0 %}up{% else %}down{% endif %}-line fs-13 align-middle"></i>
+                            {% if bookings_change >= 0 %}+{% endif %}{{ bookings_change }}%
+                        </h5>
+                    </div>
+                </div>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div>
+                        <h4 class="fs-22 fw-semibold mb-4"><span class="counter-value" data-target="{{ service_bookings }}">{{ service_bookings }}</span></h4>
+                        <a style="color:#ff385c" href="#" class="text-decoration-underline">View Requests</a>
+                    </div>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span style="background-color: #ff385c" class="avatar-title bg-info-subtle rounded fs-3">
+                            <i class="fa fa-shopping-bag fa-lg text-white"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Providers -->
+    <div class="col-md-3">
+        <div class="card card-animate shadow-lg">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 overflow-hidden">
+                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Active Providers</p>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <h5 class="{% if providers_change >= 0 %}text-success{% else %}text-danger{% endif %} fs-14 mb-0">
+                            <i class="ri-arrow-right-{% if providers_change >= 0 %}up{% else %}down{% endif %}-line fs-13 align-middle"></i>
+                            {% if providers_change >= 0 %}+{% endif %}{{ providers_change }}%
+                        </h5>
+                    </div>
+                </div>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div>
+                        <h4 class="fs-22 fw-semibold mb-4"><span class="counter-value" data-target="{{ active_providers }}">{{ active_providers }}</span></h4>
+                        <a style="color:#ff385c" href="#" class="text-decoration-underline">See Details</a>
+                    </div>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span style="background-color: #ff385c" class="avatar-title bg-warning-subtle rounded fs-3">
+                            <i class="fa fa-user-circle fa-lg text-white"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Withdrawals -->
+    <div class="col-md-3">
+        <div class="card card-animate shadow-lg">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 overflow-hidden">
+                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Pending Withdrawals</p>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <h5 class="{% if pending_change != 0 %}{% if pending_change > 0 %}text-success{% else %}text-danger{% endif %}{% else %}text-muted{% endif %} fs-14 mb-0">
+                            <i class="ri-arrow-right-{% if pending_change >= 0 %}up{% else %}down{% endif %}-line fs-13 align-middle"></i>
+                            {% if pending_change >= 0 %}+{% endif %}{{ pending_change }}%
+                        </h5>
+                    </div>
+                </div>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div>
+                        <h4 class="fs-22 fw-semibold mb-4">$<span class="counter-value" data-target="{{ pending_withdrawals }}">{{ pending_withdrawals }}</span></h4>
+                        <a style="color:#ff385c" href="#" class="text-decoration-underline">Process Now</a>
+                    </div>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span style="background-color: #ff385c" class="avatar-title bg-primary-subtle rounded fs-3">
+                            <i class="fa fa-money-bill fa-lg text-white"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
     <!-- Revenue & Activity Section -->
     <div class="row g-4">

@@ -6,63 +6,186 @@
 {% endblock %}
 
 {% block content %}
-    <section class="content-main">
-        <div class="row justify-content-center">
-            <div class="col-md-8 col-12">
-                <div class="card">
-                    <div class="card-header">
+<section class="content-main">
+    <div class="row justify-content-center">
+
+
+        <!-- Second Column: Total Amount (Unchanged) -->
+        <div class="col-md-4">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <div class="">
+                        <h4 class="mt-1 mb-3">Total Amount: <span class="text-dark">{{ object.user.wallet.total_amounts }}$</span></h4>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <p class="text-muted mb-1">Total Deposits: <b class="text-danger">{{ object.user.wallet.total_deposits }}$</b></p>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <p class="text-muted mb-1">Total Earnings: <b class="text-success">{{ object.user.wallet.total_deposits }}$</b></p>
+                            </div>
+                            <div class="col-sm-12">
+                                <p class="text-muted mb-1">Total Withdrawals: <b class="text-danger">{{ object.user.wallet.total_withdrawals }}$</b></p>
+                            </div>
+                        </div>
+                        <hr class="p-0 m-3">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <p class="text-muted mb-1">Balance Available: <b class="text-success">{{ object.user.wallet.balance_available }}$</b></p>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <p class="text-muted mb-1">Balance Pending: <b class="text-success">{{ object.user.wallet.balance_pending }}$</b></p>
+                            </div>
+                            <div class="col-md-12">
+                                <p class="text-muted mb-1">Outstanding Charges: <b class="text-danger">{{ object.user.wallet.outstanding_charges }}$</b></p>
+                            </div>
+                        </div>
+                        <hr class="p-0 m-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h6 class="mb-2">
+                                    <i class="bx bx-shape-triangle font-size-16 align-middle text-dark me-1"></i> Connect Account Details:
+                                </h6>
+                            </div>
+                            <div class="col-12">
+                                <table class="table table-bordered border-primary" style="border-color: black">
+                                    <thead>
+                                        <tr>
+                                            <th>Field</th>
+                                            <th>Amount</th>
+                                            <th>Currency</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Balance</td>
+                                            <td>{{ object.user.wallet.connect_available_balance }}</td>
+                                            <td>{{ object.user.wallet.connect_available_balance_currency }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Pending Balance</td>
+                                            <td>{{ object.user.wallet.connect_pending_balance }}</td>
+                                            <td>{{ object.user.wallet.connect_pending_balance_currency }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-12">
-                                <h5>Withdrawal Details</h5>
+                                <p class="text-dark">
+                                    <i class="bx bx-unlink font-size-16 align-middle text-dark me-1"></i> Stripe
+                                </p>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        {% if object.user.wallet.is_stripe_connected %}
+                                            <i class="text-success fa fa-check-circle me-1"></i> Connected
+                                        {% else %}
+                                            <i class="text-danger fa fa-times-circle me-1"></i> Not Connected
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {% if object.user.wallet.is_stripe_account_active %}
+                                            <i class="text-success fa fa-check-circle me-1"></i> Active
+                                        {% else %}
+                                            <i class="text-danger fa fa-times-circle me-1"></i> Inactive
+                                        {% endif %}
+                                        <div class="row" style="height:20px;"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <form action="" method="POST">
-                        {% csrf_token %}
-                        <div class="card-body">
-                            <div class="row mb-3">
-                                <div class="col-md-4"><strong>User:</strong></div>
-                                <div class="col-md-8">{{ object.user }}</div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-4"><strong>Amount:</strong></div>
-                                <div class="col-md-8">{{ object.amount }}</div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-4"><strong>Withdrawal Type:</strong></div>
-                                <div class="col-md-8">{{ object.withdrawal_type }}</div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-4"><strong>Description:</strong></div>
-                                <div class="col-md-8">{{ object.description|default:"No description provided" }}</div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-4"><strong>Current Status:</strong></div>
-                                <div class="col-md-8">
-                                    {{ form.status }}
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-4"><strong>Created At:</strong></div>
-                                <div class="col-md-8">{{ object.created_at }}</div>
-                            </div>
-                            <hr>
-                            <div class="d-flex justify-content-between mt-4">
-                                <a href="{% url 'finance:_withdrawal-list' %}" class="btn btn-primary">
-                                    <i class="material-icons md-arrow_back"></i>
-                                    Back to Withdrawals
-                                </a>
-                                <button type="submit" class="btn btn-success text-white" id="submitBtn">
-                                    <i class="material-icons md-save"></i> Save Changes
-                                </button>
-                            </div>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>
-    </section>
-{% endblock %}
 
+
+        <!-- First Column: Withdrawal Details -->
+        <div class="col-md-4 ">
+            <div class="card shadow-lg">
+
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <h4 class="mt-1 mb-3">Total Amount: <span class="text-dark">{{ object.user.wallet.total_amounts }}$</span></h4>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <p class="text-muted mb-1">
+                                    User: <a href="{% url 'users:user-detail' object.user.pk %}">{{ object.user }}</a>
+                                </p>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <p class="text-muted mb-1">
+                                    <i class="far fa-dollar-sign font-size-16 align-middle text-dark me-1"></i> Amount:
+                                    <b class="text-success">{{ object.amount }}$</b>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <p class="text-muted mb-1">
+                                     Withdrawal Type:
+                                    {{ object.withdrawal_type }}
+                                </p>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <p class="text-muted mb-1">
+                                     Created:
+                                    {{ object.created_at|date:"F d, Y" }}
+                                </p>
+                            </div>
+                        </div>
+                        <hr class="p-0 m-3">
+
+
+                        <div class="row">
+                            <div class="col-12">
+                                <p class="text-muted mb-1">
+                                    <b> Description:</b>
+                                    <span class="text-dark">{{ object.description|default:"No description provided" }}</span>
+                                </p>
+                            </div>
+                        </div>
+                        <hr class="p-0 m-3">
+                        <!-- Table for Status -->
+                        <div class="row">
+                            <div class="col-12">
+                                <table class="table table-bordered border-primary" style="border-color: black">
+                                    <thead>
+                                        <tr>
+                                            <th>Field</th>
+                                            <th>Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Current Status</td>
+                                            <td>{{ form.status }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <hr class="p-0 m-3">
+                        <p>
+                            <b>Change Status:</b> <br>
+                            <span class="text-danger">Only change the status when the transaction/transfer has been completed </span>
+                        </p>
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'finance:_withdrawal-list' %}" class="btn btn-primary">
+                                <i class="fa fa-arrow-left font-size-16 align-middle me-1"></i> Back to Withdrawals
+                            </a>
+                            <button type="submit" class="btn btn-success text-white" id="submitBtn">
+                                <i class="far fa-save font-size-16 align-middle me-1"></i> Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}
 {% block js_code %}
 {% endblock %}
