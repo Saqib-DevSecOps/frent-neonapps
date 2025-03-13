@@ -19,14 +19,14 @@
                         <div class="row g-3 align-items-center">
                             <div class="col-sm-auto">
                                 <div class="input-group" style="max-width: 300px;">
-                                    <input type="text" class="form-control border-0 shadow-lg" data-provider="flatpickr" data-range-date="true" data-date-format="d M, Y" value="01 Mar 2025 to 08 Mar 2025" readonly style="border-radius: 5px 0 0 5px; padding-right: 0; z-index: 2;">
+                                    <input type="text" class="form-control border-0 shadow-lg" data-provider="flatpickr" data-range-date="true" data-date-format="d M, Y" value="{{ today }}" readonly style="border-radius: 5px 0 0 5px; padding-right: 0; z-index: 2;">
                                     <span class="input-group-text" style="background-color: #ff385c; color: white; border: 0; border-radius: 0 5px 5px 0; margin-left: -1px; padding: 0 10px; z-index: 1;">
                                         <i class="fa fa-calendar"></i>
                                     </span>
                                 </div>
                             </div>
                             <div class="col-auto">
-                                <button type="button" style="background-color: #ff385c; color:white" class="btn shadow-lg"><i class="ri-add-circle-line me-1"></i>All Services</button>
+                                <a href="{% url 'services:services-list' %}" type="button" style="background-color: #ff385c; color:white" class="btn shadow-lg"><i class="ri-add-circle-line me-1"></i>All Services</a>
                             </div>
                         </div>
                     </form>
@@ -55,7 +55,7 @@
                 <div class="d-flex align-items-end justify-content-between mt-4">
                     <div>
                         <h4 class="fs-22 fw-semibold mb-4">$<span class="counter-value" data-target="{{ total_earnings }}">{{ total_earnings }}</span></h4>
-                        <a style="color:#ff385c" href="#" class="text-decoration-underline">View Payments</a>
+                        <a style="color:#ff385c" href="{% url 'finance:_charge-list' %}" class="text-decoration-underline">View Payments</a>
                     </div>
                     <div class="avatar-sm flex-shrink-0">
                         <span style="background-color: #ff385c !important;" class="avatar-title bg-success-subtle rounded fs-3">
@@ -85,7 +85,7 @@
                 <div class="d-flex align-items-end justify-content-between mt-4">
                     <div>
                         <h4 class="fs-22 fw-semibold mb-4"><span class="counter-value" data-target="{{ service_bookings }}">{{ service_bookings }}</span></h4>
-                        <a style="color:#ff385c" href="#" class="text-decoration-underline">View Requests</a>
+                        <a style="color:#ff385c" href="{% url 'order:services-request' %}" class="text-decoration-underline">View Requests</a>
                     </div>
                     <div class="avatar-sm flex-shrink-0">
                         <span style="background-color: #ff385c" class="avatar-title bg-info-subtle rounded fs-3">
@@ -115,7 +115,7 @@
                 <div class="d-flex align-items-end justify-content-between mt-4">
                     <div>
                         <h4 class="fs-22 fw-semibold mb-4"><span class="counter-value" data-target="{{ active_providers }}">{{ active_providers }}</span></h4>
-                        <a style="color:#ff385c" href="#" class="text-decoration-underline">See Details</a>
+                        <a style="color:#ff385c" href="{% url 'users:user-list' %}" class="text-decoration-underline">See Details</a>
                     </div>
                     <div class="avatar-sm flex-shrink-0">
                         <span style="background-color: #ff385c" class="avatar-title bg-warning-subtle rounded fs-3">
@@ -145,7 +145,7 @@
                 <div class="d-flex align-items-end justify-content-between mt-4">
                     <div>
                         <h4 class="fs-22 fw-semibold mb-4">$<span class="counter-value" data-target="{{ pending_withdrawals }}">{{ pending_withdrawals }}</span></h4>
-                        <a style="color:#ff385c" href="#" class="text-decoration-underline">Process Now</a>
+                        <a style="color:#ff385c" href="{% url 'finance:_withdrawal-list' %}" class="text-decoration-underline">Process Now</a>
                     </div>
                     <div class="avatar-sm flex-shrink-0">
                         <span style="background-color: #ff385c" class="avatar-title bg-primary-subtle rounded fs-3">
@@ -159,86 +159,69 @@
 </div>
 
     <!-- Revenue & Activity Section -->
-    <div class="row g-4">
-        <div class="col-xl-8">
-            <div class="card shadow-lg">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <h4 class="card-title mb-0">Revenue Analytics</h4>
-                    <div class="d-flex gap-1">
-                        <button type="button" class="btn btn-sm time-filter active" data-period="all" style="background-color: rgba(255, 56, 92, 0.1); color: #ff385c;">All</button>
-                        <button type="button" class="btn btn-sm time-filter btn-soft-secondary" data-period="1m">1M</button>
-                        <button type="button" class="btn btn-sm time-filter btn-soft-secondary" data-period="6m">6M</button>
-                        <button type="button" class="btn btn-sm time-filter btn-soft-secondary" data-period="1y">1Y</button>
-                    </div>
+<div class="row g-4">
+    <div class="col-xl-8">
+        <div class="card shadow-lg">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h4 class="card-title mb-0">Revenue Analytics</h4>
+                <div class="d-flex gap-1">
+{#                    <button type="button" class="btn btn-sm time-filter {% if period == 'all' %}active{% endif %}" data-period="all" style="background-color: rgba(255, 56, 92, 0.1); color: #ff385c;">All</button>#}
+{#                    <button type="button" class="btn btn-sm time-filter btn-soft-secondary {% if period == '1m' %}active{% endif %}" data-period="1m">1M</button>#}
+{#                    <button type="button" class="btn btn-sm time-filter btn-soft-secondary {% if period == '6m' %}active{% endif %}" data-period="6m">6M</button>#}
+{#                    <button type="button" class="btn btn-sm time-filter btn-soft-secondary {% if period == '1y' %}active{% endif %}" data-period="1y">1Y</button>#}
                 </div>
-
-                <div class="card-header bg-light-subtle p-0">
-                    <div class="row g-0 text-center">
-                        <div class="col-6 col-sm-3">
-                            <div class="p-3 border border-dashed border-start-0">
-                                <h5 class="mb-1"><span class="counter-value" data-target="{{ total_bookings|default:'450' }}">{{ total_bookings|default:'450' }}</span></h5>
-                                <p class="text-muted mb-0">Total Bookings</p>
-                            </div>
+            </div>
+            <div class="card-header bg-light-subtle p-0">
+                <div class="row g-0 text-center">
+                    <div class="col-6">
+                        <div class="p-3 border border-dashed border-start-0">
+                            <h5 class="mb-1"><span class="counter-value" data-target="{{ cumulative_bookings }}">{{ cumulative_bookings }}</span></h5>
+                            <p class="text-muted mb-0">Total Bookings</p>
                         </div>
-                        <div class="col-6 col-sm-3">
-                            <div class="p-3 border border-dashed border-start-0">
-                                <h5 class="mb-1">$<span class="counter-value" data-target="{{ total_earnings|default:'5230' }}">{{ total_earnings|default:'5,230' }}</span></h5>
-                                <p class="text-muted mb-0">Total Earnings</p>
-                            </div>
-                        </div>
-                        <div class="col-6 col-sm-3">
-                            <div class="p-3 border border-dashed border-start-0">
-                                <h5 class="mb-1"><span class="counter-value" data-target="{{ total_refunds|default:'12' }}">{{ total_refunds|default:'12' }}</span></h5>
-                                <p class="text-muted mb-0">Total Refunds</p>
-                            </div>
-                        </div>
-                        <div class="col-6 col-sm-3">
-                            <div class="p-3 border border-dashed border-start-0 border-end-0">
-                                <h5 class="mb-1" style="color: #ff385c;"><span class="counter-value" data-target="{{ conversion_rate|default:'15.8' }}">{{ conversion_rate|default:'15.8' }}</span>%</h5>
-                                <p class="text-muted mb-0">Conversion Rate</p>
-                            </div>
+                    </div>
+                    <div class="col-6 ">
+                        <div class="p-3 border border-dashed border-start-0">
+                            <h5 class="mb-1">$<span class="counter-value" data-target="{{ cumulative_earnings }}">{{ cumulative_earnings }}</span></h5>
+                            <p class="text-muted mb-0">Total Earnings</p>
                         </div>
                     </div>
                 </div>
-
-                <div class="card-body">
-                    <div id="revenue-chart" class="apex-charts" dir="ltr" style="min-height: 300px;"></div>
+            </div>
+            <div class="card-body">
+                <div id="revenue-chart" class="apex-charts" dir="ltr" style="min-height: 300px;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4">
+        <div class="card shadow-lg rounded-2">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h4 class="card-title mt-2">Top Vendors:</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body pt-0 mt-3">
+                <canvas id="radarChart"></canvas>
+            </div>
+            <div class="row g-0 text-center mt-3 mb-4">
+                <div class="col-6">
+                    <div class="p-3 border border-dashed border-start-0">
+                        <h5 class="mb-1"><span class="counter-value" data-target="{{ cumulative_bookings }}">{{ cumulative_bookings }}</span></h5>
+                        <p class="text-muted mb-0">Total Bookings{{ monthly_bookings }}</p>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="p-3 border border-dashed border-start-0">
+                        <h5 class="mb-1">$<span class="counter-value" data-target="{{ cumulative_earnings }}">{{ cumulative_earnings }}</span></h5>
+                        <p class="text-muted mb-0">Total Earnings{{  monthly_revenue }}</p>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <div class="col-xl-4">
-            <div class="card shadow-lg rounded-2">
-                <div class="card-header">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h4 class="card-title mt-2">Top Vendors:</h4>
-                        </div><!--end col-->
-                    </div>  <!--end row-->
-                </div><!--end card-header-->
-
-                <div class="card-body pt-0 mt-3 ">
-                    <canvas id="radarChart"></canvas>
-                </div><!--end card-body-->
-
-                <div class="row g-0 text-center mt-3 mb-4">
-                        <div class="col-6 ">
-                            <div class="p-3 border border-dashed border-start-0">
-                                <h5 class="mb-1"><span class="counter-value" data-target="450">450</span></h5>
-                                <p class="text-muted mb-0">Total Bookings</p>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="p-3 border border-dashed border-start-0">
-                                <h5 class="mb-1">$<span class="counter-value" data-target="5230">5,230</span></h5>
-                                <p class="text-muted mb-0">Total Earnings</p>
-                            </div>
-                        </div>
-
-                    </div>
-            </div><!--end card-->
-        </div>
     </div>
+</div>
+
 {% endblock %}
 
 
@@ -254,11 +237,11 @@
         series: [
             {
                 name: 'Revenue',
-                data: {{ revenue_data|default:'[1200, 1900, 3000, 2800, 4200, 5500, 4100, 3800, 5200, 5500, 6100, 7000]'|safe }}
+                data: {{ monthly_revenue }}
             },
             {
                 name: 'Bookings',
-                data: {{ booking_data|default:'[90, 120, 180, 170, 250, 300, 280, 260, 310, 330, 370, 410]'|safe }}
+                data: {{ monthly_bookings }}
             }
         ],
         chart: {
