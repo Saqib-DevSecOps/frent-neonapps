@@ -19,7 +19,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 
 from .models import (
     User, BlockedUser, ServiceProvider, Address, UserImage, SocialMedia, Interest, Certification,
-    ServiceProviderLanguage, UserContact
+    ServiceProviderLanguage, UserContact,PasswordResetOTP
 )
 
 csrf_protect_m = method_decorator(csrf_protect)
@@ -287,6 +287,12 @@ class ServiceProviderLanguageAdmin(admin.ModelAdmin):
 class UserContactAdmin(admin.ModelAdmin):
     list_display = ('name', 'phone_number')
     search_fields = ('name', 'phone_number')
+
+@admin.register(PasswordResetOTP)
+class PasswordResetOTPAdmin(admin.ModelAdmin):
+    list_display = ('user', 'otp_code', 'created_at','expires_at')
+    search_fields = ('user__username', 'otp_code')
+    readonly_fields = ('created_at', 'expires_at')
 
 # Register User with the custom admin
 admin.site.register(User, UserCustomAdmin)

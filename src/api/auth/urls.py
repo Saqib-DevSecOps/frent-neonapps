@@ -2,11 +2,11 @@ from dj_rest_auth.registration.views import RegisterView, ResendEmailVerificatio
 from django.urls import path, re_path, include
 
 from dj_rest_auth.views import (
-    LogoutView, PasswordChangeView, PasswordResetView, PasswordResetConfirmView,
+    LogoutView, PasswordChangeView,
 )
 from .views import (
     CustomLoginView, DeactivateUserAPIView, DeleteUserAPIView, GoogleLogin, GoogleConnect,
-    AppleLogin, AppleConnect, EmailConfirmationView
+    AppleLogin, AppleConnect, EmailConfirmationView, PasswordResetView, PasswordResetConfirmView
 )
 
 app_name = 'auth'

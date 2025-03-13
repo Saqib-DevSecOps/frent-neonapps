@@ -7,12 +7,14 @@ from django.contrib.auth import authenticate, login
 from rest_framework import permissions, status
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import RetrieveUpdateAPIView, CreateAPIView, GenericAPIView
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from root.settings import GOOGLE_CALLBACK_ADDRESS, APPLE_CALLBACK_ADDRESS
 from src.api.auth.serializers import PasswordSerializer, UserSerializer, CustomLoginSerializer, \
-    EmailConfirmationSerializer
+    EmailConfirmationSerializer, PasswordResetSerializer, PasswordResetConfirmSerializer
+from src.services.users.models import User
 
 
 class GoogleLogin(SocialLoginView):
@@ -51,6 +53,33 @@ class CustomLoginView(CreateAPIView):
         new_token = Token.objects.create(user=user)
         return Response({'key': new_token.key}, status=status.HTTP_200_OK)
 
+
+
+class PasswordResetView(GenericAPIView):
+    serializer_class = PasswordResetSerializer
+    permission_classes = (AllowAny,)
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            {'detail': 'Password reset e-mail has been sent.'},
+            status=status.HTTP_200_OK,
+        )
+
+class PasswordResetConfirmView(GenericAPIView):
+    serializer_class = PasswordResetConfirmSerializer
+    permission_classes = (AllowAny,)
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            {'detail': 'Password has been reset with the new password.'},
+            status=status.HTTP_200_OK,
+        )
 
 class EmailConfirmationView(GenericAPIView):
     serializer_class = EmailConfirmationSerializer
