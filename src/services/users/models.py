@@ -1,5 +1,10 @@
+import random
+import uuid
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
+from django.utils.timezone import now
 from django_otp.models import Device
 from django_resized import ResizedImageField
 from phonenumber_field.modelfields import PhoneNumberField
@@ -268,3 +273,17 @@ class ServiceProviderLanguage(models.Model):
 
     def __str__(self):
         return f"{self.language} - {self.fluency}"
+
+
+class PasswordResetOTP(models.Model):
+    user = models.OneToOneField("User", on_delete=models.CASCADE, related_name="otp")
+    otp_code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+
+    def is_valid(self):
+        """Check if the OTP is still valid"""
+        return timezone.now() < self.expires_at
+
+    def __str__(self):
+        return f"OTP for {self.user.email} - {self.otp_code}"

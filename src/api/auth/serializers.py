@@ -1,12 +1,18 @@
+import random
 import re
-
 from allauth.account.models import EmailConfirmation
-from autobahn.wamp.gen.wamp.proto.Serializer import Serializer
 from dj_rest_auth.registration.serializers import RegisterSerializer, VerifyEmailSerializer
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
 from django.db import models
+from django.template.loader import render_to_string
+from django.utils import timezone
+from django.utils.html import strip_tags
 from rest_framework import serializers
 
-from src.services.users.models import User
+from root import settings
+from src.services.users.models import User, PasswordResetOTP
 from django.utils.translation import gettext_lazy as _
 
 
@@ -125,3 +131,85 @@ class EmailConfirmationSerializer(serializers.Serializer):
         email_confirmation = self.validated_data['email_confirmation']
         email_address = email_confirmation.confirm(self.context.get('request'))
         return email_address
+
+
+class PasswordResetSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate_email(self, value):
+        """Check if email exists in the database"""
+        if not User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("No user found with this email.")
+        return value
+
+    def send_otp_email(self, email, otp):
+        context = {
+            "otp": otp
+        }
+        template_name = "account/password_reset_otp.html"
+        convert_to_html_content = render_to_string(
+            template_name=template_name,
+            context=context
+        )
+        plain_message = strip_tags(convert_to_html_content)
+        send_mail(
+            subject="Password Reset OTP",
+            message=plain_message,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[email, ],
+            html_message=convert_to_html_content,
+            fail_silently=True
+        )
+
+    def save(self):
+        """Generate OTP and send it to the user"""
+        email = self.validated_data['email']
+        user = User.objects.get(email=email)
+        PasswordResetOTP.objects.filter(user=user).delete()
+        otp = str(random.randint(100000, 999999))
+        expires_at = timezone.now() + timezone.timedelta(minutes=10)
+        PasswordResetOTP.objects.create(user=user, otp_code=otp, expires_at=expires_at)
+        self.send_otp_email(email, otp)
+
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    otp = serializers.CharField(max_length=6)
+    new_password = serializers.CharField(write_only=True)
+    confirm_password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        """Validate OTP and passwords"""
+        email = data.get('email')
+        otp = data.get('otp')
+        new_password = data.get('new_password')
+        confirm_password = data.get('confirm_password')
+
+        if new_password != confirm_password:
+            raise serializers.ValidationError({"confirm_password": "Passwords do not match."})
+        try:
+            validate_password(new_password)
+        except ValidationError as e:
+            raise serializers.ValidationError({"new_password": e.messages})
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise serializers.ValidationError({"email": "Invalid email."})
+        try:
+            otp_obj = PasswordResetOTP.objects.get(user=user, otp_code=otp)
+            if otp_obj.expires_at < timezone.now():
+                raise serializers.ValidationError({"otp": "OTP has expired."})
+        except PasswordResetOTP.DoesNotExist:
+            raise serializers.ValidationError({"otp": "Invalid OTP."})
+
+        data['user'] = user
+        return data
+
+    def save(self):
+        """Reset the user's password"""
+        user = self.validated_data['user']
+        new_password = self.validated_data['new_password']
+        user.set_password(new_password)
+        user.save()
+        PasswordResetOTP.objects.filter(user=user).delete()
