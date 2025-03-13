@@ -207,7 +207,8 @@
                         <div class="col-md-3">
                             <h5><strong>Social Media:</strong></h5>
                             <div class="">
-                                <div class="row">
+                                <div class="row" style="height: 2px;"></div>
+                                <div class="row mb-2 mt-1">
                                     <div class="col-md-6">{% if user.service_provider_profile.social_media.facebook %}
                                         <a href="{{ user.service_provider_profile.social_media.facebook }}"
                                            target="_blank"
@@ -227,6 +228,7 @@
                                         </a>
                                     {% endif %}</div>
                                 </div>
+                                <div class="row" style="height: 2px;"></div>
                                 <div class="row mt-2">
                                     <div class="col-md-6">
                                         {% if user.service_provider_profile.social_media.twitter %}
@@ -277,8 +279,8 @@
                                         {{ forloop.counter }}. {{ certification.name }}
                                         <a href="{{ certification.certificate_file.url }}"
                                            download="{{ certification.certificate_file.name }}"
-                                           class="text-muted">
-                                            <i class="fa fa-sm fa-download ms-2"></i>
+                                           class="text-muted"> &nbsp;
+                                            <i class="fa fa-sm fa-download ms-3"></i>
                                         </a>
                                     </li>
                                 {% empty %}
