@@ -90,9 +90,9 @@ def get_monthly_revenue():
     """Returns a list of revenue totals (as Decimals) for the last 12 months."""
     today = timezone.now().date()
     revenue_list = []
-    for i in range(11, -1, -1):  # From 11 months ago to current month
-        month_start = today - relativedelta(months=i, day=1)  # First day of the month
-        month_end = month_start + relativedelta(months=1, days=-1)  # Last day of the month
+    for i in range(11, -1, -1):
+        month_start = today - relativedelta(months=i, day=1)
+        month_end = month_start + relativedelta(months=1, days=-1)
         monthly_revenue = Charge.objects.filter(
             created_at__date__gte=month_start,
             created_at__date__lte=month_end,
@@ -106,14 +106,12 @@ def get_monthly_bookings():
     """Returns a list of booking counts (as integers) for the last 12 months."""
     today = timezone.now().date()
     bookings_list = []
-    for i in range(11, -1, -1):  # From 11 months ago to current month
-        month_start = today - relativedelta(months=i, day=1)  # First day of the month
-        month_end = month_start + relativedelta(months=1, days=-1)  # Last day of the month
+    for i in range(11, -1, -1):
+        month_start = today - relativedelta(months=i, day=1)
+        month_end = month_start + relativedelta(months=1, days=-1)
         monthly_bookings = ServiceBookingRequest.objects.filter(
             created_at__date__gte=month_start,
             created_at__date__lte=month_end
         ).count()
-
-        print(monthly_bookings)
-        bookings_list.append(monthly_bookings)  # No Decimal conversion, keep as int
+        bookings_list.append(monthly_bookings)
     return bookings_list
