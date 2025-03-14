@@ -84,7 +84,10 @@ class UserAddressRetrieveUpdateAPIView(RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        return get_object_or_404(self.queryset, id=self.request.user.id)
+        user = self.request.user
+        print("User", user)
+        user_address, created = Address.objects.get_or_create(user=user)
+        return user_address
 
     def perform_update(self, serializer):
         serializer.save()
