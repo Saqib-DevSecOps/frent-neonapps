@@ -7,23 +7,7 @@
             <!-- LOGO -->
             <!-- LOGO -->
             <div class="navbar-brand-box">
-                <a href="#" class="logo logo-dark">
-                                <span class="logo-sm">
-                                    <img src="{% if app.logo %}{{ app.logo.url }}{% else %}{% static 'core/images/logos/logo-red.png' %}{% endif %}" alt="" height="35">
-                                </span>
-                    <span class="logo-lg">
-                                    <img src="{% if app.logo %}{{ app.logo.url }}{% else %}{% static 'core/images/logos/logo-red.png' %}{% endif %}" alt="" height="35">
-                                </span>
-                </a>
-
-                <a href="#" class="logo logo-light">
-                                <span class="logo-sm">
-                                    <img src="{% if app.logo %}{{ app.logo.url }}{% else %}{% static 'core/images/logos/logo-red.png' %}{% endif %}" alt="" height="35">
-                                </span>
-                    <span class="logo-lg">
-                                    <img src="{% if app.logo %}{{ app.logo.url }}{% else %}{% static 'core/images/logos/logo-red.png' %}{% endif %}" alt="" height="35">
-                                </span>
-                </a>
+                <img src="{% static 'website/logo.png' %}" alt="" height="35">
             </div>
 
             <button type="button" class="btn btn-sm px-3 font-size-16 d-lg-none header-item waves-effect waves-light"

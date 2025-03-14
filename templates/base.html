@@ -12,12 +12,12 @@
     <meta name="author" content="mark">
     <meta name="developer" content="exarth.com">
     <meta name="org-name" content="exarth"/>
-    <link rel="icon" href="{% if app.favicon %}{{ app.favicon.url }}{% else %}{% static 'core/images/logos/favico.ico' %}{% endif %}">
+    <link rel="icon" href="{% static 'website/logo.png' %}">
 
     <title>
 
         {% block title %}
-            {{ app.name }} | Frent
+            Frent
 
             {# BASE HALF TITLE #}
             {% block subtitle %}
