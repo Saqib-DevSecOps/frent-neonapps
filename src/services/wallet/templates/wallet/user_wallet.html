@@ -168,34 +168,3 @@
     </div>
     </div>
 {% endblock %}
-                                <div>
-                                    <ul class="pagination mt-2">
-                                        {% if expenses.has_previous %}
-                                            <li class="page-item">
-                                                <a class="page-link"
-                                                   href="?page={{ expenses.previous_page_number }}">Previous</a>
-                                            </li>
-                                        {% else %}
-                                            <li class="page-item disabled">
-                                                <a class="page-link" tabindex="-1">Previous</a>
-                                            </li>
-                                        {% endif %}
-
-                                        {% for num in expenses.paginator.page_range %}
-                                            <li class="page-item {% if expenses.number == num %}active{% endif %}">
-                                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                                            </li>
-                                        {% endfor %}
-
-                                        {% if expenses.has_next %}
-                                            <li class="page-item">
-                                                <a class="page-link"
-                                                   href="?page={{ expenses.next_page_number }}">Next</a>
-                                            </li>
-                                        {% else %}
-                                            <li class="page-item disabled">
-                                                <a class="page-link" tabindex="-1">Next</a>
-                                            </li>
-                                        {% endif %}
-                                    </ul>
-                                </div>
