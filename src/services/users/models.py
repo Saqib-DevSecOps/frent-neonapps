@@ -60,7 +60,7 @@ class User(AbstractUser):
     def get_provider_location(self):
         """Returns formatted location details from the ServiceProvider model"""
         if hasattr(self, 'address') and self.address.address:
-            return f"{self.address.city.name}, {self.address.region.name}, {self.address.country.name}"
+            return f"{self.address.city}, {self.address.region}, {self.address.country.name}"
         return None
 
     def get_address(self):
