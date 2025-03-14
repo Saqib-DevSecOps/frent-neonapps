@@ -4,9 +4,11 @@ from datetime import timedelta
 from django.db.models import Sum, Count
 from decimal import Decimal
 from src.services.finance.models import Withdrawal, Charge
-from src.services.order.models import ServiceBookingRequest
+from src.services.order.models import ServiceBookingRequest, Order, Advertisement
+from src.services.services.models import Service
 from src.services.users.models import ServiceProvider
 from dateutil.relativedelta import relativedelta  # Requires python-dateutil
+
 
 def calculate_percentage_change(current, previous):
     """Calculates percentage change between current and previous values."""
@@ -115,3 +117,41 @@ def get_monthly_bookings():
         ).count()
         bookings_list.append(monthly_bookings)
     return bookings_list
+
+def get_radius_data():
+    now = timezone.now()
+    rad_data = []
+
+    bookings_this_month = ServiceBookingRequest.objects.filter(  #
+        created_at__year=now.year, created_at__month=now.month
+    ).count()
+
+    total_users = ServiceProvider.objects.all().count()
+
+    providers = ServiceProvider.objects.filter(                  #
+        verified=True,
+        created_at__year=now.year, created_at__month=now.month
+    ).count()
+    seekers =  total_users - providers                           #
+
+    services = Service.objects.filter(
+        created_at__year=now.year, created_at__month=now.month         #
+    ).count()
+
+    orders = Order.objects.filter(
+        created_at__year=now.year, created_at__month=now.month         #
+    ).count()
+    advertisements = Advertisement.objects.filter(
+        created_at__year=now.year, created_at__month=now.month         #
+    ).count()
+
+    rad_data.append(bookings_this_month)
+    rad_data.append(total_users)
+    rad_data.append(providers)
+    rad_data.append(seekers)
+    rad_data.append(services)
+    rad_data.append(orders)
+    rad_data.append(advertisements)
+
+    indexer = ["Bookings", "Users", "Providers", "Seekers", "Services", "Orders", "Advertisements"]
+    return indexer, rad_data

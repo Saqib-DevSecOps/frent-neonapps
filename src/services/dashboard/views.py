@@ -10,7 +10,9 @@ from .utils import (
     get_cumulative_earnings,
     get_monthly_revenue,
     get_monthly_bookings,
+    get_radius_data,
 )
+from ..order.models import Order
 from ...web.accounts.decorators import staff_required_decorator
 
 
@@ -20,7 +22,8 @@ class DashboardView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
+        i, d = get_radius_data()
+        now = timezone.now()
         context.update({
             'total_earnings': get_total_earnings()[0],
             'earnings_change': get_total_earnings()[1],
@@ -35,6 +38,10 @@ class DashboardView(TemplateView):
             'monthly_revenue': get_monthly_revenue(),
             'monthly_bookings': get_monthly_bookings(),
             'today': timezone.now().date(),
+            'rad_data' : d,
+            'indexes': i,
+            'month': now.strftime("%B"),
+            'object_list': Order.objects.order_by("-created_at")[:9]
         })
 
         return context

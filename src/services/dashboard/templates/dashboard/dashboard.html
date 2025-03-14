@@ -2,6 +2,8 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% load humanize %}
+{% load core_tags %}
+
 
 {% block subtitle %} {{ request.user }}'s Dashboard {% endblock %}
 
@@ -159,27 +161,59 @@
 </div>
 
     <!-- Revenue & Activity Section -->
-<div class="row g-4">
-    <div class="col-xl-8">
-        <div class="card shadow-lg">
-            <div class="card-header d-flex align-items-center justify-content-between">
-                <h4 class="card-title mb-0">Revenue Analytics</h4>
-                <div class="d-flex gap-1">
-{#                    <button type="button" class="btn btn-sm time-filter {% if period == 'all' %}active{% endif %}" data-period="all" style="background-color: rgba(255, 56, 92, 0.1); color: #ff385c;">All</button>#}
-{#                    <button type="button" class="btn btn-sm time-filter btn-soft-secondary {% if period == '1m' %}active{% endif %}" data-period="1m">1M</button>#}
-{#                    <button type="button" class="btn btn-sm time-filter btn-soft-secondary {% if period == '6m' %}active{% endif %}" data-period="6m">6M</button>#}
-{#                    <button type="button" class="btn btn-sm time-filter btn-soft-secondary {% if period == '1y' %}active{% endif %}" data-period="1y">1Y</button>#}
+    <div class="row g-4">
+        <div class="col-xl-8">
+            <div class="card shadow-lg">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h4 class="card-title mb-0">Revenue Analytics</h4>
+                    <div class="d-flex gap-1">
+    {#                    <button type="button" class="btn btn-sm time-filter {% if period == 'all' %}active{% endif %}" data-period="all" style="background-color: rgba(255, 56, 92, 0.1); color: #ff385c;">All</button>#}
+    {#                    <button type="button" class="btn btn-sm time-filter btn-soft-secondary {% if period == '1m' %}active{% endif %}" data-period="1m">1M</button>#}
+    {#                    <button type="button" class="btn btn-sm time-filter btn-soft-secondary {% if period == '6m' %}active{% endif %}" data-period="6m">6M</button>#}
+    {#                    <button type="button" class="btn btn-sm time-filter btn-soft-secondary {% if period == '1y' %}active{% endif %}" data-period="1y">1Y</button>#}
+                    </div>
+                </div>
+                <div class="card-header bg-light-subtle p-0">
+                    <div class="row g-0 text-center">
+                        <div class="col-6">
+                            <div class="p-3 border border-dashed border-start-0">
+                                <h5 class="mb-1"><span class="counter-value" data-target="{{ cumulative_bookings }}">{{ cumulative_bookings }}</span></h5>
+                                <p class="text-muted mb-0">Total Bookings</p>
+                            </div>
+                        </div>
+                        <div class="col-6 ">
+                            <div class="p-3 border border-dashed border-start-0">
+                                <h5 class="mb-1">$<span class="counter-value" data-target="{{ cumulative_earnings }}">{{ cumulative_earnings }}</span></h5>
+                                <p class="text-muted mb-0">Total Earnings</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="revenue-chart" class="apex-charts" dir="ltr" style="min-height: 300px;"></div>
                 </div>
             </div>
-            <div class="card-header bg-light-subtle p-0">
-                <div class="row g-0 text-center">
+        </div>
+        <div class="col-xl-4">
+            <div class="card shadow-lg rounded-2">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title mt-2">Top Vendors:</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body pt-0 mt-3">
+                    <canvas id="radarChart"></canvas>
+                </div>
+                <div class="row g-0 text-center mt-3 mb-4">
                     <div class="col-6">
                         <div class="p-3 border border-dashed border-start-0">
                             <h5 class="mb-1"><span class="counter-value" data-target="{{ cumulative_bookings }}">{{ cumulative_bookings }}</span></h5>
                             <p class="text-muted mb-0">Total Bookings</p>
                         </div>
                     </div>
-                    <div class="col-6 ">
+                    <div class="col-6">
                         <div class="p-3 border border-dashed border-start-0">
                             <h5 class="mb-1">$<span class="counter-value" data-target="{{ cumulative_earnings }}">{{ cumulative_earnings }}</span></h5>
                             <p class="text-muted mb-0">Total Earnings</p>
@@ -187,40 +221,98 @@
                     </div>
                 </div>
             </div>
-            <div class="card-body">
-                <div id="revenue-chart" class="apex-charts" dir="ltr" style="min-height: 300px;"></div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="card ">
+                <div class="card-body pb-0">
+                    <div class="row">
+                        <div class="card-body p-2">
+                            <div class="row">
+                                <div class="col-11">
+                                    <h4 class="ms-3"> Recent Orders </h4>
+                                </div>
+                                <div class="col-1 align-items-end">
+                                    <a href="#" class="btn btn-outline-primary">All Orders</a>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover table-borderless custom-table">
+                            {% if object_list %}
+                                <thead class="border-bottom">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>User</th>
+                                    <th>Service</th>
+                                    <th>Total Price</th>
+                                    <th>Paid Price</th>
+                                    <th>Tip</th>
+                                    <th>Payment Type</th>
+                                    <th>Order Status</th>
+                                    <th>Payment Status</th>
+{#                                    <th>-</th>#}
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+                                {% for object in object_list %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td><a href="{% url 'users:user-detail' object.user.id %}">{{ object.user }}</a>
+                                        </td>
+                                    <td><a href="{% url 'services:services-detail' object.get_service.id %}">{{ object.get_service }}</a>
+                                        </td>
+
+                                        <td>
+                                            {{ object.total_price }}
+                                        </td>
+                                        <td>
+                                            {{ object.paid_price }}
+                                        </td>
+                                        <td>
+                                            {{ object.tip }}
+                                        </td>
+                                        <td>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="badge text-white bg-{{ object.payment_type|alert_type_class }}"> {{ object.payment_type }}</span>
+                                        </td>
+                                        <td>
+                                           <span class="badge text-white bg-{{ object.payment_status|alert_type_class }}"> {{ object.payment_status }}</span>
+                                        </td>
+                                        <td>
+                                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="badge text-white bg-{{ object.order_status|alert_type_class }}"> {{ object.order_status }}</span>
+                                        </td>
+
+{#                                        <td><a href="{% url 'order:o' object.id %}"><i class="fa fa-eye"></i>#}
+{#                                            {{ object.get_total_requests }}#}
+{#                                               <b> view </b></a>#}
+{#                                        </td>#}
+                                    </tr>
+                                {% endfor %}
+
+                                </tbody>
+                            {% else %}
+                                 <div class="text-center py-4">
+                                    <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop" colors="primary:#405189,secondary:#0ab39c" style="width:75px;height:75px"></lord-icon>
+                                    <h5 class="mt-2">Sorry! No Result Found</h5>
+                                    <p class="text-muted mb-0">
+                                        We've couldn't find any related data in our the database.
+                                    </p>
+                                </div>
+                            {% endif %}
+                        </table>
+                            </div><!--end /div-->
+                        </div><!--end card-body-->
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-xl-4">
-        <div class="card shadow-lg rounded-2">
-            <div class="card-header">
-                <div class="row align-items-center">
-                    <div class="col">
-                        <h4 class="card-title mt-2">Top Vendors:</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body pt-0 mt-3">
-                <canvas id="radarChart"></canvas>
-            </div>
-            <div class="row g-0 text-center mt-3 mb-4">
-                <div class="col-6">
-                    <div class="p-3 border border-dashed border-start-0">
-                        <h5 class="mb-1"><span class="counter-value" data-target="{{ cumulative_bookings }}">{{ cumulative_bookings }}</span></h5>
-                        <p class="text-muted mb-0">Total Bookings{{ monthly_bookings }}</p>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="p-3 border border-dashed border-start-0">
-                        <h5 class="mb-1">$<span class="counter-value" data-target="{{ cumulative_earnings }}">{{ cumulative_earnings }}</span></h5>
-                        <p class="text-muted mb-0">Total Earnings{{  monthly_revenue }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
+
+
 
 {% endblock %}
 
@@ -387,22 +479,11 @@
         var radarChart = new Chart(ctx, {
             type: 'radar',
             data: {
-                labels: ['Speed', 'Strength', 'Agility', 'Endurance', 'Flexibility', 'Skill'],
+                labels: {{ indexes|safe }},
                 datasets: [
                     {
-                        label: 'Athlete Stats',
-                        data: [80, 90, 75, 85, 70, 95], // Example values
-                        backgroundColor: 'rgba(255, 56, 92, 0.2)',  // Light red-pink for transparency
-                        borderColor: '#FF385C',
-                        borderWidth: 2,
-                        pointBackgroundColor: '#FF385C',
-                        pointBorderColor: '#FF385C',
-                        pointHoverBackgroundColor: '#FF385C',
-                        pointHoverBorderColor: '#FF385C'
-                    },
-                    {
-                        label: 'Services',
-                        data: [60, 75, 85, 70, 80, 65], // Example values for services
+                        label: '{{ month }}',
+                        data: {{ rad_data }}, // Example values for services
                         backgroundColor: 'rgba(255, 56, 92, 0.4)',  // Slightly darker transparency
                         borderColor: '#FF385C',
                         borderWidth: 2,
