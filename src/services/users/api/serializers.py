@@ -204,10 +204,17 @@ class UserBlockSerializer(serializers.ModelSerializer):
 
 
 
+report = apps.get_model('reporting', 'Report')
 class ReportingSerializer(serializers.ModelSerializer):
     class Meta:
-        report = apps.get_model('reporting', 'Report')
         model = report
         fields = ['id', 'report_type', 'reported_user', 'reported_service', 'reason', 'additional_info', 'is_resolved',
                   'resolved_at']
         read_only_fields = ['id', 'is_resolved', 'resolved_at']
+
+    def validate_reported_user(self, reported_user):
+        user = self.context['request'].user
+        if report.objects.filter(reported_user=reported_user,reported_by=user).exists():
+            raise serializers.ValidationError("You have already report this user.")
+        return reported_user
+
