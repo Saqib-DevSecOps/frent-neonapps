@@ -215,6 +215,6 @@ class ReportingSerializer(serializers.ModelSerializer):
     def validate_reported_user(self, reported_user):
         user = self.context['request'].user
         if report.objects.filter(reported_user=reported_user,reported_by=user).exists():
-            raise serializers.ValidationError("You have already report this user.")
+            raise serializers.ValidationError("You have already reported this.")
         return reported_user
 
