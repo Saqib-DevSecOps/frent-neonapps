@@ -7,23 +7,19 @@ from src.services.services.models import Service
 class ServiceFilter(django_filters.FilterSet):
     search = django_filters.CharFilter(method='search_services', field_name='search By Title ')
     category = django_filters.UUIDFilter(field_name="category__id")
-    location = django_filters.CharFilter(field_name="provider__service_provider_profile__address",
-                                         lookup_expr='icontains')
-    province = django_filters.CharFilter(field_name="provider__service_provider_profile__region__name",
-                                         lookup_expr='icontains')
-    sub_region = django_filters.CharFilter(field_name="provider__service_provider_profile__sub_region__name",
-                                           lookup_expr='icontains')
     average_rating = django_filters.NumberFilter(method='filter_by_average_rating')
     date = django_filters.CharFilter(method='filter_by_date_and_time')
     start_time = django_filters.TimeFilter(method='filter_by_date_and_time')
     end_time = django_filters.TimeFilter(method='filter_by_date_and_time')
 
+    latitude = django_filters.CharFilter(method='filter_by_latitude')
+    longitude = django_filters.CharFilter(method='filter_by_longitude')
+
     class Meta:
         model = Service
-        fields = ['category', 'location', 'average_rating', 'date', 'start_time', 'end_time', 'sub_region']
+        fields = ['category', 'average_rating', 'date', 'start_time', 'end_time']
 
     def filter_by_average_rating(self, queryset, name, value):
-        # Annotate services with average rating and filter based on the provided value
         return queryset.annotate(average_rating=Avg('reviews__rating')).filter(average_rating=value)
 
     def filter_by_date_and_time(self, queryset, name, value):
@@ -41,5 +37,22 @@ class ServiceFilter(django_filters.FilterSet):
 
         return queryset
 
+    def filter_by_latitude(self, queryset, name, value):
+        longitude = self.data.get('longitude')
+
+        if value and longitude:
+            return queryset.filter(location__latitude__range=(float(value) - 5, float(value) + 5),
+                                   location__longitude__range=(float(longitude) - 5, float(longitude) + 5))
+        return queryset
+
+    def filter_by_longitude(self, queryset, name, value):
+        latitude = self.data.get('latitude')
+
+        if value and latitude:
+            return queryset.filter(location__longitude__range=(float(value) - 5, float(value) + 5),
+                                   location__latitude__range=(float(latitude) - 5, float(latitude) + 5))
+        return queryset
+
     def search_services(self, queryset, name, value):
         return queryset.filter(title__icontains=value) | queryset.filter(description__icontains=value)
+

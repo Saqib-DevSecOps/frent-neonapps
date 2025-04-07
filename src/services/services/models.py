@@ -132,6 +132,9 @@ class Service(models.Model):
     def get_service_schedule(self):
         return self.availability_slots.filter(is_active=True)
 
+    def get_service_locations(self):
+        return self.location.filter(is_active=True)
+
 
 class ServiceImage(models.Model):
     """Service Image Model"""
