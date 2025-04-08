@@ -10,6 +10,7 @@ from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.html import strip_tags
 from rest_framework import serializers
+from twilio.rest import Client
 
 from root import settings
 from src.services.users.models import User, PasswordResetOTP
@@ -85,17 +86,25 @@ class CustomRegisterSerializer(RegisterSerializer):
         return email
 
     def validate_phone_number(self, value):
+        print("Validating phone number:", value)  # or use logging
+
         """Validate unique phone number and phone number format."""
         # Check for uniqueness
         if User.objects.filter(phone_number=value).exists():
             raise serializers.ValidationError("This phone number is already registered.")
 
         # Validate phone number format (only digits, 10-15 characters)
-        if not value.isdigit() or not (10 <= len(value) <= 15):
+        if not re.match(r'^\+\d{10,15}$', value):
             raise serializers.ValidationError(
-                "Phone number is not valid. It should contain only digits and be 10 to 15 characters long."
+                "Phone number must start with '+' followed by 10 to 15 digits (including country code)."
             )
         return value
+
+    def save(self, request):
+        user = super().save(request)
+        user.phone_number = self.validated_data.get('phone_number')
+        user.save()
+        return user
 
 
 class PasswordSerializer(serializers.Serializer):
@@ -161,6 +170,15 @@ class PasswordResetSerializer(serializers.Serializer):
             fail_silently=True
         )
 
+    def send_sms(self, to_number, verification_key):
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+        message = client.messages.create(
+            body=f"Your verification code is: {verification_key}",
+            from_=settings.TWILIO_PHONE_NUMBER,
+            to=str(to_number)  # Convert to string here
+        )
+        return message.sid
+
     def save(self):
         """Generate OTP and send it to the user"""
         email = self.validated_data['email']
@@ -170,6 +188,11 @@ class PasswordResetSerializer(serializers.Serializer):
         expires_at = timezone.now() + timezone.timedelta(minutes=10)
         PasswordResetOTP.objects.create(user=user, otp_code=otp, expires_at=expires_at)
         self.send_otp_email(email, otp)
+        if user.phone_number:
+            try:
+                self.send_sms(user.phone_number, otp)
+            except Exception as e:
+                raise serializers.ValidationError({"sms": "Failed to send OTP via SMS."})
 
 
 
