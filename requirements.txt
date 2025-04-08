@@ -38,3 +38,4 @@ firebase-admin
 fcm-django
 stripe
 user-agents
+twilio

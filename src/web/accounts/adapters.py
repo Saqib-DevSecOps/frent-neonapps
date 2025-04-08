@@ -6,6 +6,9 @@ from django.shortcuts import resolve_url
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.utils import timezone
+from twilio.rest import Client
+
+from root import settings
 
 
 class MyAccountAdapter(DefaultAccountAdapter):
@@ -32,9 +35,14 @@ class MyAccountAdapter(DefaultAccountAdapter):
         else:
             return HttpResponseRedirect(reverse('/'))
 
-    def send_sms(self, request, user):
-        # Send SMS
-        pass
+    def send_sms(self, to_number, verification_key):
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+        message = client.messages.create(
+            body=f"Your verification code is: {verification_key}",
+            from_=settings.TWILIO_PHONE_NUMBER,
+            to=str(to_number)  # Convert to string here
+        )
+        return message.sid
 
     def send_confirmation_mail(self, request, emailconfirmation, signup):
         # Generate the verification key
@@ -56,6 +64,14 @@ class MyAccountAdapter(DefaultAccountAdapter):
 
         # Send the custom email with the verification key
         self.send_mail("account/email/email_verification_key", emailconfirmation.email_address.email, context)
+
+        user = emailconfirmation.email_address.user
+        # Send the verification key via SMS
+        if hasattr(user, 'phone_number') and user.phone_number:
+            try:
+                self.send_sms(user.phone_number, verification_key)
+            except Exception as e:
+                print(f"Failed to send SMS: {e}")
 
     def get_email_confirmation_url(self, request, emailconfirmation):
         return emailconfirmation.key

@@ -106,6 +106,13 @@ MIDDLEWARE = [
     "allauth.account.middleware.AccountMiddleware",
 ]
 
+
+# settings.py
+TWILIO_ACCOUNT_SID = env('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = env('TWILIO_AUTH_TOKEN')
+TWILIO_PHONE_NUMBER = env('TWILIO_PHONE_NUMBER')
+
+
 # settings.py
 CITIES_LIGHT_TRANSLATION_LANGUAGES = ['en']  # Load English translations only
 CITIES_LIGHT_INCLUDE_COUNTRIES = ['FR' ]  # Load data only for Pakistan and Turkey
