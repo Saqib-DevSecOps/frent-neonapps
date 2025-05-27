@@ -237,6 +237,12 @@ class ServiceProviderSocialMediaRetrieveUpdateDestroyAPIView(RetrieveUpdateDestr
         return get_object_or_404(self.queryset, service_provider=self.request.user.get_service_provider_profile(),
                                  id=self.kwargs.get('pk'))
 
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_200_OK,
+                        data={'message': 'Service provider Social Media deleted successfully'})
+
 
 # User Favorite Service
 
