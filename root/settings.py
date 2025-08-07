@@ -321,10 +321,10 @@ SOCIALACCOUNT_PROVIDERS = {
     "apple": {
         "APP": {
             # Your service identifier
-            "client_id": " com.turkay.frent",
+            "client_id": " com.frent.app",
 
             # The Key ID (visible in the "View Key Details" page)
-            "secret": "FLSHS44XA9",
+            "secret": "PXJLPS84HH",
 
             # Member ID/App ID Prefix (Team ID)
             "key": "PXJLPS84HH",
@@ -333,11 +333,11 @@ SOCIALACCOUNT_PROVIDERS = {
 
             # Certificate key
             "certificate_key": """-----BEGIN PRIVATE KEY-----
-MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgz/rpBHMlgYlr31pm
-JAH3COaRnU5q29qTdxupqvt3TKagCgYIKoZIzj0DAQehRANCAAS4epYl0Rx5m1+T
-JZCJy28Cvo+1Oj/khLqGiUzvXutSTlkyd8qXU0KQQK6j/msTS+dhUOh6cuuNu1F+
-l0eOhn8F
------END PRIVATE KEY-----"""
+    MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgz/rpBHMlgYlr31pm
+    JAH3COaRnU5q29qTdxupqvt3TKagCgYIKoZIzj0DAQehRANCAAS4epYl0Rx5m1+T
+    JZCJy28Cvo+1Oj/khLqGiUzvXutSTlkyd8qXU0KQQK6j/msTS+dhUOh6cuuNu1F+
+    l0eOhn8F
+    -----END PRIVATE KEY-----"""
         }
     }
 }
