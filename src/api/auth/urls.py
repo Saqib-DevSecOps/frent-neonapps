@@ -15,6 +15,9 @@ urlpatterns = [
     # path('profile/', UserRetrieveChangeAPIView.as_view(), name='user_retrieve_update'),
     path('login/', CustomLoginView.as_view(), name='rest_login'),
     path('logout/', LogoutView.as_view(), name='rest_logout'),
+    
+    path('registration/', CustomRegisterView.as_view(), name='register_user'),
+
     path('password/change/', PasswordChangeView.as_view(), name='rest_password_change'),
     path('password/reset/', PasswordResetView.as_view(), name='rest_password_reset'),
     re_path(r'^password/reset/confirm/$', PasswordResetConfirmView.as_view(), name='rest_password_reset_confirm'),
